@@ -76,6 +76,15 @@
 <h1>Oversigt</h1>
 <div class="ad-kort-gitter" id="ad-tal" style="margin-top:20px"></div>
 <div class="kort" style="margin-top:16px"><h3>Opsætning</h3><ul id="ad-tjek" class="ad-tjek"></ul></div>
+<div class="kort skjult" id="ad-import" style="margin-top:16px">
+<h3>Flyt data fra den gamle side</h3>
+<p class="daempet" style="margin:8px 0 14px">Henter staff-listen, de tekster du har rettet, banneret og hele straf-historikken fra den gamle hjemmeside. Det du allerede har her, bliver ikke overskrevet. Stats og leaderboards kommer selv, når serveren sender næste gang.</p>
+<form id="ad-import-form" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+<div class="felt" style="flex:1 1 260px"><label for="ad-import-fra">Den gamle sides adresse</label><input id="ad-import-fra" value="https://hopdop.netlify.app"></div>
+<button class="knap groen" type="submit">Hent data fra den gamle side</button>
+</form>
+<p id="ad-import-besked" role="status" class="daempet" style="margin:12px 0 0"></p>
+</div>
 </div>
 
 <div data-indhold="ansog" class="skjult">

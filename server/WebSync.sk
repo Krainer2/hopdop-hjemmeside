@@ -24,7 +24,7 @@ import:
 	java.io.File
 
 options:
-	url: https://hopdop.netlify.app/api/sync
+	url: https://hopdop.pages.dev/api/sync
 	noegle: SKRIV-DIN-WEB-NOEGLE-HER
 	teamsfil: plugins/Teams/teams.yml
 	prefix: &8[ &a&lWEB &8] &7

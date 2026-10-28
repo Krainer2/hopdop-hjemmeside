@@ -92,6 +92,7 @@
         return '<li><span class="badge ' + (t[0] ? '' : 'roed') + '">' + (t[0] ? 'OK' : 'Mangler') + '</span><span>' + H.esc(t[0] ? t[1] : t[2]) + '</span></li>';
       }).join('') + (o.syncFejl && (!s || o.syncFejl.tid > s.sidst) ? '<li><span class="badge roed">Fejl</span><span>Seneste sync fejlede ' + H.esc(H.siden(o.syncFejl.tid)) + ': ' + H.esc(o.syncFejl.fejl) + '</span></li>' : '');
       opdaterNye(o.nyeAnsogninger);
+      el('ad-import').classList.toggle('skjult', !(o.mig && o.mig.rolle === 'ejer'));
     }).catch(function () {});
   }
   function opdaterNye(n) {
@@ -239,6 +240,27 @@
       });
     }).catch(function () {});
   }
+
+  // ---------- Import fra den gamle side (kun Ejer) ----------
+  el('ad-import-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var knap = e.target.querySelector('button');
+    knap.disabled = true;
+    el('ad-import-besked').textContent = 'Henter data...';
+    H.api('import', { method: 'POST', body: { fra: el('ad-import-fra').value.trim() } }).catch(fejlHaandter)
+      .then(function (j) {
+        var r = j.resultat || {};
+        var dele = [];
+        if (r.staff != null) dele.push(r.staff + ' på staff-listen');
+        if (r.tekster != null) dele.push(r.tekster + ' tekster');
+        if (r.banner) dele.push('banneret');
+        if (r.straffe != null) dele.push(r.straffe + ' straffe');
+        el('ad-import-besked').textContent = (j.ok ? 'Færdig! Hentet: ' : 'Delvist hentet: ') + dele.join(', ') + '.' + (j.fejl && j.fejl.length ? ' Fejl: ' + j.fejl.join(' | ') : '');
+        hentOversigt();
+      })
+      .catch(function (err) { el('ad-import-besked').textContent = err.message; })
+      .then(function () { knap.disabled = false; });
+  });
 
   // ---------- Banner ----------
   function bannerFelter() {

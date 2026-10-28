@@ -1,6 +1,7 @@
 // GET /api/oversigt - tal til admin-panelets forside (kræver login)
 import { hent } from '../lib/data.mjs';
 import { hvemErDet, json } from '../lib/auth.mjs';
+import { env } from '../lib/miljoe.mjs';
 
 export default async (req) => {
   const bruger = await hvemErDet(req);
@@ -17,8 +18,8 @@ export default async (req) => {
     staff: (staff || []).length,
     straffe: Object.keys((straffe && straffe.poster) || {}).length,
     aktiveBans,
-    saKlar: !!(process.env.SA_CLIENT_ID && process.env.SA_CLIENT_SECRET),
-    webNoegleKlar: (process.env.WEB_NOEGLE || '').length >= 16
+    saKlar: !!(env('SA_CLIENT_ID') && env('SA_CLIENT_SECRET')),
+    webNoegleKlar: env('WEB_NOEGLE').length >= 16
   });
 };
 

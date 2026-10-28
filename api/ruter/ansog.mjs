@@ -3,9 +3,9 @@
 //  GET   ?kode=XXXX   (offentlig)               -> status på din ansøgning
 //  GET   (staff)                                -> alle ansøgninger
 //  PATCH (staff)      {id, status, note}        -> godkend/afvis
-import crypto from 'node:crypto';
 import { hent, gem, logHandling, ipHash } from '../lib/data.mjs';
 import { hvemErDet, json } from '../lib/auth.mjs';
+import { tilfaeldigeBytes, uuid } from '../lib/miljoe.mjs';
 
 const TYPER = { staff: 'Staff', bygger: 'Bygger', unban: 'Unban' };
 const STATUS = ['ny', 'godkendt', 'afvist'];
@@ -13,7 +13,7 @@ const MC = /^[A-Za-z0-9_]{3,16}$/;
 
 function nyKode() {
   const tegn = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  return Array.from(crypto.randomBytes(8), (b) => tegn[b % tegn.length]).join('');
+  return Array.from(tilfaeldigeBytes(8), (b) => tegn[b % tegn.length]).join('');
 }
 
 export default async (req) => {
@@ -44,7 +44,7 @@ export default async (req) => {
     await gem('ansog-rl', rl);
 
     const kode = nyKode();
-    alle.unshift({ id: crypto.randomUUID(), kode, type: b.type, felter, status: 'ny', oprettet: nu });
+    alle.unshift({ id: uuid(), kode, type: b.type, felter, status: 'ny', oprettet: nu });
     await gem('ansogninger', alle.slice(0, 2000));
     return json({ ok: true, kode });
   }

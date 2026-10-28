@@ -2,6 +2,7 @@
 import { hent, slet, logHandling } from '../lib/data.mjs';
 import { lavToken, rolleFor } from '../lib/auth.mjs';
 import { SA, redirectUrl } from '../lib/sa.mjs';
+import { env, b64 } from '../lib/miljoe.mjs';
 
 function tilbage(req, fejl) {
   return Response.redirect(new URL('/admin.html#fejl=' + encodeURIComponent(fejl), req.url).toString(), 302);
@@ -18,7 +19,7 @@ export default async (req) => {
   const code = p.get('code');
   if (!code) return tilbage(req, 'sa-fejl');
 
-  const basic = Buffer.from(encodeURIComponent(process.env.SA_CLIENT_ID) + ':' + encodeURIComponent(process.env.SA_CLIENT_SECRET)).toString('base64');
+  const basic = b64(encodeURIComponent(env('SA_CLIENT_ID')) + ':' + encodeURIComponent(env('SA_CLIENT_SECRET')));
   let tok;
   try {
     const r = await fetch(SA + '/oauth/token', {
@@ -49,7 +50,7 @@ export default async (req) => {
   // Staff får deres panel-rolle, alle andre logger ind som spiller
   const rolle = (await rolleFor(navn)) || 'spiller';
 
-  const t = lavToken(navn, rolle, 'sa', profil.uuid);
+  const t = await lavToken(navn, rolle, 'sa', profil.uuid);
   if (rolle !== 'spiller') await logHandling(navn, 'login', 'med SuperAwesome');
   const data = JSON.stringify(t).replace(/</g, '\\u003c');
   const html = `<!doctype html><html lang="da"><head><meta charset="utf-8"><title>Logger ind...</title></head><body style="background:#070B09;color:#E6F2EA;font-family:sans-serif">Logger ind...<script>try{localStorage.setItem('hopdop-login',JSON.stringify(${data}))}catch(e){}location.replace(${JSON.stringify(gemt.til || '/').replace(/</g, '\\u003c')})</script></body></html>`;

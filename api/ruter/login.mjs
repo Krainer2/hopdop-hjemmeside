@@ -6,13 +6,13 @@ export default async (req) => {
   if (req.method !== 'POST') return json({ fejl: 'Kun POST' }, 405);
   let body = {};
   try { body = await req.json(); } catch {}
-  const bruger = tjekKode(body.brugernavn, body.kode);
+  const bruger = await tjekKode(body.brugernavn, body.kode);
   if (!bruger) {
     await new Promise((r) => setTimeout(r, 800));
     return json({ fejl: 'Forkert brugernavn eller kode' }, 401);
   }
   try {
-    const t = lavToken(bruger.navn, bruger.rolle, 'kode');
+    const t = await lavToken(bruger.navn, bruger.rolle, 'kode');
     await logHandling(bruger.navn, 'login', 'med kode');
     return json(t);
   } catch (e) {

@@ -1,12 +1,13 @@
 // POST /api/sync - serveren (WebSync.sk) sender stats hertil. Kræver WEB_NOEGLE.
 import { hent, gem } from '../lib/data.mjs';
 import { ensNoegle, json } from '../lib/auth.mjs';
+import { env } from '../lib/miljoe.mjs';
 import { laesLinje, ren } from '../lib/straffe.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const NAVN = /^[A-Za-z0-9_]{1,16}$/;
 const tal = (v) => { const n = Number(v); return Number.isFinite(n) ? n : 0; };
-const MAX_STRAFFE = 10000;
+const MAX_STRAFFE = 3000; // D1 tillader højst ~2 MB pr. række
 
 // "3 timer og 12 minutter" -> sekunder (fra ontime.sk)
 function ontimeTekst(t) {
@@ -25,7 +26,7 @@ export default async (req) => {
   if (req.method === 'GET') {
     // Fejlfinding: viser de seneste forsøg fra serveren (ingen hemmeligheder)
     const [l, meta] = await Promise.all([hent('sync-forsoeg'), hent('sync-meta')]);
-    const noegle = process.env.WEB_NOEGLE || '';
+    const noegle = env('WEB_NOEGLE');
     return json({
       webNoegleSatOp: noegle.length >= 16,
       webNoegleLaengde: noegle.length,
@@ -34,11 +35,11 @@ export default async (req) => {
     });
   }
   if (req.method !== 'POST') return json({ fejl: 'Kun POST' }, 405);
-  const noegle = process.env.WEB_NOEGLE || '';
+  const noegle = env('WEB_NOEGLE');
   const h = req.headers.get('authorization') || '';
   if (noegle.length < 16) { await forsoeg(req, 500, 'WEB_NOEGLE er ikke sat op i Netlify'); return json({ fejl: 'WEB_NOEGLE er ikke sat op (mindst 16 tegn)' }, 500); }
   const sendt = h.replace(/^Bearer\s+/i, '').trim();
-  if (!ensNoegle(sendt, noegle)) {
+  if (!(await ensNoegle(sendt, noegle))) {
     await forsoeg(req, 401, h ? 'Forkert nøgle' : 'Ingen nøgle sendt', { sendtLaengde: sendt.length, forventetLaengde: noegle.length, sendtStart: sendt.slice(0, 2) });
     return json({ fejl: 'Forkert nøgle' }, 401);
   }
@@ -80,7 +81,7 @@ export default async (req) => {
     }
     spillere.push(p);
     for (const linje of Array.isArray(s.h) ? s.h : []) {
-      const post = laesLinje(s.u, s.n, linje, nu);
+      const post = await laesLinje(s.u, s.n, linje, nu);
       if (post && !poster[post.id]) { poster[post.id] = post; nyeStraffe++; }
       else if (post && poster[post.id].n !== s.n) poster[post.id].n = s.n;
     }

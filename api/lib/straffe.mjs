@@ -1,5 +1,5 @@
 // HOPDOP - læser Straf.sk-historik om til pæne poster. Lavet af Krainer2
-import crypto from 'node:crypto';
+import { sha1Hex } from './miljoe.mjs';
 
 const FARVER = /[&§][0-9a-fk-or]/gi;
 export const ren = (t) => String(t ?? '').replace(FARVER, '').replace(/\s+/g, ' ').trim();
@@ -39,12 +39,12 @@ export function laesDato(raa) {
 }
 
 // "now | BAN | grund | 7 dage | strike 2 | af Krainer2"  /  "now | UNBAN | af Krainer2"
-export function laesLinje(uuid, navn, linje, nu) {
+export async function laesLinje(uuid, navn, linje, nu) {
   const dele = String(linje).split(' | ');
   if (dele.length < 2) return null;
   const type = ren(dele[1]).toUpperCase();
   if (!['BAN', 'MUTE', 'KICK', 'UNBAN', 'UNMUTE'].includes(type)) return null;
-  const id = crypto.createHash('sha1').update(uuid + '|' + linje).digest('hex').slice(0, 16);
+  const id = (await sha1Hex(uuid + '|' + linje)).slice(0, 16);
   const post = { id, u: uuid, n: navn, type, naar: ren(dele[0]), tid: laesDato(dele[0]) || nu, gaettet: !laesDato(dele[0]) };
   if (type === 'UNBAN' || type === 'UNMUTE') {
     post.af = ren(dele[2] || '').replace(/^af\s+/i, '');
