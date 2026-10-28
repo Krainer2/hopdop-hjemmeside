@@ -13,7 +13,7 @@
 #
 #  OPSÆTNING:
 #   1. Skriv den samme hemmelige nøgle her under "noegle" som du
-#      skriver i Netlify under WEB_NOEGLE (kun bogstaver og tal).
+#      skriver i Cloudflare under WEB_NOEGLE (kun bogstaver og tal).
 #   2. Læg filen i plugins/Skript/scripts og skriv /sk reload WebSync
 #   3. Skriv /websync for at sende med det samme.
 # ==========================================================
@@ -222,8 +222,12 @@ function webSync():
 	set {_json} to "{""v"":1,""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%}"
 	set {_h::1} to "Content-Type: application/json"
 	set {_h::2} to "Authorization: Bearer {@noegle}"
+	# Cloudflare blokerer standard "Java"-navnet, så vi sender vores eget
+	set {_h::3} to "User-Agent: HOPDOP-WebSync/1.0"
 	set {web::sidst} to now
 	send a "post" request to "{@url}" with the headers {_h::*} and the body {_json}
+	set {_svar} to last response
+	set {web::svar} to "%{_svar}'s status code% %{_svar}'s body%"
 
 every 5 minutes:
 	webSync()
@@ -238,3 +242,4 @@ command /websync:
 		send "{@prefix}Sender data til hjemmesiden..."
 		webSync()
 		send "{@prefix}Sendt! Se &fSidst synkroniseret &7i admin-panelet på hjemmesiden."
+		send "{@prefix}Svar fra siden: &f%{web::svar}%"
