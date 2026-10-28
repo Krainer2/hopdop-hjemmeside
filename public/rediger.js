@@ -111,9 +111,28 @@
     goerRedigerbar();
   }
   function stop() {
-    if (Object.keys(aendringer).length && !window.confirm('Du har ændringer, der ikke er gemt. Vil du afslutte alligevel?')) return;
-    var url = location.href.replace(/[?&]rediger=1/, '');
-    location.href = url;
+    var rens = function () {
+      if (/[?&]rediger=1/.test(location.search)) {
+        history.replaceState(null, '', location.pathname + location.search.replace(/[?&]rediger=1/, '').replace(/^&/, '?') + location.hash);
+      }
+    };
+    if (Object.keys(aendringer).length) {
+      if (!window.confirm('Du har ændringer, der ikke er gemt. Vil du afslutte alligevel?')) return;
+      rens();
+      location.reload();
+      return;
+    }
+    // Slå redigering fra uden at genindlæse siden
+    redigerer = false;
+    root.removeAttribute('data-redigerer');
+    document.querySelectorAll('[contenteditable]').forEach(function (el) { el.removeAttribute('contenteditable'); });
+    document.querySelectorAll('.aendret').forEach(function (el) { el.classList.remove('aendret'); });
+    aendringer = {};
+    opdaterAntal();
+    anvend();
+    bar.hidden = true;
+    startKnap.hidden = false;
+    rens();
   }
 
   // Skriv direkte i teksten
