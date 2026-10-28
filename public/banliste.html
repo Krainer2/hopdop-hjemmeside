@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Banliste - HOPDOP</title>
+<meta name="description" content="Alle bans, mutes og kicks på HOPDOP - både aktive og tidligere.">
+<link rel="icon" href="assets/ikon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<style>
+.bl-tal{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.bl-tal .kort{padding:16px}.bl-tal b{display:block;font-family:var(--pixel);font-size:30px;color:var(--overskrift)}
+.bl-filter{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+.bl-aktiv{display:flex;align-items:center;gap:8px;font-weight:600;min-height:44px;cursor:pointer}
+.bl-aktiv input{width:20px;height:20px;min-height:0;accent-color:#4ADE80}
+.bl-soeg input{width:280px}
+.bl-tabel{width:100%;border-collapse:collapse;font-size:15px}
+.bl-tabel th{text-align:left;color:#86EFAC;font-size:13px;font-weight:600;padding:10px;border-bottom:2px solid var(--kant)}
+.bl-tabel td{padding:12px 10px;border-bottom:1px solid #18251D;vertical-align:top}
+.bl-tabel tr:hover td{background:#101C15}
+.bl-spiller{display:flex;align-items:center;gap:10px;font-weight:600;color:inherit;text-decoration:none}
+.bl-lille{font-size:13px;color:var(--daempet)}
+@media (max-width:820px){
+ .bl-soeg,.bl-soeg input{width:100%}
+ .bl-tabel thead{display:none}
+ .bl-tabel tr{display:block;border:2px solid var(--kant);border-radius:12px;margin-bottom:10px;padding:8px}
+ .bl-tabel td{display:flex;gap:12px;justify-content:space-between;border:0;padding:6px 8px}
+ .bl-tabel td::before{content:attr(data-l);color:#86EFAC;font-size:13px;font-weight:600}
+ .bl-tabel td:first-child::before{content:none}
+}
+</style>
+</head>
+<body data-side="banliste">
+<header id="hd-top"></header>
+<main class="bred">
+<section class="side-top">
+<h1>Banliste</h1>
+<p>Alle bans, mutes og kicks fra serverens straf-system. Listen opdateres automatisk. <span id="bl-info" class="daempet"></span></p>
+</section>
+<div class="bl-tal" id="bl-tal"></div>
+<div class="kort" style="margin-top:18px">
+<div class="bl-filter">
+<div class="chips" role="group" aria-label="Type" id="bl-typer"></div>
+<label class="bl-aktiv"><input type="checkbox" id="bl-kunaktive"> Kun aktive</label>
+<div class="felt bl-soeg"><label for="bl-soeg">Søg</label><input id="bl-soeg" type="search" placeholder="Spiller, grund eller staff..." autocomplete="off"></div>
+</div>
+<div id="bl-liste" class="bl-liste" aria-live="polite"><p class="indlaeser">Henter banlisten...</p></div>
+<div class="sider" id="bl-sider"></div>
+</div>
+<p class="daempet" style="margin-top:16px;font-size:14px">Mener du, at du er bannet forkert? <a href="ansog.html?type=unban">Send en unban-ansøgning</a>.</p>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="banliste.js"></script>
+</body>
+</html>

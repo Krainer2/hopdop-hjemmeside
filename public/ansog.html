@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ansøg - HOPDOP</title>
+<meta name="description" content="Søg som staff eller bygger, eller send en unban-ansøgning til HOPDOP.">
+<link rel="icon" href="assets/ikon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<style>
+.an-typer{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.an-type{text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;gap:8px;transition:transform .2s,border-color .2s}
+.an-type:hover{transform:translateY(-4px);border-color:#2F7A4B}
+.an-type[aria-pressed="true"]{border-color:var(--groen)}
+.an-type b{font-family:var(--pixel);font-size:22px;color:var(--overskrift)}
+.an-krav{color:#FCA5A5}
+.an-ja{display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer}
+.an-ja input{width:22px;height:22px;min-height:0;accent-color:#4ADE80}
+.an-kode{font-family:var(--pixel);font-size:34px;color:var(--gul);letter-spacing:3px}
+</style>
+</head>
+<body data-side="ansog">
+<header id="hd-top"></header>
+<main class="bred">
+<section class="side-top">
+<h1>Ansøgninger</h1>
+<p>Vælg hvad du vil søge. Når du har sendt den, får du en kode, så du kan følge med i, om den er godkendt.</p>
+</section>
+<div class="an-typer" id="an-typer" role="list"></div>
+<form id="an-form" class="kort skjult" novalidate style="margin-top:20px">
+<h2 id="an-titel">-</h2>
+<p class="daempet" id="an-tekst" style="margin:8px 0 18px"></p>
+<div id="an-felter" class="gitter"></div>
+<div class="sr" aria-hidden="true"><label for="an-hjemmeside">Lad dette felt være tomt</label><input id="an-hjemmeside" tabindex="-1" autocomplete="off"></div>
+<p id="an-fejl" role="alert" style="color:#FCA5A5;margin:14px 0 0;min-height:22px"></p>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><button class="knap groen" type="submit" id="an-send">Send ansøgning</button><button class="knap" type="button" id="an-tilbage">Vælg en anden</button></div>
+</form>
+<div id="an-kvit" class="kort skjult" style="margin-top:20px" role="status"></div>
+<section class="kort" style="margin-top:28px">
+<h2>Tjek din ansøgning</h2>
+<form id="an-tjek" style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:12px">
+<div class="felt"><label for="an-kode">Din kode</label><input id="an-kode" placeholder="Fx K7Q2M9XA" autocomplete="off" style="text-transform:uppercase"></div>
+<button class="knap" type="submit">Tjek status</button>
+</form>
+<div id="an-status" style="margin-top:14px" aria-live="polite"></div>
+<div id="an-mine" style="margin-top:10px"></div>
+</section>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="ansog-skema.js"></script>
+<script src="ansog.js"></script>
+</body>
+</html>

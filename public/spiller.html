@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spiller - HOPDOP</title>
+<meta name="description" content="Se en spillers stats, team og placeringer på HOPDOP.">
+<link rel="icon" href="assets/ikon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<style>
+.sp-soeg{display:flex;gap:10px;align-items:flex-end;max-width:560px}
+.sp-top{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+.sp-top img{width:120px;height:120px;border-radius:12px;image-rendering:pixelated;background:#24402F}
+.sp-top .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.sp-grupper{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
+.sp-gruppe h3{margin-bottom:12px}
+.sp-stat{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #18251D}
+.sp-stat:last-child{border:0}
+.sp-stat b{color:var(--overskrift)}
+.sp-stat .plads{font-size:12px;color:#86EFAC;margin-left:6px}
+.sp-straf{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #18251D}
+</style>
+</head>
+<body data-side="spiller">
+<header id="hd-top"></header>
+<main class="bred">
+<section class="side-top">
+<form id="sp-form" class="sp-soeg" role="search">
+<div class="felt" style="flex:1"><label for="sp-navn">Find en spiller</label><input id="sp-navn" placeholder="Minecraft-navn" autocomplete="off" list="sp-forslag"></div>
+<datalist id="sp-forslag"></datalist>
+<button class="knap groen" type="submit">Søg</button>
+</form>
+</section>
+<div id="sp-indhold" aria-live="polite"><p class="indlaeser">Henter spiller...</p></div>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="spiller.js"></script>
+</body>
+</html>

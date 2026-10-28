@@ -1,0 +1,240 @@
+# ==========================================================
+#  WebSync.sk - sender HOPDOP-stats til hjemmesiden
+#  Lavet af Krainer2
+#
+#  Kræver: Reqn og skript-mirror (begge er allerede på serveren)
+#
+#  Hvad den sender (hvert 5. minut + ved /websync):
+#   - Spillere: kills, døde, spilletid, daily-streak, fiskeri,
+#     vagtposter, NPC-tyveri, spassermine
+#   - Teams og KOTH fra Teams-pluginet (plugins/Teams/teams.yml)
+#   - Straffe: aktive bans/mutes + historik fra Straf.sk
+#   - Hvem der er online
+#
+#  OPSÆTNING:
+#   1. Skriv den samme hemmelige nøgle her under "noegle" som du
+#      skriver i Netlify under WEB_NOEGLE (kun bogstaver og tal).
+#   2. Læg filen i plugins/Skript/scripts og skriv /sk reload WebSync
+#   3. Skriv /websync for at sende med det samme.
+# ==========================================================
+
+import:
+	org.bukkit.Statistic
+	org.bukkit.configuration.file.YamlConfiguration
+	java.io.File
+
+options:
+	url: https://hopdop.netlify.app/api/sync
+	noegle: SKRIV-DIN-WEB-NOEGLE-HER
+	teamsfil: plugins/Teams/teams.yml
+	prefix: &8[ &a&lWEB &8] &7
+
+# ---------- Hjælpere ----------
+
+# Gør tekst sikker at putte i JSON (escaper \ og ")
+function webEsc(t: text) :: text:
+	set {_s} to {_t}
+	replace all "\" with "\\" in {_s}
+	replace all """" with "\""" in {_s}
+	return {_s}
+
+# Gem spilletid i sekunder for en online spiller
+function webOntime(p: player):
+	set {_u} to uuid of {_p}
+	set {_ticks} to {_p}.getStatistic(Statistic.PLAY_ONE_TICK)
+	set {_sek} to {_ticks} / 20
+	set {web::ontime::%{_u}%} to round({_sek})
+
+# Straf-historik for én spiller som JSON-liste
+function webHist(u: text) :: text:
+	set {_ud} to ""
+	loop {straf::hist::%{_u}%::*}:
+		set {_linje} to webEsc("%loop-value%")
+		if {_ud} is "":
+			set {_ud} to """%{_linje}%"""
+		else:
+			set {_ud} to "%{_ud}%,""%{_linje}%"""
+	return "[%{_ud}%]"
+
+# Aktiv ban eller mute som JSON (eller null)
+function webStraf(u: text, typ: text) :: text:
+	set {_til} to {straf::%{_typ}%::%{_u}%::until}
+	if {_til} is not set:
+		return "null"
+	set {_g} to {straf::%{_typ}%::%{_u}%::reason}
+	if {_g} is not set:
+		set {_g} to ""
+	set {_af} to {straf::%{_typ}%::%{_u}%::by}
+	if {_af} is not set:
+		set {_af} to ""
+	set {_g} to webEsc("%{_g}%")
+	set {_af} to webEsc("%{_af}%")
+	set {_at} to {straf::%{_typ}%::%{_u}%::at}
+	if {_at} is not set:
+		set {_at} to 0
+	return "{""til"":""%{_til}%"",""g"":""%{_g}%"",""af"":""%{_af}%"",""t"":""%{_at}%""}"
+
+# Én spiller som JSON (tom tekst hvis spilleren skal springes over)
+function webSpiller(u: text) :: text:
+	if length of {_u} is not 36:
+		return ""
+	set {_n} to {straf::name::%{_u}%}
+	if {_n} is not set:
+		set {_n} to {lb::name::%{_u}%}
+	if {_n} is not set:
+		set {_n} to {ld::name::%{_u}%}
+	if {_n} is not set:
+		return ""
+	set {_n} to webEsc("%{_n}%")
+	set {_k} to {lb::kills::%{_u}%} ? 0
+	set {_d} to {ld::deaths::%{_u}%} ? 0
+	set {_bk} to 0
+	if {lbadm::blokeret::%{_u}%} is set:
+		set {_bk} to 1
+	set {_bd} to 0
+	if {ld::blokeret::%{_u}%} is set:
+		set {_bd} to 1
+	set {_ot} to {web::ontime::%{_u}%} ? -1
+	set {_ott} to {ontime::%{_u}%}
+	if {_ott} is not set:
+		set {_ott} to ""
+	set {_ott} to webEsc("%{_ott}%")
+	set {_ds} to {drs::streak::%{_u}%} ? 0
+	set {_fl} to {fs::lvl::%{_u}%} ? 1
+	set {_fx} to {fs::xp::%{_u}%} ? 0
+	set {_ff} to {fs::fangst::%{_u}%} ? 0
+	set {_fr} to {fs::rares::%{_u}%} ? 0
+	set {_fm} to {fs::megas::%{_u}%} ? 0
+	set {_fp} to {fs::pvpfangst::%{_u}%} ? 0
+	set {_vp} to {vp::stats::%{_u}%} ? 0
+	set {_vr} to {vp::rares::%{_u}%} ? 0
+	set {_vs} to {vp::streaknu::%{_u}%} ? 0
+	set {_tr} to {tyv::stat::roev::%{_u}%} ? 0
+	set {_tp} to {tyv::stat::penge::%{_u}%} ? 0
+	set {_tf} to {tyv::stat::fanget::%{_u}%} ? 0
+	set {_st} to {sm::stats::times::%{_u}%} ? 0
+	set {_sm} to {sm::stats::mined::%{_u}%} ? 0
+	set {_ban} to webStraf({_u}, "ban")
+	set {_mute} to webStraf({_u}, "mute")
+	set {_h} to webHist({_u})
+	set {_j} to "{""u"":""%{_u}%"",""n"":""%{_n}%"",""k"":""%{_k}%"",""d"":""%{_d}%"",""bk"":""%{_bk}%"",""bd"":""%{_bd}%"""
+	set {_j} to "%{_j}%,""ot"":""%{_ot}%"",""ott"":""%{_ott}%"",""ds"":""%{_ds}%"""
+	set {_j} to "%{_j}%,""fl"":""%{_fl}%"",""fx"":""%{_fx}%"",""ff"":""%{_ff}%"",""fr"":""%{_fr}%"",""fm"":""%{_fm}%"",""fp"":""%{_fp}%"""
+	set {_j} to "%{_j}%,""vp"":""%{_vp}%"",""vr"":""%{_vr}%"",""vs"":""%{_vs}%"",""tr"":""%{_tr}%"",""tp"":""%{_tp}%"",""tf"":""%{_tf}%"""
+	set {_j} to "%{_j}%,""st"":""%{_st}%"",""sm"":""%{_sm}%"",""ban"":%{_ban}%,""mute"":%{_mute}%,""h"":%{_h}%}"
+	return {_j}
+
+# Medlemmer af ét team som JSON-liste
+function webTeamMedl(y: object, b: text) :: text:
+	set {_sti} to "%{_b}%medlemmer"
+	set {_ms} to {_y}.getConfigurationSection({_sti})
+	if {_ms} is not set:
+		return "[]"
+	set {_set} to {_ms}.getKeys(false)
+	set {_ids::*} to {_set}.toArray()
+	set {_ud} to ""
+	loop {_ids::*}:
+		set {_id} to "%loop-value%"
+		set {_rs} to "%{_b}%medlemmer.%{_id}%.rolle"
+		set {_ns} to "%{_b}%medlemmer.%{_id}%.navn"
+		set {_r} to {_y}.getString({_rs})
+		set {_nv} to {_y}.getString({_ns})
+		set {_rt} to webEsc("%{_r}%")
+		set {_nt} to webEsc("%{_nv}%")
+		set {_e} to "{""u"":""%{_id}%"",""n"":""%{_nt}%"",""r"":""%{_rt}%""}"
+		if {_ud} is "":
+			set {_ud} to {_e}
+		else:
+			set {_ud} to "%{_ud}%,%{_e}%"
+	return "[%{_ud}%]"
+
+# Alle teams fra Teams-pluginet som JSON-liste
+function webTeams() :: text:
+	set {_f} to new File("{@teamsfil}")
+	if {_f}.exists() is false:
+		return "[]"
+	set {_y} to YamlConfiguration.loadConfiguration({_f})
+	set {_sec} to {_y}.getConfigurationSection("teams")
+	if {_sec} is not set:
+		return "[]"
+	set {_set} to {_sec}.getKeys(false)
+	set {_ks::*} to {_set}.toArray()
+	set {_ud} to ""
+	loop {_ks::*}:
+		set {_k} to "%loop-value%"
+		set {_b} to "teams.%{_k}%."
+		set {_s1} to "%{_b}%navn"
+		set {_s2} to "%{_b}%leder"
+		set {_s3} to "%{_b}%level"
+		set {_s4} to "%{_b}%kills"
+		set {_s5} to "%{_b}%deaths"
+		set {_s6} to "%{_b}%koth-sejre"
+		set {_s7} to "%{_b}%bank"
+		set {_s8} to "%{_b}%oprettet"
+		set {_navn} to {_y}.getString({_s1})
+		set {_leder} to {_y}.getString({_s2})
+		set {_lvl} to {_y}.getInt({_s3})
+		set {_kl} to {_y}.getInt({_s4})
+		set {_dl} to {_y}.getInt({_s5})
+		set {_ko} to {_y}.getInt({_s6})
+		set {_bank} to {_y}.getDouble({_s7})
+		set {_opr} to {_y}.getLong({_s8})
+		set {_nt} to webEsc("%{_navn}%")
+		set {_kt} to webEsc({_k})
+		set {_m} to webTeamMedl({_y}, {_b})
+		set {_e} to "{""id"":""%{_kt}%"",""n"":""%{_nt}%"",""leder"":""%{_leder}%"",""lvl"":""%{_lvl}%"",""k"":""%{_kl}%"",""d"":""%{_dl}%"",""koth"":""%{_ko}%"",""bank"":""%{_bank}%"",""opr"":""%{_opr}%"",""m"":%{_m}%}"
+		if {_ud} is "":
+			set {_ud} to {_e}
+		else:
+			set {_ud} to "%{_ud}%,%{_e}%"
+	return "[%{_ud}%]"
+
+# ---------- Selve synkroniseringen ----------
+
+function webSync():
+	# Spilletid for alle online spillere
+	loop all players:
+		webOntime(loop-player)
+	# Online liste
+	set {_on} to ""
+	loop all players:
+		set {_pn} to webEsc("%loop-player%")
+		if {_on} is "":
+			set {_on} to """%{_pn}%"""
+		else:
+			set {_on} to "%{_on}%,""%{_pn}%"""
+	# Alle spillere vi kender (fra Straf, Leaderboard og dødstælling)
+	loop {straf::name::*}:
+		set {_kendt::%loop-index%} to true
+	loop {lb::name::*}:
+		set {_kendt::%loop-index%} to true
+	loop {ld::name::*}:
+		set {_kendt::%loop-index%} to true
+	set {_ps} to ""
+	loop {_kendt::*}:
+		set {_e} to webSpiller(loop-index)
+		if {_e} is not "":
+			if {_ps} is "":
+				set {_ps} to {_e}
+			else:
+				set {_ps} to "%{_ps}%,%{_e}%"
+	set {_teams} to webTeams()
+	set {_json} to "{""v"":1,""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%}"
+	set {_h::1} to "Content-Type: application/json"
+	set {_h::2} to "Authorization: Bearer {@noegle}"
+	set {web::sidst} to now
+	send a "post" request to "{@url}" with the headers {_h::*} and the body {_json}
+
+every 5 minutes:
+	webSync()
+
+on quit:
+	webOntime(player)
+
+command /websync:
+	permission: hopdop.websync
+	permission message: {@prefix}Det har du ikke adgang til.
+	trigger:
+		send "{@prefix}Sender data til hjemmesiden..."
+		webSync()
+		send "{@prefix}Sendt! Se &fSidst synkroniseret &7i admin-panelet på hjemmesiden."

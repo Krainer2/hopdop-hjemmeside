@@ -1,0 +1,7 @@
+[build]
+  publish = "public"
+  command = "echo 'Ingen build - siden er færdig HTML'"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

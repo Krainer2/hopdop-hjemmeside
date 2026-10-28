@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Staff - HOPDOP</title>
+<meta name="description" content="Mød staff-holdet bag HOPDOP.">
+<link rel="icon" href="assets/ikon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<style>
+.st-gruppe{margin-bottom:28px}
+.st-gruppe h2{margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.st-kort{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.st-person{background:var(--kort);border:2px solid var(--kant);border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:inherit;transition:transform .2s,border-color .2s}
+.st-person:hover{transform:translateY(-4px);border-color:#2F7A4B;color:inherit}
+.st-person img{width:72px;height:72px;border-radius:10px;image-rendering:pixelated;background:#24402F}
+.st-person b{font-size:17px;word-break:break-all}
+.st-on{font-size:12px;color:var(--daempet);display:flex;align-items:center;gap:6px}
+.st-on i{width:8px;height:8px;border-radius:2px;background:#4B5563;display:inline-block}
+.st-on.ja i{background:var(--groen)}
+.st-cta{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-top:12px}
+</style>
+</head>
+<body data-side="staff">
+<header id="hd-top"></header>
+<main class="bred">
+<section class="side-top">
+<h1>Staff-holdet</h1>
+<p>De her folk holder HOPDOP kørende, hjælper spillere og sørger for fair kampe. Brug for hjælp? Skriv til os på <a id="st-discord" href="#">Discord</a>.</p>
+</section>
+<div id="st-liste" aria-live="polite"><p class="indlaeser">Henter staff...</p></div>
+<div class="kort st-cta">
+<div><h2>Vil du være en del af holdet?</h2><p class="daempet" style="margin:8px 0 0">Vi søger aktive og hjælpsomme spillere som staff og byggere.</p></div>
+<a class="knap groen" href="ansog.html?type=staff">Ansøg nu</a>
+</div>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="staff.js"></script>
+</body>
+</html>

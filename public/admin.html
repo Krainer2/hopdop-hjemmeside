@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin - HOPDOP</title>
+<meta name="description" content="Admin-panel for HOPDOP staff.">
+<link rel="icon" href="assets/ikon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<style>
+.ad-login{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:40px 0}
+.ad-panel{display:flex;gap:24px;flex-wrap:wrap;padding-top:32px;align-items:flex-start}
+.ad-menu{flex:1 1 220px;max-width:260px;display:flex;flex-direction:column;gap:6px;position:sticky;top:90px}
+.ad-menu button{min-height:44px;text-align:left;padding:10px 14px;border-radius:10px;border:2px solid transparent;background:transparent;color:#C9DCD0;font:600 15px var(--brod);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.ad-menu button:hover{background:#13211A}
+.ad-menu button[aria-current="page"]{background:var(--groen-bg);border-color:var(--kant2);color:#86EFAC}
+.ad-menu .ad-logud{margin-top:12px;border-color:var(--kant2)}
+.ad-mig{display:flex;gap:12px;align-items:center;padding:12px;margin-bottom:8px;background:var(--kort);border:2px solid var(--kant);border-radius:12px}
+.ad-indhold{flex:999 1 600px;min-width:0}
+.ad-kort-gitter{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.ad-kort-gitter .kort b{display:block;font-family:var(--pixel);font-size:30px;color:var(--overskrift);margin-top:4px}
+.ad-tjek{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ad-tjek li{display:flex;gap:10px;align-items:flex-start}
+.ad-an{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.ad-an-liste{flex:1 1 300px;padding:8px;max-height:70vh;overflow:auto}
+.ad-an-detalje{flex:2 1 400px;min-width:0}
+.ad-an-raekke{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:12px;border-radius:10px;border:2px solid transparent;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.ad-an-raekke:hover{background:#13211A}
+.ad-an-raekke[aria-current="true"]{border-color:var(--groen);background:#12261A}
+.ad-svar{margin:0 0 14px}.ad-svar dt{color:#86EFAC;font-size:13px;font-weight:600}.ad-svar dd{margin:4px 0 0;white-space:pre-wrap;word-break:break-word}
+.ad-st-raekker{display:flex;flex-direction:column;gap:10px}
+.ad-st-raekke{display:grid;grid-template-columns:40px 1.2fr 1fr 1.2fr auto;gap:10px;align-items:center}
+.ad-log{list-style:none;margin:0;padding:0}.ad-log li{padding:10px 0;border-bottom:1px solid #18251D}
+@media (max-width:760px){.ad-menu{max-width:none;position:static;flex-direction:row;flex-wrap:wrap}.ad-mig{width:100%}.ad-st-raekke{grid-template-columns:32px 1fr 1fr;}.ad-st-raekke .titel{grid-column:2/4}}
+</style>
+</head>
+<body data-side="admin">
+<header id="hd-top"></header>
+<main class="bred">
+<section id="ad-login" class="ad-login skjult">
+<div class="kort" style="max-width:420px;width:100%">
+<h1 style="font-size:32px">Staff login</h1>
+<p class="daempet" style="margin:8px 0 20px">Log ind med din Minecraft-konto via SuperAwesome. Du skal stå på staff-listen som Mod, Admin eller Ejer.</p>
+<a class="knap groen" href="/api/sa/start" style="width:100%">Log ind med SuperAwesome</a>
+<p id="ad-login-fejl" role="alert" style="color:#FCA5A5;margin:14px 0 0;min-height:20px"></p>
+<details style="margin-top:14px"><summary style="cursor:pointer;color:var(--daempet)">Log ind med kode i stedet</summary>
+<form id="ad-kodeform" style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+<div class="felt"><label for="ad-bruger">Brugernavn</label><input id="ad-bruger" autocomplete="username" required></div>
+<div class="felt"><label for="ad-kode">Kode</label><input id="ad-kode" type="password" autocomplete="current-password" required></div>
+<button class="knap" type="submit">Log ind</button>
+</form></details>
+</div>
+</section>
+
+<div id="ad-panel" class="ad-panel skjult">
+<nav class="ad-menu" aria-label="Admin-menu">
+<div class="ad-mig"><img id="ad-mig-hoved" class="hoved" alt="" style="width:40px;height:40px"><div><b id="ad-mig-navn"></b><br><span class="badge" id="ad-mig-rolle"></span></div></div>
+<button type="button" data-fane="oversigt">Oversigt</button>
+<button type="button" data-fane="ansog">Ansøgninger <span class="badge gul skjult" id="ad-nye"></span></button>
+<button type="button" data-fane="staff">Staff-liste</button>
+<button type="button" data-fane="tekster">Hjemmesidens tekster</button>
+<button type="button" data-fane="log">Log</button>
+<button type="button" id="ad-logud" class="ad-logud">Log ud</button>
+</nav>
+<section class="ad-indhold">
+
+<div data-indhold="oversigt">
+<h1>Oversigt</h1>
+<div class="ad-kort-gitter" id="ad-tal" style="margin-top:20px"></div>
+<div class="kort" style="margin-top:16px"><h3>Opsætning</h3><ul id="ad-tjek" class="ad-tjek"></ul></div>
+</div>
+
+<div data-indhold="ansog" class="skjult">
+<h1>Ansøgninger</h1>
+<div style="display:flex;flex-wrap:wrap;gap:12px;margin:18px 0">
+<div class="chips" id="ad-an-status" role="group" aria-label="Status"></div>
+<div class="chips" id="ad-an-type" role="group" aria-label="Type"></div>
+</div>
+<div class="ad-an">
+<div class="kort ad-an-liste" id="ad-an-liste"><p class="indlaeser">Henter...</p></div>
+<div class="kort ad-an-detalje" id="ad-an-detalje"><p class="daempet">Vælg en ansøgning til venstre.</p></div>
+</div>
+</div>
+
+<div data-indhold="staff" class="skjult">
+<h1>Staff-liste</h1>
+<p class="daempet" id="ad-st-info" style="margin:8px 0 18px">Listen vises på hjemmesiden. Mods, Admins og Ejere på listen kan logge ind her med SuperAwesome.</p>
+<div class="kort">
+<div id="ad-st-raekker" class="ad-st-raekker"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+<button class="knap" type="button" id="ad-st-tilfoej">Tilføj person</button>
+<button class="knap groen" type="button" id="ad-st-gem">Gem staff-liste</button>
+<span id="ad-st-besked" role="status" class="daempet" style="align-self:center"></span>
+</div>
+</div>
+</div>
+
+<div data-indhold="tekster" class="skjult">
+<h1>Hjemmesidens tekster</h1>
+<div class="kort" style="margin-top:18px">
+<p style="margin:0 0 14px;line-height:1.7">Åbn forsiden i redigeringstilstand. Alle tekster med gul streg kan rettes: klik, skriv og tryk <b>Gem</b>. Ændringen kan ses af alle med det samme. <b>Nulstil valgt tekst</b> sætter en tekst tilbage til standard.</p>
+<a class="knap groen" href="index.html?rediger=1">Rediger forsiden</a>
+</div>
+</div>
+
+<div data-indhold="log" class="skjult">
+<h1>Log</h1>
+<p class="daempet" style="margin:8px 0 18px">Alt hvad staff har gjort på hjemmesiden.</p>
+<div class="kort"><ul id="ad-log" class="ad-log"></ul></div>
+</div>
+
+</section>
+</div>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="ansog-skema.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
