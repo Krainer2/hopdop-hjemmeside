@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /banliste
+Disallow: /api/
+
+Sitemap: https://hopdop.pages.dev/sitemap.xml
