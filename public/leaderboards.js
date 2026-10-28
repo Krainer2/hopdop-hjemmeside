@@ -32,7 +32,6 @@
       { id: 'blocks', navn: 'Blocks i spasserminen', v: function (s) { return s.sm; }, f: function (v) { return H.tal(v) + ' blocks'; } }
     ] },
     { id: 'aktiv', navn: 'Aktivitet', tavler: [
-      { id: 'spilletid', navn: 'Spilletid', v: function (s) { return s.ot; }, f: function (v) { return H.tid(v); } },
       { id: 'daily', navn: 'Daily-streak', v: function (s) { return s.ds; }, f: function (v) { return H.tal(v) + ' dage'; } }
     ] }
   ];

@@ -69,7 +69,7 @@
       stat('Røvet for', '$' + H.tal(s.tp)) +
       stat('Spassermine-besøg', H.tal(s.st)) + '</div>';
     html += '<div class="kort sp-gruppe"><h3>Aktivitet</h3>' +
-      stat('Spilletid', H.tid(s.ot), plads(alle, s, function (x) { return x.ot; })) +
+      '<div id="sp-spilletid"></div>' +
       stat('Daily-streak', H.tal(s.ds) + ' dage', plads(alle, s, function (x) { return x.ds; })) + '</div>';
     if (team) {
       html += '<div class="kort sp-gruppe"><h3>Team ' + H.esc(team.n) + '</h3>' +
@@ -89,6 +89,14 @@
     });
     html += '</div>';
     boks.innerHTML = html;
+    // Spilletid er privat: kun du selv (logget ind) eller staff kan se den
+    var mig = H.login();
+    var felt = document.getElementById('sp-spilletid');
+    if (felt && mig && (mig.rolle !== 'spiller' || mig.navn.toLowerCase() === s.n.toLowerCase())) {
+      H.api('spilletid?navn=' + encodeURIComponent(s.n)).then(function (j) {
+        felt.innerHTML = stat('Spilletid', H.tid(j.ot)) + '<div class="daempet" style="font-size:12px;padding-top:4px">Kun du' + (mig.rolle !== 'spiller' ? ' og staff' : '') + ' kan se dette.</div>';
+      }).catch(function () {});
+    }
   }
 
   Promise.all([

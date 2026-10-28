@@ -62,6 +62,23 @@ export async function rolleFor(navn) {
 }
 
 // Returnerer den indloggede bruger (med rolle tjekket igen) eller null
+// Hvem er logget ind (spillere OG staff). Staff får deres rolle tjekket igen.
+export async function hvemErLoggetInd(req) {
+  const h = req.headers.get('authorization') || '';
+  const token = h.startsWith('Bearer ') ? h.slice(7) : '';
+  const [data, sig] = token.split('.');
+  if (!data || !sig) return null;
+  let rigtig;
+  try { rigtig = signer(data); } catch { return null; }
+  if (sig.length !== rigtig.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(rigtig))) return null;
+  let p;
+  try { p = JSON.parse(Buffer.from(data, 'base64url').toString()); } catch { return null; }
+  if (!p || p.udloeb < Date.now()) return null;
+  const staff = await hvemErDet(req);
+  if (staff) return staff;
+  return p.kilde === 'sa' ? { ...p, rolle: 'spiller' } : null;
+}
+
 export async function hvemErDet(req) {
   const h = req.headers.get('authorization') || '';
   const token = h.startsWith('Bearer ') ? h.slice(7) : '';
