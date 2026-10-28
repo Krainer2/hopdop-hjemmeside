@@ -28,7 +28,16 @@
     '.hds > div{width:100%;height:100%;animation:hdsSvaev var(--t) ease-in-out infinite;animation-delay:var(--d)}',
     '.hds:hover{filter:drop-shadow(0 0 18px rgba(255,140,60,.7)) brightness(1.1)}',
     '.hds.ramt{pointer-events:none;animation:hdsRamt .35s ease-in forwards}',
-    '@media (prefers-reduced-motion: reduce){.hds > div{animation:none}.hds,.hds.ramt{animation-duration:.01s}}'
+    '.hds-haand{position:absolute;right:20px;bottom:24px;z-index:3;width:44px;height:44px;padding:0;border:2px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(6,10,8,.55);cursor:pointer;opacity:.75;transition:opacity .2s,transform .15s,box-shadow .2s;backdrop-filter:blur(4px)}',
+    '.hds-haand:hover{opacity:1;transform:translateY(-2px)}',
+    '.hds-haand:focus-visible{outline:2px solid #4ADE80;outline-offset:2px;opacity:1}',
+    '.hds-haand[aria-pressed="true"]{box-shadow:0 0 14px rgba(74,222,128,.45)}',
+    '.hds-haand[aria-pressed="false"]{box-shadow:0 0 14px rgba(239,68,68,.4)}',
+    '.hds-haand svg{display:block;width:100%;height:100%}',
+    '.hds-haand .arm{transition:transform .25s cubic-bezier(.3,1.6,.5,1);transform-origin:8px 11px}',
+    '.hds-haand[aria-pressed="false"] .arm{transform:rotate(-38deg)}',
+    '.hds-haand[aria-pressed="true"] .arm{transform:rotate(38deg)}',
+    '@media (prefers-reduced-motion: reduce){.hds > div{animation:none}.hds,.hds.ramt{animation-duration:.01s}.hds-haand .arm{transition:none}}'
   ].join('\n');
   document.head.appendChild(css);
 
@@ -79,7 +88,7 @@
   // Find et ledigt sted i toppen, som ikke dækker tekst, knapper eller logo
   function optaget() {
     var h = hero.getBoundingClientRect();
-    var sel = '#top h1, #top p, #top a, #top button, #top .hd-svaev, #top [data-tekst="hero.badge"], #top label, #top input';
+    var sel = '#top h1, #top p, #top a, #top button, #top .hd-svaev, #top .hds-haand, #top [data-tekst="hero.badge"], #top label, #top input';
     return Array.prototype.map.call(hero.querySelectorAll(sel), function (e) {
       var r = e.getBoundingClientRect();
       return { x1: r.left - h.left - 24, y1: r.top - h.top - 24, x2: r.right - h.left + 24, y2: r.bottom - h.top + 24 };
@@ -106,6 +115,7 @@
     });
   }
   function spawn(s) {
+    if (s.slukket || !taendt) return;
     s.str = 52 + Math.round(Math.random() * 30);
     var pos = nytSted(s.str, placering(s));
     if (!pos) { s.pos = null; setTimeout(function () { spawn(s); }, 2000); return; }
@@ -129,9 +139,38 @@
     lag.appendChild(el);
     s.el = el;
   }
+  var taendt = true;
+  try { taendt = localStorage.getItem('hopdop-skiver') !== 'fra'; } catch (e) {}
   function start() {
+    if (!taendt) return;
     for (var i = 0; i < antal; i++) { var s = {}; skiver.push(s); spawn(s); }
   }
+  function stop() {
+    skiver.forEach(function (s) { s.slukket = true; if (s.el) s.el.remove(); s.pos = null; });
+    skiver = [];
+  }
+
+  // Lille Minecraft-håndtag til at slå skiverne til og fra (grøn = til, rød = fra)
+  var haand = document.createElement('button');
+  haand.type = 'button';
+  haand.className = 'hds-haand';
+  haand.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true" style="shape-rendering:crispEdges">' +
+    '<rect x="3" y="11" width="10" height="4" fill="#5A5D66"/><rect x="3" y="11" width="10" height="1" fill="#7A7E88"/><rect x="4" y="13" width="2" height="1" fill="#44474F"/><rect x="10" y="12" width="2" height="1" fill="#44474F"/>' +
+    '<g class="arm"><rect x="7" y="3" width="2" height="8" fill="#6B4423"/><rect x="7" y="3" width="1" height="8" fill="#8A5A30"/><rect class="knop" x="6" y="1" width="4" height="3" fill="#4ADE80"/></g></svg>';
+  function opdaterHaand() {
+    haand.setAttribute('aria-pressed', taendt ? 'true' : 'false');
+    haand.setAttribute('aria-label', taendt ? 'Slå skydeskiver fra' : 'Slå skydeskiver til');
+    haand.title = taendt ? 'Skydeskiver: til' : 'Skydeskiver: fra';
+    haand.querySelector('.knop').setAttribute('fill', taendt ? '#4ADE80' : '#EF4444');
+  }
+  haand.addEventListener('click', function () {
+    taendt = !taendt;
+    try { localStorage.setItem('hopdop-skiver', taendt ? 'til' : 'fra'); } catch (e) {}
+    opdaterHaand();
+    if (taendt) start(); else stop();
+  });
+  opdaterHaand();
+  hero.appendChild(haand);
   // Vent til skrift og logo har fundet deres plads
   if (document.readyState === 'complete') setTimeout(start, 600);
   else window.addEventListener('load', function () { setTimeout(start, 600); });
@@ -141,6 +180,7 @@
   window.addEventListener('resize', function () {
     clearTimeout(t);
     t = setTimeout(function () {
+      if (!taendt) return;
       skiver.forEach(function (s) { if (s.el) s.el.remove(); s.pos = null; });
       skiver.forEach(spawn);
     }, 400);
