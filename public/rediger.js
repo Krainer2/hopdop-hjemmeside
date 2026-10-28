@@ -46,6 +46,7 @@
   stil.textContent =
     '#hd-rbar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:50;display:flex;flex-wrap:wrap;gap:8px;align-items:center;' +
     'background:#0B120E;border:2px solid #FACC15;border-radius:12px;padding:10px 12px;box-shadow:0 18px 40px rgba(0,0,0,.6);font-family:Inter,sans-serif;color:#F0FDF4;max-width:calc(100% - 32px);box-sizing:border-box}' +
+    '#hd-rbar[hidden],#hd-rknap[hidden]{display:none !important}' +
     '#hd-rbar button{min-height:44px;padding:10px 14px;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;border:2px solid #24402F;background:#0F1813;color:#DCFCE7}' +
     '#hd-rbar button.gem{background:#4ADE80;border-color:#4ADE80;color:#052E16}' +
     '#hd-rbar .info{font-size:14px;padding:0 6px}' +
