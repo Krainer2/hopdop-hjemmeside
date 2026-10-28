@@ -85,6 +85,7 @@
         [o.webNoegleKlar, 'WEB_NOEGLE er sat i Netlify', 'Mangler: sæt WEB_NOEGLE i Netlify og den samme nøgle i WebSync.sk'],
         [!!s, 'Serveren har sendt data (WebSync.sk virker)', 'Serveren har ikke sendt data endnu: læg WebSync.sk på serveren og skriv /websync'],
         [s && !gammel, 'Data er friske (under 15 minutter gamle)', 'Data er over 15 minutter gamle: tjek at serveren kører, og at WebSync.sk er loadet'],
+        o.sidsteForsoeg ? [o.sidsteForsoeg.status === 200, 'Seneste forsøg fra serveren lykkedes (' + H.siden(o.sidsteForsoeg.tid) + ')', 'Seneste forsøg fra serveren fejlede (' + H.siden(o.sidsteForsoeg.tid) + '): ' + o.sidsteForsoeg.besked] : [false, '', 'Serveren har ikke prøvet at sende noget endnu'],
         [o.saKlar, 'Login med SuperAwesome er sat op', 'Mangler: SA_CLIENT_ID og SA_CLIENT_SECRET i Netlify']
       ];
       el('ad-tjek').innerHTML = tjek.map(function (t) {
