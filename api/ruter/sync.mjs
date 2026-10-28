@@ -37,7 +37,7 @@ export default async (req) => {
   if (req.method !== 'POST') return json({ fejl: 'Kun POST' }, 405);
   const noegle = env('WEB_NOEGLE');
   const h = req.headers.get('authorization') || '';
-  if (noegle.length < 16) { await forsoeg(req, 500, 'WEB_NOEGLE er ikke sat op i Netlify'); return json({ fejl: 'WEB_NOEGLE er ikke sat op (mindst 16 tegn)' }, 500); }
+  if (noegle.length < 16) { await forsoeg(req, 500, 'WEB_NOEGLE er ikke sat op i Cloudflare'); return json({ fejl: 'WEB_NOEGLE er ikke sat op (mindst 16 tegn)' }, 500); }
   const sendt = h.replace(/^Bearer\s+/i, '').trim();
   if (!(await ensNoegle(sendt, noegle))) {
     await forsoeg(req, 401, h ? 'Forkert nøgle' : 'Ingen nøgle sendt', { sendtLaengde: sendt.length, forventetLaengde: noegle.length, sendtStart: sendt.slice(0, 2) });
@@ -45,6 +45,8 @@ export default async (req) => {
   }
 
   const raa = await req.text();
+  // Gem at vi har modtaget noget, før det tunge arbejde - så kan man se det på /api/sync, selv hvis resten fejler
+  await forsoeg(req, 102, 'Modtaget - behandler...', { bytes: raa.length });
   if (raa.length > 5_000_000) { await forsoeg(req, 413, 'For meget data', { bytes: raa.length }); return json({ fejl: 'For meget data' }, 413); }
   let d;
   try { d = JSON.parse(raa); } catch (e) {
@@ -81,9 +83,10 @@ export default async (req) => {
     }
     spillere.push(p);
     for (const linje of Array.isArray(s.h) ? s.h : []) {
-      const post = await laesLinje(s.u, s.n, linje, nu);
-      if (post && !poster[post.id]) { poster[post.id] = post; nyeStraffe++; }
-      else if (post && poster[post.id].n !== s.n) poster[post.id].n = s.n;
+      const post = laesLinje(s.u, s.n, linje, nu, poster);
+      if (!post) continue;
+      if (post.kendt) { if (poster[post.id].n !== s.n) poster[post.id].n = s.n; }
+      else { poster[post.id] = post; nyeStraffe++; }
     }
   }
 

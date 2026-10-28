@@ -2,9 +2,10 @@
 // Kopierer: staff-listen, redigerede tekster, banneret og straf-historikken.
 import { hent, gem, logHandling } from '../lib/data.mjs';
 import { hvemErDet, json } from '../lib/auth.mjs';
+import { postId } from '../lib/straffe.mjs';
 
 async function hentJson(url) {
-  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(20000) });
   if (!r.ok) throw new Error(url + ' svarede ' + r.status);
   return r.json();
 }
@@ -52,9 +53,11 @@ export default async (req) => {
     const alle = gammel.poster || {};
     let nye = 0;
     for (const p of poster || []) {
-      if (!p || !p.id || String(p.id).startsWith('aktiv-') || alle[p.id]) continue;
+      if (!p || !p.id || !p.u || String(p.id).startsWith('aktiv-')) continue;
       const { aktiv, til, ...ren } = p;
-      alle[p.id] = ren;
+      ren.id = postId(ren); // nyt id-format, så serveren ikke laver dubletter
+      if (alle[ren.id]) continue;
+      alle[ren.id] = ren;
       nye++;
     }
     let liste = Object.values(alle).sort((a, c) => c.tid - a.tid).slice(0, 3000);

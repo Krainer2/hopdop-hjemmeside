@@ -7,7 +7,7 @@
 
   // ---------- Login ----------
   var FEJL = {
-    'sa-ikke-sat-op': 'Login med SuperAwesome er ikke sat op endnu (SA_CLIENT_ID og SA_CLIENT_SECRET mangler i Netlify).',
+    'sa-ikke-sat-op': 'Login med SuperAwesome er ikke sat op endnu (SA_CLIENT_ID og SA_CLIENT_SECRET mangler i Cloudflare).',
     'afvist': 'Du afviste login på SuperAwesome.',
     'login-udloebet': 'Login tog for lang tid. Prøv igen.',
     'ugyldig-state': 'Noget gik galt med login. Prøv igen.',
@@ -36,7 +36,7 @@
     knap.disabled = true;
     H.api('login', { method: 'POST', auth: false, body: { brugernavn: el('ad-bruger').value.trim(), kode: el('ad-kode').value } })
       .then(function (j) { try { localStorage.setItem('hopdop-login', JSON.stringify(j)); } catch (er) {} start(); })
-      .catch(function (err) { el('ad-login-fejl').textContent = err.status === 404 ? 'Login virker kun, når siden kører på Netlify fra GitHub.' : err.message; })
+      .catch(function (err) { el('ad-login-fejl').textContent = err.status === 404 ? 'Login virker kun, når siden kører på Cloudflare fra GitHub.' : err.message; })
       .then(function () { knap.disabled = false; });
   });
   el('ad-logud').addEventListener('click', function () {
@@ -82,11 +82,11 @@
         return '<div class="kort"' + (t[3] ? ' style="border-color:var(--k-4a3610, #4A3610)"' : '') + '><span class="daempet">' + t[0] + '</span><b>' + H.esc(t[1]) + '</b><span class="daempet" style="font-size:13px">' + H.esc(t[2]) + '</span></div>';
       }).join('');
       var tjek = [
-        [o.webNoegleKlar, 'WEB_NOEGLE er sat i Netlify', 'Mangler: sæt WEB_NOEGLE i Netlify og den samme nøgle i WebSync.sk'],
+        [o.webNoegleKlar, 'WEB_NOEGLE er sat i Cloudflare', 'Mangler: sæt WEB_NOEGLE i Cloudflare og den samme nøgle i WebSync.sk'],
         [!!s, 'Serveren har sendt data (WebSync.sk virker)', 'Serveren har ikke sendt data endnu: læg WebSync.sk på serveren og skriv /websync'],
         [s && !gammel, 'Data er friske (under 15 minutter gamle)', 'Data er over 15 minutter gamle: tjek at serveren kører, og at WebSync.sk er loadet'],
         o.sidsteForsoeg ? [o.sidsteForsoeg.status === 200, 'Seneste forsøg fra serveren lykkedes (' + H.siden(o.sidsteForsoeg.tid) + ')', 'Seneste forsøg fra serveren fejlede (' + H.siden(o.sidsteForsoeg.tid) + '): ' + o.sidsteForsoeg.besked] : [false, '', 'Serveren har ikke prøvet at sende noget endnu'],
-        [o.saKlar, 'Login med SuperAwesome er sat op', 'Mangler: SA_CLIENT_ID og SA_CLIENT_SECRET i Netlify']
+        [o.saKlar, 'Login med SuperAwesome er sat op', 'Mangler: SA_CLIENT_ID og SA_CLIENT_SECRET i Cloudflare']
       ];
       el('ad-tjek').innerHTML = tjek.map(function (t) {
         return '<li><span class="badge ' + (t[0] ? '' : 'roed') + '">' + (t[0] ? 'OK' : 'Mangler') + '</span><span>' + H.esc(t[0] ? t[1] : t[2]) + '</span></li>';

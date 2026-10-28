@@ -1,19 +1,19 @@
 // HOPDOP - læser Straf.sk-historik om til pæne poster. Lavet af Krainer2
-import { sha1Hex } from './miljoe.mjs';
 
 const FARVER = /[&§][0-9a-fk-or]/gi;
 export const ren = (t) => String(t ?? '').replace(FARVER, '').replace(/\s+/g, ' ').trim();
 
-// Dansk tid (Europe/Copenhagen) -> UTC millisekunder
+// Dansk tid (Europe/Copenhagen) -> UTC millisekunder.
+// Regnes med EU's sommertidsregel (sidste søndag i marts/oktober kl. 01:00 UTC) - meget hurtigere end Intl.
+function sidsteSoendag(aar, md) { // md: 0-baseret
+  const sidste = new Date(Date.UTC(aar, md + 1, 0));
+  return Date.UTC(aar, md, sidste.getUTCDate() - sidste.getUTCDay(), 1, 0, 0);
+}
 function kbhTilUtc(aar, md, dag, t, m, s) {
-  const gaet = Date.UTC(aar, md - 1, dag, t, m, s);
-  const fmt = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Europe/Copenhagen', hourCycle: 'h23',
-    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'
-  });
-  const d = Object.fromEntries(fmt.formatToParts(new Date(gaet)).map((x) => [x.type, x.value]));
-  const somKbh = Date.UTC(+d.year, +d.month - 1, +d.day, +d.hour, +d.minute, +d.second);
-  return gaet - (somKbh - gaet);
+  const lokal = Date.UTC(aar, md - 1, dag, t, m, s);
+  const somVinter = lokal - 3600000;
+  const sommer = somVinter >= sidsteSoendag(aar, 2) && somVinter < sidsteSoendag(aar, 9);
+  return lokal - (sommer ? 7200000 : 3600000);
 }
 
 // Skript skriver %now% forskelligt alt efter opsætning. Vi prøver de almindelige formater.
@@ -39,13 +39,32 @@ export function laesDato(raa) {
 }
 
 // "now | BAN | grund | 7 dage | strike 2 | af Krainer2"  /  "now | UNBAN | af Krainer2"
-export async function laesLinje(uuid, navn, linje, nu) {
+// Hurtig hash (cyrb53) - Cloudflare giver kun 10 ms CPU pr. kald, så ingen tung kryptografi her
+function hash(t) {
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < t.length; i++) {
+    const c = t.charCodeAt(i);
+    h1 = Math.imul(h1 ^ c, 2654435761);
+    h2 = Math.imul(h2 ^ c, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (h2 >>> 0).toString(16).padStart(8, '0') + (h1 >>> 0).toString(16).padStart(8, '0');
+}
+
+// Id ud fra indholdet - samme straf giver altid samme id (også ved import fra den gamle side)
+export function postId(p) {
+  return hash([p.u, p.type, p.naar, p.grund || '', p.varighed || '', p.strike || '', p.af || ''].join('|'));
+}
+
+// "now | BAN | grund | 7 dage | strike 2 | af Krainer2"  /  "now | UNBAN | af Krainer2"
+// kendte: (valgfri) objekt med id'er vi allerede har - så springes datolæsningen over
+export function laesLinje(uuid, navn, linje, nu, kendte) {
   const dele = String(linje).split(' | ');
   if (dele.length < 2) return null;
   const type = ren(dele[1]).toUpperCase();
   if (!['BAN', 'MUTE', 'KICK', 'UNBAN', 'UNMUTE'].includes(type)) return null;
-  const id = (await sha1Hex(uuid + '|' + linje)).slice(0, 16);
-  const post = { id, u: uuid, n: navn, type, naar: ren(dele[0]), tid: laesDato(dele[0]) || nu, gaettet: !laesDato(dele[0]) };
+  const post = { id: '', u: uuid, n: navn, type, naar: ren(dele[0]) };
   if (type === 'UNBAN' || type === 'UNMUTE') {
     post.af = ren(dele[2] || '').replace(/^af\s+/i, '');
   } else {
@@ -54,5 +73,10 @@ export async function laesLinje(uuid, navn, linje, nu) {
     post.strike = ren(dele[4] || '').replace(/^strike\s+/i, '');
     post.af = ren(dele[5] || '').replace(/^af\s+/i, '');
   }
+  post.id = postId(post);
+  if (kendte && kendte[post.id]) return { id: post.id, kendt: true };
+  const tid = laesDato(dele[0]);
+  post.tid = tid || nu;
+  post.gaettet = !tid;
   return post;
 }
