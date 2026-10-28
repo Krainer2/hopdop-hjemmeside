@@ -84,6 +84,12 @@ function webSpiller(u: text) :: text:
 	if {_n} is not set:
 		set {_n} to {ld::name::%{_u}%}
 	if {_n} is not set:
+		set {_n} to {web::navn::%{_u}%}
+	if {_n} is not set:
+		set {_n} to {fs::navn::%{_u}%}
+	if {_n} is not set:
+		set {_n} to {vp::navn::%{_u}%}
+	if {_n} is not set:
 		return ""
 	set {_n} to webEsc("%{_n}%")
 	set {_k} to {lb::kills::%{_u}%} ? 0
@@ -203,12 +209,24 @@ function webSync():
 			set {_on} to """%{_pn}%"""
 		else:
 			set {_on} to "%{_on}%,""%{_pn}%"""
-	# Alle spillere vi kender (fra Straf, Leaderboard og dødstælling)
+	# Alle spillere vi kender (fra Straf, Leaderboard, dødstælling, fiskeri, vagt, tyveri, spassermine og daily)
 	loop {straf::name::*}:
 		set {_kendt::%loop-index%} to true
 	loop {lb::name::*}:
 		set {_kendt::%loop-index%} to true
 	loop {ld::name::*}:
+		set {_kendt::%loop-index%} to true
+	loop {web::navn::*}:
+		set {_kendt::%loop-index%} to true
+	loop {fs::fangst::*}:
+		set {_kendt::%loop-index%} to true
+	loop {vp::stats::*}:
+		set {_kendt::%loop-index%} to true
+	loop {tyv::stat::roev::*}:
+		set {_kendt::%loop-index%} to true
+	loop {sm::stats::times::*}:
+		set {_kendt::%loop-index%} to true
+	loop {drs::streak::*}:
 		set {_kendt::%loop-index%} to true
 	set {_ps} to ""
 	loop {_kendt::*}:
@@ -236,6 +254,11 @@ every 5 minutes:
 
 on quit:
 	webOntime(player)
+
+# Husk navnet på alle der joiner, så de kommer med på hjemmesiden (også hvis de kun fisker/røver)
+on join:
+	set {_u} to uuid of player
+	set {web::navn::%{_u}%} to "%player%"
 
 command /websync:
 	permission: hopdop.websync
