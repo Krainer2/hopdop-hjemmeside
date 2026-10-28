@@ -10,15 +10,17 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#070B09">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
 .an-typer{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .an-type{text-align:left;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;gap:8px;transition:transform .2s,border-color .2s}
-.an-type:hover{transform:translateY(-4px);border-color:#2F7A4B}
+.an-type:hover{transform:translateY(-4px);border-color:var(--k-2f7a4b, #2F7A4B)}
 .an-type[aria-pressed="true"]{border-color:var(--groen)}
 .an-type b{font-family:var(--pixel);font-size:22px;color:var(--overskrift)}
-.an-krav{color:#FCA5A5}
+.an-krav{color:var(--t-fca5a5, #FCA5A5)}
 .an-ja{display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer}
 .an-ja input{width:22px;height:22px;min-height:0;accent-color:#4ADE80}
 .an-kode{font-family:var(--pixel);font-size:34px;color:var(--gul);letter-spacing:3px}
@@ -37,7 +39,7 @@
 <p class="daempet" id="an-tekst" style="margin:8px 0 18px"></p>
 <div id="an-felter" class="gitter"></div>
 <div class="sr" aria-hidden="true"><label for="an-hjemmeside">Lad dette felt være tomt</label><input id="an-hjemmeside" tabindex="-1" autocomplete="off"></div>
-<p id="an-fejl" role="alert" style="color:#FCA5A5;margin:14px 0 0;min-height:22px"></p>
+<p id="an-fejl" role="alert" style="color:var(--t-fca5a5, #FCA5A5);margin:14px 0 0;min-height:22px"></p>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px"><button class="knap groen" type="submit" id="an-send">Send ansøgning</button><button class="knap" type="button" id="an-tilbage">Vælg en anden</button></div>
 </form>
 <div id="an-kvit" class="kort skjult" style="margin-top:20px" role="status"></div>
@@ -55,5 +57,6 @@
 <script src="faelles.js"></script>
 <script src="ansog-skema.js"></script>
 <script src="ansog.js"></script>
+<script src="top.js"></script>
 </body>
 </html>

@@ -127,7 +127,7 @@
       if (soeg) li.className = 'fremhaev';
       var a = document.createElement(n.link ? 'a' : 'div');
       if (n.link) a.href = n.link;
-      else a.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid #18251D';
+      else a.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid var(--k-18251d, #18251D)';
       a.innerHTML = '<span class="nr">' + r.plads + '</span><img class="hoved" alt="" loading="lazy" src="' + H.hoved(n.hoved) + '"><span class="navn"></span>' +
         (!t.team && online[r.x.n.toLowerCase()] ? '<span class="on" title="Online"></span>' : '') + '<span class="v"></span>';
       a.querySelector('.navn').textContent = n.navn + (n.under ? ' · ' + n.under : '');

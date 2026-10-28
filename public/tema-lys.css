@@ -1,0 +1,73 @@
+/* HOPDOP - lyst tema (genereret). Lavet af Krainer2 */
+:root[data-tema="lyst"]{
+  --b-04070a:#F6F7F9;
+  --b-05070c:#F5F6F8;
+  --b-05080a:#F6F7F8;
+  --b-070b09:#F5F7F6;
+  --b-0a120d:#F2F5F3;
+  --b-0c2235:#E2EAF0;
+  --b-0d1611:#F0F3F1;
+  --b-0f1813:#EFF2F0;
+  --b-101c15:#EDF1EF;
+  --b-111a15:#EEF1EF;
+  --b-12261a:#E8EFEB;
+  --b-13211a:#EAEFED;
+  --b-13221a:#EAEFEC;
+  --b-16301f:#E4ECE7;
+  --b-1c1f24:#E8E9EB;
+  --b-24402f:#DBE4DF;
+  --b-2a1e05:#F5F1E8;
+  --b-4-7-5-0_94:rgba(247,249,248,0.94);
+  --b-4-7-5-_94:rgba(247,249,248,.94);
+  --b-4b5563:#C8CBCF;
+  --b-5-8-6-_82:rgba(247,248,247,.82);
+  --b-5-8-6-_94:rgba(247,248,247,.94);
+  --b-6-10-8-0_86:rgba(246,248,247,0.86);
+  --b-6-10-8-_88:rgba(246,248,247,.88);
+  --b-8-13-10-0_78:rgba(244,247,245,0.78);
+  --b-8-13-10-0_85:rgba(244,247,245,0.85);
+  --k-12261a:#C9D8CF;
+  --k-16354f:#B9C8D5;
+  --k-18251d:#CBD4CE;
+  --k-1f3127:#C6D1CB;
+  --k-24402f:#C0CEC6;
+  --k-2d323a:#C4C6CA;
+  --k-2f7a4b:#ACC7B6;
+  --k-3a2e07:#DFD7BD;
+  --k-4a3610:#D9CEBA;
+  --k-5b2323:#CEB6B6;
+  --k-a16207:#D6BF9D;
+  --s-06100a:#CFDFD5;
+  --s-0a120d:#D0DBD4;
+  --s-2f7a4b:#ACC7B6;
+  --t-4ade80:#1DB956;
+  --t-86efac:#10933F;
+  --t-9db3a5:#577160;
+  --t-a9bfb1:#4A6554;
+  --t-b5c9bc:#405949;
+  --t-c9dcd0:#2C4636;
+  --t-d1d5db:#2F343D;
+  --t-dcfce7:#043C17;
+  --t-e6f2ea:#152A1C;
+  --t-f0fdf4:#052E12;
+  --t-facc15:#D6AB00;
+  --t-fca5a5:#750101;
+  --t-fcd34d:#CE9E00;
+  --t-fdba74:#A75500;
+  --t-fff:#1A1A1A;
+  --t-ffffff:#1A1A1A;
+}
+/* Fælles tokens på undersiderne */
+:root[data-tema="lyst"]{--bg:#F3F7F4;--kort:#FFFFFF;--kort2:#F6FAF7;--kant:#D5E3DA;--kant2:#C3D6CA;--tekst:#14251B;--daempet:#4B6355;--svag:#5F7769;--overskrift:#0B1A11;--groen-bg:#DCFCE7;--gul:#A16207;--roed:#DC2626;--roed-bg:#FEE2E2;--blaa:#0369A1}
+:root[data-tema="lyst"] body{background:#F3F7F4}
+:root[data-tema="lyst"] body::after{background:linear-gradient(180deg,rgba(243,247,244,.86),rgba(243,247,244,.95) 40%,#F3F7F4)}
+:root[data-tema="lyst"] .knap.groen,:root[data-tema="lyst"] .chip[aria-pressed="true"],:root[data-tema="lyst"] .chip[aria-selected="true"]{background:#4ADE80;border-color:#22C55E;color:#052E16}
+:root[data-tema="lyst"] .sider button[aria-current="page"]{background:#4ADE80;border-color:#22C55E;color:#052E16}
+:root[data-tema="lyst"] input,:root[data-tema="lyst"] select,:root[data-tema="lyst"] textarea{background:#FFFFFF;color:#14251B}
+/* Forsiden: fast baggrund bliver lys, når man scroller */
+:root[data-tema="lyst"] #bg-moerk{background:#F3F7F4 !important}
+:root[data-tema="lyst"] .hd-blad{opacity:.6}
+/* S-stien mellem features */
+:root[data-tema="lyst"] .hd-sti-svg path:first-child{stroke:#D3E4D9}
+:root[data-tema="lyst"] .hd-sti-svg path.hd-sti{stroke:#16A34A}
+:root[data-tema="lyst"]{--t-facc15:#A16207;--t-fcd34d:#92400E}

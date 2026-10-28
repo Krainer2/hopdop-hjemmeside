@@ -10,15 +10,17 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#070B09">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
 .ad-login{min-height:70vh;display:flex;align-items:center;justify-content:center;padding:40px 0}
 .ad-panel{display:flex;gap:24px;flex-wrap:wrap;padding-top:32px;align-items:flex-start}
 .ad-menu{flex:1 1 220px;max-width:260px;display:flex;flex-direction:column;gap:6px;position:sticky;top:90px}
-.ad-menu button{min-height:44px;text-align:left;padding:10px 14px;border-radius:10px;border:2px solid transparent;background:transparent;color:#C9DCD0;font:600 15px var(--brod);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.ad-menu button:hover{background:#13211A}
-.ad-menu button[aria-current="page"]{background:var(--groen-bg);border-color:var(--kant2);color:#86EFAC}
+.ad-menu button{min-height:44px;text-align:left;padding:10px 14px;border-radius:10px;border:2px solid transparent;background:transparent;color:var(--t-c9dcd0, #C9DCD0);font:600 15px var(--brod);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.ad-menu button:hover{background:var(--b-13211a, #13211A)}
+.ad-menu button[aria-current="page"]{background:var(--groen-bg);border-color:var(--kant2);color:var(--t-86efac, #86EFAC)}
 .ad-menu .ad-logud{margin-top:12px;border-color:var(--kant2)}
 .ad-mig{display:flex;gap:12px;align-items:center;padding:12px;margin-bottom:8px;background:var(--kort);border:2px solid var(--kant);border-radius:12px}
 .ad-indhold{flex:999 1 600px;min-width:0}
@@ -30,12 +32,12 @@
 .ad-an-liste{flex:1 1 300px;padding:8px;max-height:70vh;overflow:auto}
 .ad-an-detalje{flex:2 1 400px;min-width:0}
 .ad-an-raekke{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:12px;border-radius:10px;border:2px solid transparent;background:transparent;color:inherit;font:inherit;cursor:pointer}
-.ad-an-raekke:hover{background:#13211A}
-.ad-an-raekke[aria-current="true"]{border-color:var(--groen);background:#12261A}
-.ad-svar{margin:0 0 14px}.ad-svar dt{color:#86EFAC;font-size:13px;font-weight:600}.ad-svar dd{margin:4px 0 0;white-space:pre-wrap;word-break:break-word}
+.ad-an-raekke:hover{background:var(--b-13211a, #13211A)}
+.ad-an-raekke[aria-current="true"]{border-color:var(--groen);background:var(--b-12261a, #12261A)}
+.ad-svar{margin:0 0 14px}.ad-svar dt{color:var(--t-86efac, #86EFAC);font-size:13px;font-weight:600}.ad-svar dd{margin:4px 0 0;white-space:pre-wrap;word-break:break-word}
 .ad-st-raekker{display:flex;flex-direction:column;gap:10px}
 .ad-st-raekke{display:grid;grid-template-columns:40px 1.2fr 1fr 1.2fr auto;gap:10px;align-items:center}
-.ad-log{list-style:none;margin:0;padding:0}.ad-log li{padding:10px 0;border-bottom:1px solid #18251D}
+.ad-log{list-style:none;margin:0;padding:0}.ad-log li{padding:10px 0;border-bottom:1px solid var(--k-18251d, #18251D)}
 @media (max-width:760px){.ad-menu{max-width:none;position:static;flex-direction:row;flex-wrap:wrap}.ad-mig{width:100%}.ad-st-raekke{grid-template-columns:32px 1fr 1fr;}.ad-st-raekke .titel{grid-column:2/4}}
 </style>
 </head>
@@ -46,8 +48,8 @@
 <div class="kort" style="max-width:420px;width:100%">
 <h1 style="font-size:32px">Staff login</h1>
 <p class="daempet" style="margin:8px 0 20px">Log ind med din Minecraft-konto via SuperAwesome. Du skal stå på staff-listen som Mod, Admin eller Ejer.</p>
-<a class="knap groen" href="/api/sa/start" style="width:100%">Log ind med SuperAwesome</a>
-<p id="ad-login-fejl" role="alert" style="color:#FCA5A5;margin:14px 0 0;min-height:20px"></p>
+<a class="knap groen" href="/api/sa/start?til=%2Fadmin.html" style="width:100%">Log ind med SuperAwesome</a>
+<p id="ad-login-fejl" role="alert" style="color:var(--t-fca5a5, #FCA5A5);margin:14px 0 0;min-height:20px"></p>
 <details style="margin-top:14px"><summary style="cursor:pointer;color:var(--daempet)">Log ind med kode i stedet</summary>
 <form id="ad-kodeform" style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
 <div class="felt"><label for="ad-bruger">Brugernavn</label><input id="ad-bruger" autocomplete="username" required></div>
@@ -64,6 +66,7 @@
 <button type="button" data-fane="ansog">Ansøgninger <span class="badge gul skjult" id="ad-nye"></span></button>
 <button type="button" data-fane="staff">Staff-liste</button>
 <button type="button" data-fane="tekster">Hjemmesidens tekster</button>
+<button type="button" data-fane="banner">Banner</button>
 <button type="button" data-fane="log">Log</button>
 <button type="button" id="ad-logud" class="ad-logud">Log ud</button>
 </nav>
@@ -108,6 +111,22 @@
 </div>
 </div>
 
+<div data-indhold="banner" class="skjult">
+<h1>Banner</h1>
+<p class="daempet" style="margin:8px 0 18px">En bjælke helt øverst på alle sider, fx "Vi søger staff og vagter - Ansøg her!". Besøgende kan lukke den. Når du ændrer teksten, ser alle den igen.</p>
+<form id="ad-bn-form" class="kort" style="display:flex;flex-direction:column;gap:14px">
+<label style="display:flex;align-items:center;gap:10px;font-weight:600;cursor:pointer"><input type="checkbox" id="ad-bn-aktiv" style="width:22px;height:22px;min-height:0;accent-color:#4ADE80"> Vis banneret</label>
+<div class="felt"><label for="ad-bn-tekst">Tekst</label><input id="ad-bn-tekst" maxlength="200" placeholder="Vi søger både staff og vagter."></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+<div class="felt"><label for="ad-bn-linktekst">Link-tekst (valgfri)</label><input id="ad-bn-linktekst" maxlength="40" placeholder="Ansøg her!"></div>
+<div class="felt"><label for="ad-bn-link">Link (valgfri)</label><input id="ad-bn-link" maxlength="300" placeholder="ansog.html"></div>
+<div class="felt"><label for="ad-bn-farve">Farve</label><select id="ad-bn-farve"><option value="groen">Grøn</option><option value="gul">Gul</option><option value="roed">Rød</option><option value="blaa">Blå</option></select></div>
+</div>
+<div><span class="daempet" style="font-size:13px">Forhåndsvisning</span><div id="ad-bn-vis" style="margin-top:6px;border-radius:10px;overflow:hidden"></div></div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="knap groen" type="submit">Gem banner</button><span id="ad-bn-besked" role="status" class="daempet"></span></div>
+</form>
+</div>
+
 <div data-indhold="log" class="skjult">
 <h1>Log</h1>
 <p class="daempet" style="margin:8px 0 18px">Alt hvad staff har gjort på hjemmesiden.</p>
@@ -121,5 +140,6 @@
 <script src="faelles.js"></script>
 <script src="ansog-skema.js"></script>
 <script src="admin.js"></script>
+<script src="top.js"></script>
 </body>
 </html>

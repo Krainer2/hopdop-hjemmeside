@@ -10,20 +10,22 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#070B09">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
 .sp-soeg{display:flex;gap:10px;align-items:flex-end;max-width:560px}
 .sp-top{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
-.sp-top img{width:120px;height:120px;border-radius:12px;image-rendering:pixelated;background:#24402F}
+.sp-top img{width:120px;height:120px;border-radius:12px;image-rendering:pixelated;background:var(--b-24402f, #24402F)}
 .sp-top .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .sp-grupper{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:20px}
 .sp-gruppe h3{margin-bottom:12px}
-.sp-stat{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #18251D}
+.sp-stat{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--k-18251d, #18251D)}
 .sp-stat:last-child{border:0}
 .sp-stat b{color:var(--overskrift)}
-.sp-stat .plads{font-size:12px;color:#86EFAC;margin-left:6px}
-.sp-straf{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #18251D}
+.sp-stat .plads{font-size:12px;color:var(--t-86efac, #86EFAC);margin-left:6px}
+.sp-straf{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--k-18251d, #18251D)}
 </style>
 </head>
 <body data-side="spiller">
@@ -41,5 +43,6 @@
 <footer id="hd-bund"></footer>
 <script src="faelles.js"></script>
 <script src="spiller.js"></script>
+<script src="top.js"></script>
 </body>
 </html>

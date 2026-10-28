@@ -10,6 +10,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#070B09">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
@@ -22,18 +24,18 @@
 .lb-pod{background:var(--kort2);border:2px solid var(--kant);border-radius:12px;padding:16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;color:inherit}
 .lb-pod img{width:56px;height:56px;border-radius:8px;image-rendering:pixelated}
 .lb-pod .plads{font-family:var(--pixel);font-size:22px}
-.lb-pod.p1{order:2;border-color:#A16207;padding-top:24px}.lb-pod.p1 img{width:72px;height:72px}.lb-pod.p1 .plads{color:#FACC15}
-.lb-pod.p2{order:1}.lb-pod.p2 .plads{color:#D1D5DB}
-.lb-pod.p3{order:3}.lb-pod.p3 .plads{color:#FDBA74}
+.lb-pod.p1{order:2;border-color:var(--k-a16207, #A16207);padding-top:24px}.lb-pod.p1 img{width:72px;height:72px}.lb-pod.p1 .plads{color:var(--t-facc15, #FACC15)}
+.lb-pod.p2{order:1}.lb-pod.p2 .plads{color:var(--t-d1d5db, #D1D5DB)}
+.lb-pod.p3{order:3}.lb-pod.p3 .plads{color:var(--t-fdba74, #FDBA74)}
 .lb-pod b{font-size:15px;word-break:break-all}.lb-pod span.v{color:var(--daempet);font-size:14px}
 .lb-liste{list-style:none;margin:0;padding:0}
-.lb-liste li a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid #18251D;color:inherit;text-decoration:none;border-radius:8px}
-.lb-liste li a:hover{background:#13211A}
-.lb-liste .nr{width:40px;text-align:center;font-weight:700;color:#86EFAC;flex:none}
+.lb-liste li a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid var(--k-18251d, #18251D);color:inherit;text-decoration:none;border-radius:8px}
+.lb-liste li a:hover{background:var(--b-13211a, #13211A)}
+.lb-liste .nr{width:40px;text-align:center;font-weight:700;color:var(--t-86efac, #86EFAC);flex:none}
 .lb-liste .navn{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis}
-.lb-liste .v{margin-left:auto;color:#B5C9BC;font-weight:600;white-space:nowrap}
+.lb-liste .v{margin-left:auto;color:var(--t-b5c9bc, #B5C9BC);font-weight:600;white-space:nowrap}
 .lb-liste .on{width:8px;height:8px;border-radius:2px;background:var(--groen);flex:none}
-.lb-liste li.fremhaev a{background:#16301F;outline:2px solid var(--groen)}
+.lb-liste li.fremhaev a{background:var(--b-16301f, #16301F);outline:2px solid var(--groen)}
 .lb-online{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:420px;overflow:auto}
 .lb-online a{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
 @media (max-width:560px){.lb-podie{grid-template-columns:1fr}.lb-pod{order:0 !important}.lb-soeg input{width:100%}.lb-soeg{width:100%}}
@@ -65,5 +67,6 @@
 <footer id="hd-bund"></footer>
 <script src="faelles.js"></script>
 <script src="leaderboards.js"></script>
+<script src="top.js"></script>
 </body>
 </html>

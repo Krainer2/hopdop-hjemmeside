@@ -105,7 +105,7 @@
       '<nav class="hd-nav" aria-label="Hovedmenu">' + links.map(function (l) {
         return '<a href="' + l[0] + '"' + (l[2] === aktiv ? ' aria-current="page"' : '') + '>' + l[1] + '</a>';
       }).join('') + '</nav>' +
-      '<div class="hd-knapper"><a class="knap" href="admin.html">Admin</a><a class="knap blaa" href="' + H.DISCORD + '">Discord</a></div></div>';
+      '<div class="hd-knapper"><span data-hd-online></span><span data-hd-tema></span><span data-hd-konto></span><a class="knap blaa" href="' + H.DISCORD + '">Discord</a></div></div>';
   }
   var bund = document.getElementById('hd-bund');
   if (bund) {

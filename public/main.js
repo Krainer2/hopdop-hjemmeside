@@ -26,12 +26,13 @@
     venter = false;
     var t = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.7)));
     if (sloer) sloer.style.opacity = String(t);
-    if (moerk) moerk.style.opacity = String(t * 0.55);
+    if (moerk) moerk.style.opacity = String(t * (document.documentElement.getAttribute('data-tema') === 'lyst' ? 0.9 : 0.55));
   }
   window.addEventListener('scroll', function () {
     if (!venter) { venter = true; requestAnimationFrame(opdaterBaggrund); }
   }, { passive: true });
   opdaterBaggrund();
+  window.addEventListener('hdtema', opdaterBaggrund);
 
   // ---------- Live server-status ----------
   function saetStatus(online, tekst) {
@@ -90,8 +91,8 @@
   ];
   var tabs = document.getElementById('kit-tabs');
   var valgtKit = 'diamond';
-  var aktivKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid #4ADE80; background: #12261A; color: #F0FDF4; font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
-  var normalKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid #1F3127; background: #0F1813; color: #C9DCD0; font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
+  var aktivKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid #4ADE80; background: var(--b-12261a, #12261A); color: var(--t-f0fdf4, #F0FDF4); font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
+  var normalKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid var(--k-1f3127, #1F3127); background: var(--b-0f1813, #0F1813); color: var(--t-c9dcd0, #C9DCD0); font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
   function visKit(id) {
     valgtKit = id;
     var k = kits.filter(function (x) { return x.id === id; })[0] || kits[0];
@@ -146,17 +147,17 @@
       var har = !!stemt[i.id];
       var kort = document.createElement('div');
       kort.className = 'hd-kort';
-      kort.style.cssText = 'background: #0F1813; border: 2px solid #1F3127; border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 12px';
+      kort.style.cssText = 'background: var(--b-0f1813, #0F1813); border: 2px solid var(--k-1f3127, #1F3127); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 12px';
       var tag = document.createElement('span');
       tag.textContent = 'IDÉ';
-      tag.style.cssText = 'align-self: flex-start; font-family: ' + PIXEL + '; font-size: 13px; color: #FACC15; border: 2px solid #3A2E07; padding: 3px 8px; border-radius: 4px';
+      tag.style.cssText = 'align-self: flex-start; font-family: ' + PIXEL + '; font-size: 13px; color: var(--t-facc15, #FACC15); border: 2px solid var(--k-3a2e07, #3A2E07); padding: 3px 8px; border-radius: 4px';
       kort.appendChild(tag);
-      kort.appendChild(tekstEl('h3', 'ide.' + i.id + '.titel', i.titel, 'margin: 0; font-family: ' + PIXEL + '; font-weight: 700; font-size: 22px; color: #F0FDF4'));
-      kort.appendChild(tekstEl('p', 'ide.' + i.id + '.tekst', i.tekst, 'margin: 0; color: #C9DCD0; line-height: 1.65; flex: 1'));
+      kort.appendChild(tekstEl('h3', 'ide.' + i.id + '.titel', i.titel, 'margin: 0; font-family: ' + PIXEL + '; font-weight: 700; font-size: 22px; color: var(--t-f0fdf4, #F0FDF4)'));
+      kort.appendChild(tekstEl('p', 'ide.' + i.id + '.tekst', i.tekst, 'margin: 0; color: var(--t-c9dcd0, #C9DCD0); line-height: 1.65; flex: 1'));
       var bund = document.createElement('div');
       bund.style.cssText = 'display: flex; align-items: center; justify-content: space-between; gap: 12px';
       var info = document.createElement('span');
-      info.style.cssText = 'color: #A9BFB1; font-size: 14px';
+      info.style.cssText = 'color: var(--t-a9bfb1, #A9BFB1); font-size: 14px';
       info.textContent = har ? 'Du har stemt' : 'Klik for at stemme';
       var knap = document.createElement('button');
       knap.type = 'button';
@@ -164,7 +165,7 @@
       knap.textContent = har ? 'Stemt' : 'Stem';
       knap.setAttribute('aria-pressed', har ? 'true' : 'false');
       knap.style.cssText = har
-        ? 'padding: 11px 18px; min-height: 44px; border-radius: 8px; border: 2px solid #4ADE80; background: #12261A; color: #86EFAC; font-family: ' + PIXEL + '; font-weight: 700; font-size: 15px; cursor: pointer'
+        ? 'padding: 11px 18px; min-height: 44px; border-radius: 8px; border: 2px solid #4ADE80; background: var(--b-12261a, #12261A); color: var(--t-86efac, #86EFAC); font-family: ' + PIXEL + '; font-weight: 700; font-size: 15px; cursor: pointer'
         : 'padding: 11px 18px; min-height: 44px; border-radius: 8px; border: 0; background: #4ADE80; color: #052E16; font-family: ' + PIXEL + '; font-weight: 700; font-size: 15px; box-shadow: inset 0 -4px 0 #16A34A; cursor: pointer';
       knap.addEventListener('click', function () {
         stemt[i.id] = !stemt[i.id];
@@ -193,16 +194,16 @@
     faqListe.innerHTML = '';
     faq.forEach(function (f, i) {
       var boks = document.createElement('div');
-      boks.style.cssText = 'background: #0F1813; border: 2px solid #1F3127; border-radius: 10px; overflow: hidden';
+      boks.style.cssText = 'background: var(--b-0f1813, #0F1813); border: 2px solid var(--k-1f3127, #1F3127); border-radius: 10px; overflow: hidden';
       var knap = document.createElement('button');
       knap.type = 'button';
-      knap.style.cssText = 'width: 100%; min-height: 56px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; background: transparent; border: 0; color: #F0FDF4; font-family: Inter, sans-serif; font-weight: 600; font-size: 16px; text-align: left; cursor: pointer';
+      knap.style.cssText = 'width: 100%; min-height: 56px; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 20px; background: transparent; border: 0; color: var(--t-f0fdf4, #F0FDF4); font-family: Inter, sans-serif; font-weight: 600; font-size: 16px; text-align: left; cursor: pointer';
       knap.appendChild(tekstEl('span', 'faq.' + i + '.q', f.q));
       var tegn = document.createElement('span');
       tegn.setAttribute('aria-hidden', 'true');
-      tegn.style.cssText = 'font-family: ' + PIXEL + '; color: #4ADE80; font-size: 22px';
+      tegn.style.cssText = 'font-family: ' + PIXEL + '; color: var(--t-4ade80, #4ADE80); font-size: 22px';
       knap.appendChild(tegn);
-      var svar = tekstEl('p', 'faq.' + i + '.a', f.a, 'margin: 0; padding: 0 20px 18px; color: #C9DCD0; line-height: 1.65');
+      var svar = tekstEl('p', 'faq.' + i + '.a', f.a, 'margin: 0; padding: 0 20px 18px; color: var(--t-c9dcd0, #C9DCD0); line-height: 1.65');
       svar.id = 'faq-svar-' + i;
       knap.setAttribute('aria-controls', svar.id);
       var saet = function (aaben) {
@@ -246,21 +247,21 @@
   if (topKills) {
     fetch('/api/stats').then(function (r) { return r.json(); }).then(function (d) {
       var top = (d.spillere || []).filter(function (s) { return s.k > 0; }).sort(function (a, b) { return b.k - a.k; }).slice(0, 5);
-      if (!top.length) { topKills.innerHTML = '<li style="color: #A9BFB1">Ingen kills endnu - bliv den første!</li>'; return; }
+      if (!top.length) { topKills.innerHTML = '<li style="color: var(--t-a9bfb1, #A9BFB1)">Ingen kills endnu - bliv den første!</li>'; return; }
       var farver = [['#FACC15', '#422006'], ['#D1D5DB', '#1F2937'], ['#FDBA74', '#431407'], ['#12261A', '#86EFAC'], ['#12261A', '#86EFAC']];
       topKills.innerHTML = '';
       top.forEach(function (s, i) {
         var li = document.createElement('li');
         li.innerHTML = '<a style="display: flex; align-items: center; gap: 12px; color: inherit; text-decoration: none">' +
           '<span style="width: 30px; height: 30px; border-radius: 4px; background: ' + farver[i][0] + '; color: ' + farver[i][1] + '; font-weight: 700; display: flex; align-items: center; justify-content: center">' + (i + 1) + '</span>' +
-          '<img alt="" loading="lazy" style="width: 30px; height: 30px; border-radius: 4px; image-rendering: pixelated; background: #24402F"><span style="font-weight: 600"></span><span style="margin-left: auto; color: #A9BFB1"></span></a>';
+          '<img alt="" loading="lazy" style="width: 30px; height: 30px; border-radius: 4px; image-rendering: pixelated; background: var(--b-24402f, #24402F)"><span style="font-weight: 600"></span><span style="margin-left: auto; color: var(--t-a9bfb1, #A9BFB1)"></span></a>';
         li.querySelector('a').href = 'spiller.html?navn=' + encodeURIComponent(s.n);
         li.querySelector('img').src = 'https://mc-heads.net/avatar/' + s.u + '/30';
         li.querySelector('span[style*="font-weight: 600"]').textContent = s.n;
         li.querySelector('span[style*="margin-left"]').textContent = s.k + ' kills';
         topKills.appendChild(li);
       });
-    }).catch(function () { topKills.innerHTML = '<li style="color: #A9BFB1">Kunne ikke hente top kills.</li>'; });
+    }).catch(function () { topKills.innerHTML = '<li style="color: var(--t-a9bfb1, #A9BFB1)">Kunne ikke hente top kills.</li>'; });
   }
 
   // ---------- Scroll-animation til browsere uden scroll-timeline (fx Safari/iPhone) ----------

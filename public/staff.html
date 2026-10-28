@@ -10,6 +10,8 @@
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="theme-color" content="#070B09">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
@@ -17,11 +19,11 @@
 .st-gruppe h2{margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .st-kort{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 .st-person{background:var(--kort);border:2px solid var(--kant);border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:inherit;transition:transform .2s,border-color .2s}
-.st-person:hover{transform:translateY(-4px);border-color:#2F7A4B;color:inherit}
-.st-person img{width:72px;height:72px;border-radius:10px;image-rendering:pixelated;background:#24402F}
+.st-person:hover{transform:translateY(-4px);border-color:var(--k-2f7a4b, #2F7A4B);color:inherit}
+.st-person img{width:72px;height:72px;border-radius:10px;image-rendering:pixelated;background:var(--b-24402f, #24402F)}
 .st-person b{font-size:17px;word-break:break-all}
 .st-on{font-size:12px;color:var(--daempet);display:flex;align-items:center;gap:6px}
-.st-on i{width:8px;height:8px;border-radius:2px;background:#4B5563;display:inline-block}
+.st-on i{width:8px;height:8px;border-radius:2px;background:var(--b-4b5563, #4B5563);display:inline-block}
 .st-on.ja i{background:var(--groen)}
 .st-cta{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-top:12px}
 </style>
@@ -42,5 +44,6 @@
 <footer id="hd-bund"></footer>
 <script src="faelles.js"></script>
 <script src="staff.js"></script>
+<script src="top.js"></script>
 </body>
 </html>

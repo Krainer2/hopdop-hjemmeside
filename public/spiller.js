@@ -85,7 +85,7 @@
       var cls = p.type === 'BAN' ? 'roed' : p.type === 'MUTE' ? 'gul' : p.type === 'KICK' ? 'blaa' : '';
       html += '<div class="sp-straf"><span class="badge ' + cls + '">' + H.esc(p.type) + '</span><div><b>' + H.esc(p.grund || (p.type.indexOf('UN') === 0 ? 'Ophævet' : '-')) + '</b>' +
         '<div class="daempet" style="font-size:14px">' + H.esc([p.varighed, p.af ? 'af ' + p.af : '', p.gaettet && p.naar ? p.naar : H.dato(p.tid)].filter(Boolean).join(' · ')) +
-        (p.aktiv ? ' · <span style="color:#FCA5A5">aktiv</span>' : '') + '</div></div></div>';
+        (p.aktiv ? ' · <span style="color:var(--t-fca5a5, #FCA5A5)">aktiv</span>' : '') + '</div></div></div>';
     });
     html += '</div>';
     boks.innerHTML = html;

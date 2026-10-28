@@ -46,13 +46,13 @@ export default async (req) => {
   }).catch(() => {});
 
   const navn = String(profil.username);
-  const rolle = await rolleFor(navn);
-  if (!rolle) return tilbage(req, 'ingen-adgang:' + navn);
+  // Staff får deres panel-rolle, alle andre logger ind som spiller
+  const rolle = (await rolleFor(navn)) || 'spiller';
 
   const t = lavToken(navn, rolle, 'sa', profil.uuid);
-  await logHandling(navn, 'login', 'med SuperAwesome');
+  if (rolle !== 'spiller') await logHandling(navn, 'login', 'med SuperAwesome');
   const data = JSON.stringify(t).replace(/</g, '\\u003c');
-  const html = `<!doctype html><html lang="da"><head><meta charset="utf-8"><title>Logger ind...</title></head><body style="background:#070B09;color:#E6F2EA;font-family:sans-serif">Logger ind...<script>try{localStorage.setItem('hopdop-login',JSON.stringify(${data}))}catch(e){}location.replace('/admin.html')</script></body></html>`;
+  const html = `<!doctype html><html lang="da"><head><meta charset="utf-8"><title>Logger ind...</title></head><body style="background:#070B09;color:#E6F2EA;font-family:sans-serif">Logger ind...<script>try{localStorage.setItem('hopdop-login',JSON.stringify(${data}))}catch(e){}location.replace(${JSON.stringify(gemt.til || '/').replace(/</g, '\\u003c')})</script></body></html>`;
   return new Response(html, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 };
 

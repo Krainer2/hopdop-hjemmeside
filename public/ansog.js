@@ -118,7 +118,7 @@
       el('an-status').innerHTML = '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><b>' + H.esc(a.type) + '-ansøgning fra ' + H.esc(a.mcnavn) + '</b><span class="badge ' + st[1] + '">' + st[0] + '</span></div>' +
         '<p class="daempet" style="margin:6px 0 0">Sendt ' + H.esc(H.dato(a.oprettet)) + (a.behandlet ? ' · behandlet ' + H.esc(H.dato(a.behandlet)) : '') + '</p>' +
         (a.note ? '<p style="margin:8px 0 0"><b>Besked fra staff:</b> ' + H.esc(a.note) + '</p>' : '');
-    }).catch(function (err) { el('an-status').innerHTML = '<span style="color:#FCA5A5">' + H.esc(err.message) + '</span>'; });
+    }).catch(function (err) { el('an-status').innerHTML = '<span style="color:var(--t-fca5a5, #FCA5A5)">' + H.esc(err.message) + '</span>'; });
   }
   el('an-tjek').addEventListener('submit', function (e) {
     e.preventDefault();

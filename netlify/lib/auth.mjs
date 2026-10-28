@@ -37,7 +37,8 @@ function signer(data) {
 }
 
 export function lavToken(navn, rolle, kilde, uuid) {
-  const udloeb = Date.now() + TIMER_12;
+  // Spillere forbliver logget ind i 30 dage, staff i 12 timer
+  const udloeb = Date.now() + (rolle === 'spiller' ? 30 * 24 * 60 * 60 * 1000 : TIMER_12);
   const data = Buffer.from(JSON.stringify({ navn, rolle, kilde, uuid: uuid || null, udloeb })).toString('base64url');
   return { token: data + '.' + signer(data), navn, rolle, kilde, uuid: uuid || null, udloeb };
 }

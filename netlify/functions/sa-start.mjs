@@ -11,7 +11,10 @@ export default async (req) => {
   const state = crypto.randomBytes(32).toString('base64url');
   const verifier = crypto.randomBytes(48).toString('base64url');
   const challenge = crypto.createHash('sha256').update(verifier).digest('base64url');
-  await gem('oauth-' + state, { verifier, tid: Date.now() });
+  // Hvor brugeren skal sendes hen efter login (kun stier på vores egen side)
+  let til = new URL(req.url).searchParams.get('til') || '/';
+  if (!/^\/(?!\/)[A-Za-z0-9._\-\/?=&%#]{0,200}$/.test(til)) til = '/';
+  await gem('oauth-' + state, { verifier, til, tid: Date.now() });
 
   const url = new URL(SA + '/oauth/authorize');
   url.search = new URLSearchParams({

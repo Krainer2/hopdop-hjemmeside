@@ -39,7 +39,7 @@
     })
     .catch(function () {});
 
-  if (!login) return;
+  if (!login || login.rolle === 'spiller') return;
 
   // ---------- Værktøjslinje ----------
   var stil = document.createElement('style');

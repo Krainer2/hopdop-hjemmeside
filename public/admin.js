@@ -55,6 +55,7 @@
     if (id === 'ansog') hentAnsog();
     if (id === 'staff') hentStaff();
     if (id === 'log') hentLog();
+    if (id === 'banner') hentBanner();
     if (id === 'oversigt') hentOversigt();
   }
   document.querySelectorAll('.ad-menu [data-fane]').forEach(function (b) {
@@ -78,7 +79,7 @@
         ['Staff', H.tal(o.staff), 'personer på listen']
       ];
       el('ad-tal').innerHTML = tal.map(function (t) {
-        return '<div class="kort"' + (t[3] ? ' style="border-color:#4A3610"' : '') + '><span class="daempet">' + t[0] + '</span><b>' + H.esc(t[1]) + '</b><span class="daempet" style="font-size:13px">' + H.esc(t[2]) + '</span></div>';
+        return '<div class="kort"' + (t[3] ? ' style="border-color:var(--k-4a3610, #4A3610)"' : '') + '><span class="daempet">' + t[0] + '</span><b>' + H.esc(t[1]) + '</b><span class="daempet" style="font-size:13px">' + H.esc(t[2]) + '</span></div>';
       }).join('');
       var tjek = [
         [o.webNoegleKlar, 'WEB_NOEGLE er sat i Netlify', 'Mangler: sæt WEB_NOEGLE i Netlify og den samme nøgle i WebSync.sk'],
@@ -238,17 +239,66 @@
     }).catch(function () {});
   }
 
+  // ---------- Banner ----------
+  function bannerFelter() {
+    return {
+      aktiv: el('ad-bn-aktiv').checked,
+      tekst: el('ad-bn-tekst').value.trim(),
+      linkTekst: el('ad-bn-linktekst').value.trim(),
+      link: el('ad-bn-link').value.trim(),
+      farve: el('ad-bn-farve').value
+    };
+  }
+  function bannerVis() {
+    var b = bannerFelter();
+    var vis = el('ad-bn-vis');
+    if (!b.tekst) { vis.innerHTML = '<p class="daempet" style="margin:0">Skriv en tekst for at se banneret.</p>'; return; }
+    vis.innerHTML = '<div class="hdt-banner hdt-' + b.farve + '" style="border-radius:10px"><span></span>' + (b.linkTekst ? '<a href="#" tabindex="-1"></a>' : '') + '</div>';
+    vis.querySelector('span').textContent = b.tekst;
+    if (b.linkTekst) vis.querySelector('a').textContent = b.linkTekst;
+    vis.style.opacity = b.aktiv ? '1' : '.45';
+  }
+  function hentBanner() {
+    var kan = mig && (mig.rolle === 'ejer' || mig.rolle === 'admin');
+    el('ad-bn-form').querySelectorAll('input,select,button').forEach(function (x) { x.disabled = !kan; });
+    if (!kan) el('ad-bn-besked').textContent = 'Kun Admins og Ejere kan ændre banneret.';
+    H.api('banner', { auth: false }).then(function (j) {
+      var b = j.banner || {};
+      el('ad-bn-aktiv').checked = !!b.aktiv;
+      el('ad-bn-tekst').value = b.tekst || '';
+      el('ad-bn-linktekst').value = b.linkTekst || '';
+      el('ad-bn-link').value = b.link || '';
+      el('ad-bn-farve').value = b.farve || 'groen';
+      bannerVis();
+    }).catch(function () {});
+  }
+  ['ad-bn-aktiv', 'ad-bn-tekst', 'ad-bn-linktekst', 'ad-bn-link', 'ad-bn-farve'].forEach(function (id) {
+    el(id).addEventListener('input', bannerVis);
+    el(id).addEventListener('change', bannerVis);
+  });
+  el('ad-bn-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    el('ad-bn-besked').textContent = 'Gemmer...';
+    H.api('banner', { method: 'PUT', body: bannerFelter() }).catch(fejlHaandter)
+      .then(function (j) { el('ad-bn-besked').textContent = j.banner.aktiv ? 'Gemt - banneret vises nu på hele siden.' : 'Gemt - banneret er slået fra.'; })
+      .catch(function (err) { el('ad-bn-besked').textContent = err.message; });
+  });
+
   // ---------- Start ----------
   function start() {
     mig = H.login();
     if (!mig) { visLogin(hashFejl); return; }
+    if (mig.rolle === 'spiller') {
+      visLogin('Du er logget ind som ' + mig.navn + ', men du står ikke på staff-listen som Mod, Admin eller Ejer. Bed en Ejer om at tilføje dig, og log så ind igen.');
+      return;
+    }
     el('ad-login').classList.add('skjult');
     el('ad-panel').classList.remove('skjult');
     el('ad-mig-navn').textContent = mig.navn;
     el('ad-mig-rolle').textContent = ROLLE_NAVN[mig.rolle] || mig.rolle;
     el('ad-mig-hoved').src = H.hoved(mig.uuid || mig.navn, 40);
     var f = location.hash.replace('#', '');
-    fane(['oversigt', 'ansog', 'staff', 'tekster', 'log'].indexOf(f) !== -1 ? f : 'oversigt');
+    fane(['oversigt', 'ansog', 'staff', 'tekster', 'banner', 'log'].indexOf(f) !== -1 ? f : 'oversigt');
   }
   start();
 })();
