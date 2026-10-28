@@ -96,19 +96,31 @@
   }
 
   function hent() {
-    H.api('straffe', { auth: false }).then(function (d) {
+    H.api('straffe').then(function (d) {
       poster = d.poster || [];
       opdateret = d.opdateret;
       tal();
       tegn();
-    }).catch(function () {
+    }).catch(function (e) {
+      if (e && (e.status === 401 || e.status === 403)) { laast(e.status); return; }
       el('bl-liste').innerHTML = '<p class="tom">Kunne ikke hente banlisten lige nu. Prøv igen om lidt.</p>';
     });
+  }
+
+  // Ikke Admin/Ejer: vis en lås i stedet for listen
+  function laast(status) {
+    clearInterval(timer);
+    el('bl-tal').innerHTML = '';
+    el('bl-sider').innerHTML = '';
+    var f = document.querySelector('.bl-filter'); if (f) f.classList.add('skjult');
+    el('bl-liste').innerHTML = '<div class="kort tom" style="text-align:center;padding:40px 20px"><div style="font-size:40px">🔒</div><h2 style="margin:10px 0 8px">Kun for staff</h2>' +
+      '<p class="daempet" style="margin:0 0 18px">Banlisten kan kun ses af Admin og Ejer.' + (status === 401 ? ' Log ind for at se den.' : '') + '</p>' +
+      (status === 401 ? '<a class="knap groen" href="admin.html">Log ind</a>' : '<a class="knap" href="index.html">Til forsiden</a>') + '</div>';
   }
 
   el('bl-kunaktive').addEventListener('change', function (e) { kunAktive = e.target.checked; side = 1; tegn(); });
   el('bl-soeg').addEventListener('input', function (e) { soeg = e.target.value.trim().toLowerCase(); side = 1; tegn(); });
   typeKnapper();
+  var timer = setInterval(hent, 60000);
   hent();
-  setInterval(hent, 60000);
 })();

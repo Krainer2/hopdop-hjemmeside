@@ -1,8 +1,11 @@
-// GET /api/straffe - bans, mutes og kicks (offentlig banliste)
+// GET /api/straffe - bans, mutes og kicks. KUN for Admin og Ejer (SuperAwesomes regler: banlister må ikke være offentlige)
 import { hent } from '../lib/data.mjs';
-import { json } from '../lib/auth.mjs';
+import { hvemErDet, harNiveau, json } from '../lib/auth.mjs';
 
-export default async () => {
+export default async (req) => {
+  const bruger = await hvemErDet(req);
+  if (!bruger) return json({ fejl: 'Banlisten er kun for staff. Log ind først.' }, 401);
+  if (!harNiveau(bruger, 'admin')) return json({ fejl: 'Banlisten er kun for Admin og Ejer.' }, 403);
   const nu = Date.now();
   const { poster = {} } = (await hent('straffe')) || {};
   const stats = (await hent('stats')) || { spillere: [], opdateret: 0 };
@@ -21,7 +24,7 @@ export default async () => {
     }
   }
   liste.sort((a, b) => b.tid - a.tid);
-  return json({ opdateret: stats.opdateret, poster: liste }, 200, { 'Cache-Control': 'public, max-age=30' });
+  return json({ opdateret: stats.opdateret, poster: liste }, 200, { 'Cache-Control': 'private, no-store' });
 };
 
 export const config = { path: '/api/straffe' };

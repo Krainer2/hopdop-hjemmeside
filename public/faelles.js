@@ -93,11 +93,13 @@
   var links = [
     ['index.html', 'Forside', 'forside'],
     ['leaderboards.html', 'Leaderboards', 'leaderboards'],
-    ['banliste.html', 'Banliste', 'banliste'],
     ['staff.html', 'Staff', 'staff'],
     ['ansog.html', 'Ansøg', 'ansog'],
     ['index.html#faq', 'FAQ', 'faq']
   ];
+  // Banlisten er kun for Admin og Ejer
+  var migNu = H.login();
+  if (migNu && (migNu.rolle === 'admin' || migNu.rolle === 'ejer')) links.splice(2, 0, ['banliste.html', 'Banliste', 'banliste']);
   var top = document.getElementById('hd-top');
   if (top) {
     top.className = 'hd-top';

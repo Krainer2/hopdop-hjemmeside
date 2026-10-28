@@ -25,6 +25,9 @@
       (p ? '<span class="plads">#' + p + '</span>' : '') + '</span></div>';
   }
 
+  var migL = H.login();
+  var straffeAdgang = !!(migL && (migL.rolle === 'admin' || migL.rolle === 'ejer'));
+
   function vis(stats, straffe, staff) {
     var boks = el('sp-indhold');
     var forslag = el('sp-forslag');
@@ -50,7 +53,7 @@
       (online ? '<span class="badge">Online nu</span>' : '<span class="badge graa">Offline</span>') +
       (st ? '<span class="badge gul">' + H.esc(st.rolle) + '</span>' : '') +
       (team ? '<span class="badge blaa">Team ' + H.esc(team.n) + (rolle ? ' · ' + H.esc(rolle.charAt(0) + rolle.slice(1).toLowerCase().replace('_', '-')) : '') + '</span>' : '') +
-      (s.b ? '<span class="badge roed">Bannet</span>' : '') +
+      (straffe.some(function (p) { return p.u === s.u && p.type === 'BAN' && p.aktiv; }) ? '<span class="badge roed">Bannet</span>' : '') +
       '</div></div></div>';
 
     html += '<div class="sp-grupper">';
@@ -78,16 +81,17 @@
     }
     html += '</div>';
 
+    // Straffe vises kun for Admin og Ejer
     var mine = straffe.filter(function (p) { return p.u === s.u; });
-    html += '<div class="kort" style="margin-top:16px"><h3>Straffe</h3>';
-    if (!mine.length) html += '<p class="daempet" style="margin:10px 0 0">Ingen straffe. Rent bord!</p>';
-    mine.slice(0, 30).forEach(function (p) {
+    if (straffeAdgang) html += '<div class="kort" style="margin-top:16px"><h3>Straffe <span class="badge graa" style="font-size:11px">Kun Admin+</span></h3>';
+    if (straffeAdgang && !mine.length) html += '<p class="daempet" style="margin:10px 0 0">Ingen straffe. Rent bord!</p>';
+    (straffeAdgang ? mine : []).slice(0, 30).forEach(function (p) {
       var cls = p.type === 'BAN' ? 'roed' : p.type === 'MUTE' ? 'gul' : p.type === 'KICK' ? 'blaa' : '';
       html += '<div class="sp-straf"><span class="badge ' + cls + '">' + H.esc(p.type) + '</span><div><b>' + H.esc(p.grund || (p.type.indexOf('UN') === 0 ? 'Ophævet' : '-')) + '</b>' +
         '<div class="daempet" style="font-size:14px">' + H.esc([p.varighed, p.af ? 'af ' + p.af : '', p.gaettet && p.naar ? p.naar : H.dato(p.tid)].filter(Boolean).join(' · ')) +
         (p.aktiv ? ' · <span style="color:var(--t-fca5a5, #FCA5A5)">aktiv</span>' : '') + '</div></div></div>';
     });
-    html += '</div>';
+    if (straffeAdgang) html += '</div>';
     boks.innerHTML = html;
     // Spilletid er privat: kun du selv (logget ind) eller staff kan se den
     var mig = H.login();
@@ -101,7 +105,7 @@
 
   Promise.all([
     H.api('stats', { auth: false }),
-    H.api('straffe', { auth: false }).catch(function () { return { poster: [] }; }),
+    (straffeAdgang ? H.api('straffe') : Promise.reject()).catch(function () { return { poster: [] }; }),
     H.api('staff', { auth: false }).catch(function () { return { staff: [] }; })
   ]).then(function (r) { vis(r[0], r[1].poster || [], r[2].staff || []); })
     .catch(function () { el('sp-indhold').innerHTML = '<div class="kort tom">Kunne ikke hente spilleren lige nu.</div>'; });
