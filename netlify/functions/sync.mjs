@@ -14,17 +14,41 @@ function ontimeTekst(t) {
   return m ? (+m[1]) * 3600 + (+m[2]) * 60 : 0;
 }
 
+// Gemmer de seneste forsøg, så man kan se hvad der går galt på /api/sync
+async function forsoeg(req, status, besked, ekstra = {}) {
+  const l = (await hent('sync-forsoeg')) || [];
+  l.unshift({ tid: Date.now(), status, besked, klient: (req.headers.get('user-agent') || '').slice(0, 80), ...ekstra });
+  await gem('sync-forsoeg', l.slice(0, 15));
+}
+
 export default async (req) => {
+  if (req.method === 'GET') {
+    // Fejlfinding: viser de seneste forsøg fra serveren (ingen hemmeligheder)
+    const [l, meta] = await Promise.all([hent('sync-forsoeg'), hent('sync-meta')]);
+    const noegle = process.env.WEB_NOEGLE || '';
+    return json({
+      webNoegleSatOp: noegle.length >= 16,
+      webNoegleLaengde: noegle.length,
+      sidstLykkedes: meta ? new Date(meta.sidst).toISOString() : null,
+      seneste: (l || []).map((x) => ({ ...x, tid: new Date(x.tid).toISOString() }))
+    });
+  }
   if (req.method !== 'POST') return json({ fejl: 'Kun POST' }, 405);
   const noegle = process.env.WEB_NOEGLE || '';
   const h = req.headers.get('authorization') || '';
-  if (noegle.length < 16) return json({ fejl: 'WEB_NOEGLE er ikke sat op (mindst 16 tegn)' }, 500);
-  if (!ensNoegle(h.replace(/^Bearer\s+/i, ''), noegle)) return json({ fejl: 'Forkert nøgle' }, 401);
+  if (noegle.length < 16) { await forsoeg(req, 500, 'WEB_NOEGLE er ikke sat op i Netlify'); return json({ fejl: 'WEB_NOEGLE er ikke sat op (mindst 16 tegn)' }, 500); }
+  const sendt = h.replace(/^Bearer\s+/i, '').trim();
+  if (!ensNoegle(sendt, noegle)) {
+    await forsoeg(req, 401, h ? 'Forkert nøgle' : 'Ingen nøgle sendt', { sendtLaengde: sendt.length, forventetLaengde: noegle.length, sendtStart: sendt.slice(0, 2) });
+    return json({ fejl: 'Forkert nøgle' }, 401);
+  }
 
   const raa = await req.text();
-  if (raa.length > 5_000_000) return json({ fejl: 'For meget data' }, 413);
+  if (raa.length > 5_000_000) { await forsoeg(req, 413, 'For meget data', { bytes: raa.length }); return json({ fejl: 'For meget data' }, 413); }
   let d;
   try { d = JSON.parse(raa); } catch (e) {
+    const pos = Number((e.message.match(/position (\d+)/) || [])[1]) || 0;
+    await forsoeg(req, 400, 'Ugyldig JSON: ' + e.message, { bytes: raa.length, omkring: raa.slice(Math.max(0, pos - 120), pos + 120) });
     await gem('sync-fejl', { tid: Date.now(), fejl: 'Ugyldig JSON: ' + e.message, start: raa.slice(0, 300) });
     return json({ fejl: 'Ugyldig JSON' }, 400);
   }
@@ -82,6 +106,7 @@ export default async (req) => {
   await gem('straffe', { poster: Object.fromEntries(alle.map((p) => [p.id, p])) });
   await gem('stats', { opdateret: nu, online, spillere, teams });
   await gem('sync-meta', { sidst: nu, spillere: spillere.length, teams: teams.length, online: online.length, nyeStraffe, bytes: raa.length });
+  await forsoeg(req, 200, 'OK', { spillere: spillere.length, teams: teams.length, bytes: raa.length });
   return json({ ok: true, spillere: spillere.length, teams: teams.length, nyeStraffe });
 };
 
