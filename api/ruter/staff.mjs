@@ -1,13 +1,19 @@
-// /api/staff   GET (offentlig) -> staff-listen.   PUT (Admin/Ejer) {staff:[{navn, rolle}]}
+// /api/staff   GET (offentlig) -> staff-listen (Vagt-holdet kun for staff).   PUT (Admin/Ejer) {staff:[{navn, rolle}]}
 import { hent, gem, logHandling } from '../lib/data.mjs';
 import { hvemErDet, harNiveau, json } from '../lib/auth.mjs';
 
-const ROLLER = ['Ejer', 'Admin', 'Mod', 'Helper', 'Bygger'];
+const ROLLER = ['Ejer', 'Admin', 'Mod', 'Helper', 'Bygger', 'Vagtchef', 'Vagt'];
+// Vagt-holdet vises kun for staff, der er logget ind
+const VAGT = ['Vagtchef', 'Vagt'];
 const MC = /^[A-Za-z0-9_]{3,16}$/;
 
 export default async (req) => {
   const staff = (await hent('staff')) || [];
-  if (req.method === 'GET') return json({ staff }, 200, { 'Cache-Control': 'public, max-age=30' });
+  if (req.method === 'GET') {
+    const mig = await hvemErDet(req);
+    if (mig) return json({ staff, vagtAdgang: true }, 200, { 'Cache-Control': 'private, no-store', 'Vary': 'Authorization' });
+    return json({ staff: staff.filter((s) => !VAGT.includes(s.rolle)), vagtAdgang: false }, 200, { 'Cache-Control': 'public, max-age=30', 'Vary': 'Authorization' });
+  }
   if (req.method !== 'PUT') return json({ fejl: 'Metode ikke tilladt' }, 405);
 
   const bruger = await hvemErDet(req);

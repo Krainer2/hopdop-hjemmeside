@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Staff - HOPDOP</title>
+<title>Vores Staff Team - HOPDOP</title>
 <meta name="description" content="Mød staff-holdet bag HOPDOP.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/ikon-32.png">
@@ -15,28 +15,79 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
 <link rel="stylesheet" href="faelles.css">
 <style>
-.st-gruppe{margin-bottom:28px}
-.st-gruppe h2{margin-bottom:14px;display:flex;align-items:center;gap:10px}
+/* Hero */
+.st-hero{text-align:center;padding:56px 0 18px}
+.st-hero small{font-family:var(--pixel);letter-spacing:.2em;text-transform:uppercase;color:var(--groen);font-size:13px}
+.st-hero h1{font-size:clamp(40px,7vw,76px);margin:10px 0 12px;text-shadow:4px 4px 0 color-mix(in srgb,var(--groen) 25%,transparent)}
+.st-hero h1 span{color:var(--groen)}
+body.vagt .st-hero small,body.vagt .st-hero h1 span{color:var(--orange)}
+body.vagt .st-hero h1{text-shadow:4px 4px 0 color-mix(in srgb,var(--orange) 25%,transparent)}
+.st-hero p{max-width:620px;margin:0 auto;color:var(--daempet)}
+.st-pil{display:block;margin:22px auto 0;width:22px;height:22px;border-right:3px solid var(--svag);border-bottom:3px solid var(--svag);transform:rotate(45deg);animation:stPil 1.6s ease-in-out infinite}
+@keyframes stPil{50%{transform:translate(0,8px) rotate(45deg);opacity:.5}}
+
+/* Vandret menu */
+.st-menu{position:sticky;top:70px;z-index:10;display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 12px 14px;margin:0 -12px 12px;border-radius:0 0 16px 16px;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:2px solid var(--kant)}
+.st-faner{display:inline-flex;gap:4px;padding:5px;border-radius:14px;background:var(--kort2);border:2px solid var(--kant)}
+.st-faner button{font:700 15px var(--pixel);color:var(--daempet);background:none;border:0;border-radius:10px;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .2s,color .2s}
+.st-faner button:hover{color:var(--tekst)}
+.st-faner button[aria-selected="true"]{background:var(--groen);color:#052E16}
+.st-faner button.vagtfane[aria-selected="true"]{background:var(--orange);color:#2A1203}
+.st-faner .laas{font-size:11px;opacity:.8}
+.st-hop{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.st-hop a{font-size:13px;font-weight:600;text-decoration:none;color:var(--daempet);border:1px solid var(--kant);border-radius:999px;padding:4px 12px;background:var(--kort2)}
+.st-hop a:hover{color:var(--tekst);border-color:var(--kant2)}
+@media (max-width:760px){.st-menu{top:0}}
+
+/* Grupper */
+.st-gruppe{margin:34px 0 10px;scroll-margin-top:170px}
+.st-gruppe h2{margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.st-gruppe h2::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--kant2),transparent)}
 .st-kort{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.st-person{background:var(--kort);border:2px solid var(--kant);border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:inherit;transition:transform .2s,border-color .2s}
-.st-person:hover{transform:translateY(-4px);border-color:var(--k-2f7a4b, #2F7A4B);color:inherit}
-.st-person img{width:72px;height:72px;border-radius:10px;image-rendering:pixelated;background:var(--b-24402f, #24402F)}
+.st-person{position:relative;background:var(--kort);border:2px solid var(--kant);border-radius:14px;padding:22px 18px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:inherit;transition:transform .25s,border-color .25s,box-shadow .25s}
+.st-person:hover{transform:translateY(-5px);border-color:var(--groen);box-shadow:0 10px 30px -12px color-mix(in srgb,var(--groen) 50%,transparent);color:inherit}
+.st-person img{width:76px;height:76px;border-radius:10px;image-rendering:pixelated;background:var(--b-24402f, #24402F)}
 .st-person b{font-size:17px;word-break:break-all}
 .st-on{font-size:12px;color:var(--daempet);display:flex;align-items:center;gap:6px}
 .st-on i{width:8px;height:8px;border-radius:2px;background:var(--b-4b5563, #4B5563);display:inline-block}
-.st-on.ja i{background:var(--groen)}
-.st-cta{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-top:12px}
+.st-on.ja i{background:var(--groen);box-shadow:0 0 8px var(--groen)}
+
+/* Kommer frem når man ruller */
+.st-vis{opacity:0;transform:translateY(28px) scale(.97);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0) * 70ms)}
+.st-vis.ind{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.st-vis{opacity:1;transform:none;transition:none}.st-pil{animation:none}}
+
+/* Vagt-holdet: id-kort */
+.vagt-kort .st-person{border-color:color-mix(in srgb,var(--orange) 35%,var(--kant));padding-top:30px;overflow:hidden}
+.vagt-kort .st-person::before{content:"";position:absolute;top:0;left:0;right:0;height:10px;background:repeating-linear-gradient(-45deg,var(--orange) 0 10px,#1A1A1A 10px 20px)}
+.vagt-kort .st-person:hover{border-color:var(--orange);box-shadow:0 10px 30px -12px color-mix(in srgb,var(--orange) 55%,transparent)}
+.vagt-nr{font:700 12px var(--pixel);letter-spacing:.12em;color:var(--orange)}
+.badge.orange{background:color-mix(in srgb,var(--orange) 14%,var(--kort));color:var(--orange);border-color:color-mix(in srgb,var(--orange) 40%,var(--kant))}
+.vagt-info{scroll-margin-top:170px;display:flex;gap:14px;align-items:center;margin:8px 0 0;padding:14px 16px;border:2px dashed color-mix(in srgb,var(--orange) 45%,var(--kant));border-radius:12px;color:var(--daempet);font-size:14px}
+.vagt-info b{color:var(--orange)}
+.st-cta{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-top:34px}
+:root{--orange:#FB923C}
+:root[data-tema="lyst"]{--orange:#C2410C}
 </style>
 </head>
 <body data-side="staff">
 <header id="hd-top"></header>
 <main class="bred">
-<section class="side-top">
-<h1>Staff-holdet</h1>
-<p>De her folk holder HOPDOP kørende, hjælper spillere og sørger for fair kampe. Brug for hjælp? Skriv til os på <a id="st-discord" href="#">Discord</a>.</p>
+<section class="st-hero">
+<small id="st-over">HOPDOP</small>
+<h1 id="st-titel">Vores <span>Staff</span> Team</h1>
+<p id="st-tekst">De her folk holder HOPDOP kørende, hjælper spillere og sørger for fair kampe. Brug for hjælp? Skriv til os på <a id="st-discord" href="#">Discord</a>.</p>
+<i class="st-pil" aria-hidden="true"></i>
 </section>
+<nav class="st-menu" aria-label="Vælg hold">
+<div class="st-faner" role="tablist">
+<button type="button" role="tab" id="fane-staff" aria-selected="true">Staff Team</button>
+<button type="button" role="tab" id="fane-vagt" class="vagtfane skjult" aria-selected="false">Vagt Team <span class="laas" title="Kun synlig for staff">🔒</span></button>
+</div>
+<div class="st-hop" id="st-hop"></div>
+</nav>
 <div id="st-liste" aria-live="polite"><p class="indlaeser">Henter staff...</p></div>
-<div class="kort st-cta">
+<div class="kort st-cta" id="st-cta">
 <div><h2>Vil du være en del af holdet?</h2><p class="daempet" style="margin:8px 0 0">Vi søger aktive og hjælpsomme spillere som staff og byggere.</p></div>
 <a class="knap groen" href="ansog.html?type=staff">Ansøg nu</a>
 </div>

@@ -180,7 +180,7 @@
   }
 
   // ---------- Staff ----------
-  var ROLLER = ['Ejer', 'Admin', 'Mod', 'Helper', 'Bygger'];
+  var ROLLER = ['Ejer', 'Admin', 'Mod', 'Helper', 'Bygger', 'Vagtchef', 'Vagt'];
   function kanRetteStaff() { return mig && (mig.rolle === 'ejer' || mig.rolle === 'admin'); }
   function staffRaekke(s) {
     var d = document.createElement('div');
