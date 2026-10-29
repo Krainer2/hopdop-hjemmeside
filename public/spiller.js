@@ -83,6 +83,42 @@
     });
     if (straffeAdgang) html += '</div>';
     boks.innerHTML = html;
+    // Kun Admin og Ejer: knap til at rette spillerens stats direkte her
+    if (straffeAdgang) {
+      var top = boks.querySelector('.sp-top');
+      var retKnap = document.createElement('button');
+      retKnap.type = 'button';
+      retKnap.className = 'knap sp-ret-knap';
+      retKnap.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>Ret stats';
+      top.appendChild(retKnap);
+      var panel = document.createElement('form');
+      panel.className = 'kort sp-ret skjult';
+      panel.innerHTML = '<h3 style="margin:0 0 6px">Ret stats for ' + H.esc(s.n) + '</h3>' +
+        '<p class="daempet" style="margin:0 0 14px;font-size:14px">Vises med det samme her og gemmes på serveren ved næste sync (eller skriv /websync).</p>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">' +
+        '<div class="felt"><label for="sp-ret-k">Kills</label><input id="sp-ret-k" type="number" min="0" step="1" value="' + (s.k || 0) + '"></div>' +
+        '<div class="felt"><label for="sp-ret-d">Døde</label><input id="sp-ret-d" type="number" min="0" step="1" value="' + (s.d || 0) + '"></div>' +
+        '<div class="felt"><label for="sp-ret-ds">Daily-streak</label><input id="sp-ret-ds" type="number" min="0" step="1" value="' + (s.ds || 0) + '"></div></div>' +
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="knap groen" type="submit">Gem</button><button class="knap" type="button" data-luk>Annuller</button><span class="sp-ret-besked" role="status"></span></div>';
+      top.insertAdjacentElement('afterend', panel);
+      retKnap.addEventListener('click', function () { panel.classList.toggle('skjult'); });
+      panel.querySelector('[data-luk]').addEventListener('click', function () { panel.classList.add('skjult'); });
+      panel.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var besked = panel.querySelector('.sp-ret-besked');
+        var aendr = ['k', 'd', 'ds'].map(function (f) { return { felt: f, v: Math.max(0, Math.trunc(Number(el('sp-ret-' + f).value) || 0)) }; })
+          .filter(function (x) { return x.v !== (Number(s[x.felt]) || 0); });
+        if (!aendr.length) { besked.textContent = 'Ingen ændringer.'; return; }
+        besked.textContent = 'Gemmer...';
+        aendr.reduce(function (p, x) {
+          return p.then(function () { return H.api('statsaendring', { method: 'POST', body: { navn: s.n, felt: x.felt, handling: 'saet', v: x.v } }); })
+            .then(function () { s[x.felt] = x.v; });
+        }, Promise.resolve()).then(function () {
+          besked.textContent = 'Gemt! Serveren får det ved næste sync.';
+          setTimeout(function () { location.reload(); }, 900);
+        }).catch(function (err) { besked.textContent = err.message; });
+      });
+    }
     // Spilletid er privat: kun du selv (logget ind) eller staff kan se den
     var mig = H.login();
     var felt = document.getElementById('sp-spilletid');
@@ -94,7 +130,7 @@
   }
 
   Promise.all([
-    H.api('stats', { auth: false }),
+    H.api('stats' + (straffeAdgang ? '?t=' + Date.now() : ''), { auth: false }),
     (straffeAdgang ? H.api('straffe') : Promise.reject()).catch(function () { return { poster: [] }; }),
     H.api('staff', { auth: false }).catch(function () { return { staff: [] }; })
   ]).then(function (r) { vis(r[0], r[1].poster || [], r[2].staff || []); })

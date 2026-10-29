@@ -238,7 +238,7 @@
     el('ad-stats-nu').textContent = s ? 'Nu: ' + H.tal(s.k) + ' kills · ' + H.tal(s.d) + ' døde · ' + H.tal(s.ds) + ' dages streak' : '';
   }
   function hentStatsRet() {
-    H.api('stats', { auth: false }).then(function (d) {
+    H.api('stats?t=' + Date.now(), { auth: false }).then(function (d) {
       statsSpillere = d.spillere || [];
       el('ad-stats-forslag').innerHTML = statsSpillere.map(function (x) { return '<option value="' + H.esc(x.n) + '">'; }).join('');
       visNu();
@@ -371,7 +371,7 @@
     el('ad-mig-rolle').textContent = ROLLE_NAVN[mig.rolle] || mig.rolle;
     el('ad-mig-hoved').src = H.hoved(mig.uuid || mig.navn, 40);
     var f = location.hash.replace('#', '');
-    fane(['oversigt', 'ansog', 'staff', 'tekster', 'banner', 'log'].indexOf(f) !== -1 ? f : 'oversigt');
+    fane(['oversigt', 'ansog', 'staff', 'stats', 'tekster', 'banner', 'log'].indexOf(f) !== -1 ? f : 'oversigt');
   }
   start();
 })();

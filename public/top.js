@@ -129,6 +129,7 @@
       '<div class="hdt-menu" role="menu">' +
       '<a role="menuitem" href="spiller.html?navn=' + encodeURIComponent(l.navn) + '">' + IKON.person + 'Min profil</a>' +
       (staff ? '<a role="menuitem" href="admin.html">' + IKON.skjold + 'Admin-panel</a>' : '') +
+      ((l.rolle === 'admin' || l.rolle === 'ejer') ? '<a role="menuitem" href="admin.html#stats">' + IKON.skjold + 'Ret stats</a>' : '') +
       '<hr><button type="button" role="menuitem" class="ud">' + IKON.ud + 'Log ud</button></div>';
     mount.appendChild(boks);
     dropdown(boks, boks.querySelector('.hdt-konto'), boks.querySelector('.hdt-menu'));
@@ -318,8 +319,10 @@
         return '<li role="option" aria-selected="' + (i === valgt) + '"><a href="' + esc(r.h) + '">' + ikon + '<span class="nd-soeg-t">' + esc(r.t) + (r.info ? ' <small>' + esc(r.info) + '</small>' : '') + '</span><span class="nd-soeg-type">' + esc(r.type) + '</span></a></li>';
       }).join('');
     }
+    var bar = boks.closest('.nd-top-in');
     function aaben() {
       boks.classList.add('aaben');
+      if (bar) bar.classList.add('soeg-aaben');
       knap.setAttribute('aria-expanded', 'true');
       input.tabIndex = 0;
       setTimeout(function () { input.focus(); }, 30);
@@ -327,6 +330,7 @@
     }
     function luk() {
       boks.classList.remove('aaben');
+      if (bar) bar.classList.remove('soeg-aaben');
       knap.setAttribute('aria-expanded', 'false');
       input.tabIndex = -1;
       input.value = '';
