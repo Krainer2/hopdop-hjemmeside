@@ -89,46 +89,69 @@
     { id: 'rogue', navn: 'Rogue', farve: '#B8BEC6', kant: '#5A6069', rolle: 'Snigmorder', rustning: 'Fuld chainmail', vaaben: 'Guldsværd', ekstra: 'Speed og jump', evne: 'Backstab: slå bagfra med guldsværdet for stor skade', tekst: 'Snig dig rundt om kampen og ram bagfra, når de mindst venter det.' },
     { id: 'reaper', navn: 'Reaper', farve: '#9C5B2E', kant: '#5A6069', rolle: 'Jæger', rustning: 'Læderhjelm og -støvler, chainmail-bryst og -bukser', vaaben: 'Iron hoe', ekstra: '[Bestem selv]', evne: 'Høst: hits giver Wither, og et kill giver dig liv tilbage', tekst: 'Halv læder, halv chainmail. Reaperen jager sårede spillere og høster dem, før de når at potte.' }
   ];
-  var tabs = document.getElementById('kit-tabs');
-  var valgtKit = 'diamond';
-  var aktivKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid #4ADE80; background: var(--b-12261a, #12261A); color: var(--t-f0fdf4, #F0FDF4); font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
-  var normalKnap = 'padding: 12px 18px; min-height: 48px; border-radius: 8px; border: 2px solid var(--k-1f3127, #1F3127); background: var(--b-0f1813, #0F1813); color: var(--t-c9dcd0, #C9DCD0); font-family: ' + PIXEL + '; font-weight: 700; font-size: 16px; cursor: pointer';
-  function visKit(id) {
-    valgtKit = id;
-    var k = kits.filter(function (x) { return x.id === id; })[0] || kits[0];
-    tabs.querySelectorAll('button').forEach(function (b) {
-      var valgt = b.dataset.id === k.id;
-      b.setAttribute('aria-selected', valgt ? 'true' : 'false');
-      b.style.cssText = valgt ? aktivKnap : normalKnap;
-    });
-    document.querySelectorAll('[data-kit]').forEach(function (el) {
-      var felt = el.dataset.kit;
-      var noegle = 'kit.' + k.id + '.' + felt;
-      el.dataset.tekst = noegle;
-      el.dataset.standard = k[felt];
-      el.textContent = T(noegle, k[felt]);
-    });
-    var boks = document.getElementById('kit-felt');
-    if (boks) boks.style.cssText = 'display: block; width: 64px; height: 64px; border-radius: 6px; background: ' + k.farve + '; border: 4px solid ' + k.kant + '; box-shadow: inset -8px -8px 0 rgba(0, 0, 0, 0.25)';
-  }
+  // Rustningsfarver til stativerne: hjelm, bryst, bukser, støvler
+  var RUST = {
+    diamond: ['#4FC6D6', '#4FC6D6', '#3BA9B8', '#3BA9B8'],
+    bard: ['#F5C542', '#F5C542', '#E0A82E', '#E0A82E'],
+    archer: ['#A0734A', '#A0734A', '#8A6240', '#8A6240'],
+    rogue: ['#9AA3AB', '#9AA3AB', '#828B93', '#828B93'],
+    reaper: ['#A0734A', '#9AA3AB', '#828B93', '#8A6240']
+  };
+  var KITFARVE = { diamond: '#4FC6D6', bard: '#F5C542', archer: '#C9A26B', rogue: '#B8C1C9', reaper: '#E74C3C' };
   function tegnKits() {
-    if (!tabs) return;
-    tabs.innerHTML = '';
+    var grid = document.getElementById('kit-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
     kits.forEach(function (k) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'hd-knap';
-      b.setAttribute('role', 'tab');
-      b.dataset.id = k.id;
-      var prik = document.createElement('span');
-      prik.setAttribute('aria-hidden', 'true');
-      prik.style.cssText = 'display: inline-block; width: 14px; height: 14px; margin-right: 10px; vertical-align: -2px; background: ' + k.farve + '; border: 2px solid ' + k.kant;
-      b.appendChild(prik);
-      b.appendChild(document.createTextNode(k.navn));
-      b.addEventListener('click', function () { visKit(k.id); });
-      tabs.appendChild(b);
+      var f = KITFARVE[k.id] || k.farve, r = RUST[k.id] || [k.farve, k.farve, k.farve, k.farve];
+      var kort = document.createElement('div');
+      kort.className = 'nd-kort nd-kit nd-vis';
+      kort.style.borderTop = '3px solid ' + f;
+      var stativ = document.createElement('div');
+      stativ.className = 'nd-stativ';
+      stativ.setAttribute('aria-hidden', 'true');
+      [[36, 30], [52, 44], [40, 34], [44, 12]].forEach(function (m, i) {
+        var d = document.createElement('span');
+        d.style.cssText = 'width:' + m[0] + 'px;height:' + m[1] + 'px;background:' + r[i];
+        stativ.appendChild(d);
+      });
+      var fod = document.createElement('span');
+      fod.style.cssText = 'width:64px;height:8px;background:#6B5A44;margin-top:4px;box-shadow:none';
+      stativ.appendChild(fod);
+      kort.appendChild(stativ);
+      var navn = document.createElement('span');
+      navn.className = 'nd-kit-navn';
+      navn.style.color = f;
+      navn.textContent = k.navn;
+      kort.appendChild(navn);
+      kort.appendChild(tekstEl('span', 'kit.' + k.id + '.rolle', k.rolle)).className = 'nd-kit-rolle';
+      kort.appendChild(tekstEl('span', 'kit.' + k.id + '.tekst', k.tekst)).className = 'nd-kit-tekst';
+      kort.appendChild(tekstEl('span', 'kit.' + k.id + '.evne', k.evne)).className = 'nd-kit-evne';
+      grid.appendChild(kort);
     });
-    visKit(valgtKit);
+    visNaarSynlig(grid.querySelectorAll('.nd-vis'));
+  }
+
+  // Elementer glider frem, når man ruller ned til dem
+  var visObs = 'IntersectionObserver' in window ? new IntersectionObserver(function (l) {
+    l.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('ind'); visObs.unobserve(e.target); } });
+  }, { threshold: 0.12 }) : null;
+  function visNaarSynlig(liste) {
+    Array.prototype.forEach.call(liste, function (el, i) {
+      el.style.transitionDelay = (i % 6) * 70 + 'ms';
+      if (visObs) visObs.observe(el); else el.classList.add('ind');
+    });
+  }
+  document.querySelectorAll('.nd-genvej, .nd-bento > .nd-kort, .nd-koth, .nd-bog').forEach(function (el) { el.classList.add('nd-vis'); });
+  visNaarSynlig(document.querySelectorAll('.nd-vis'));
+
+  // KOTH: holdet med flest sejre (fra serveren)
+  var kothTop = document.getElementById('koth-top');
+  if (kothTop) {
+    fetch('/api/stats').then(function (r) { return r.json(); }).then(function (d) {
+      var t = (d.teams || []).filter(function (x) { return x.koth > 0; }).sort(function (a, b) { return b.koth - a.koth; })[0];
+      kothTop.textContent = t ? t.n + ' (' + t.koth + ')' : 'Ingen endnu';
+    }).catch(function () { kothTop.textContent = '–'; });
   }
 
   // ---------- Stem på idéer ----------
@@ -246,7 +269,7 @@
   var topKills = document.getElementById('top-kills');
   if (topKills) {
     fetch('/api/stats').then(function (r) { return r.json(); }).then(function (d) {
-      var top = (d.spillere || []).filter(function (s) { return s.k > 0; }).sort(function (a, b) { return b.k - a.k; }).slice(0, 5);
+      var top = (d.spillere || []).filter(function (s) { return s.k > 0; }).sort(function (a, b) { return b.k - a.k; }).slice(0, 3);
       if (!top.length) { topKills.innerHTML = '<li style="color: var(--t-a9bfb1, #A9BFB1)">Ingen kills endnu - bliv den første!</li>'; return; }
       var farver = [['#FACC15', '#422006'], ['#D1D5DB', '#1F2937'], ['#FDBA74', '#431407'], ['#12261A', '#86EFAC'], ['#12261A', '#86EFAC']];
       topKills.innerHTML = '';

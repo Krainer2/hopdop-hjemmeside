@@ -102,17 +102,22 @@
   if (migNu && (migNu.rolle === 'admin' || migNu.rolle === 'ejer')) links.splice(2, 0, ['banliste.html', 'Banliste', 'banliste']);
   var top = document.getElementById('hd-top');
   if (top) {
-    top.className = 'hd-top';
-    top.innerHTML = '<div class="bred"><a class="hd-logo" href="index.html"><b>HOPDOP</b><span>HCF KITS</span></a>' +
-      '<nav class="hd-nav" aria-label="Hovedmenu">' + links.map(function (l) {
+    top.className = 'nd-top';
+    top.innerHTML = '<div class="nd-top-in"><a class="nd-logo" href="index.html"><img src="assets/ikon-32.png" alt=""><b>HOPDOP</b><span>HCF KITS</span></a>' +
+      '<nav class="nd-nav" aria-label="Hovedmenu">' + links.map(function (l) {
         return '<a href="' + l[0] + '"' + (l[2] === aktiv ? ' aria-current="page"' : '') + '>' + l[1] + '</a>';
       }).join('') + '</nav>' +
-      '<div class="hd-knapper"><span data-hd-online></span><span data-hd-tema></span><span data-hd-konto></span><a class="knap blaa" href="' + H.DISCORD + '">Discord</a></div></div>';
+      '<div class="nd-knapper"><span data-hd-online></span><span data-hd-tema></span><span data-hd-konto></span><a class="nd-discord" href="' + H.DISCORD + '">Discord</a></div></div>';
   }
   var bund = document.getElementById('hd-bund');
   if (bund) {
-    bund.className = 'hd-bund';
-    bund.innerHTML = '<div class="bred"><div><b style="font-family:Silkscreen,monospace;color:#4ADE80;font-size:22px">HOPDOP</b><br><span style="font-size:13px">' + H.IP + ' · Ikke tilknyttet Minecraft, Mojang eller Microsoft.</span></div>' +
-      '<nav aria-label="Footer">' + links.map(function (l) { return '<a href="' + l[0] + '">' + l[1] + '</a>'; }).join('') + '<a href="admin.html">Staff login</a></nav></div>';
+    bund.className = 'nd-footer';
+    bund.innerHTML = '<div style="height:14px;background:#5DA03B;box-shadow:inset 0 -4px 0 #477F2C"></div>' +
+      '<div class="nd-jord"><div style="max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center">' +
+      '<div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:Silkscreen,monospace;font-weight:700;font-size:24px;color:#6EF08F;text-shadow:3px 3px 0 #0B3A1C">HOPDOP</span>' +
+      '<span style="font-size:13px;color:#E2D3BF">' + H.IP + ' · Ikke tilknyttet Minecraft, Mojang eller Microsoft.</span></div>' +
+      '<nav aria-label="Footer" style="display:flex;flex-wrap:wrap;gap:18px;font-family:Pixelify Sans,sans-serif;font-size:16px">' +
+      links.map(function (l) { return '<a style="color:#fff" href="' + l[0] + '">' + l[1] + '</a>'; }).join('') +
+      '<a style="color:#fff" href="admin.html">Staff login</a></nav></div></div><div class="nd-bedrock"></div>';
   }
 })();

@@ -16,21 +16,6 @@
       { id: 'tlvl', navn: 'Team-level', team: true, v: function (t) { return t.lvl * 100000 + t.k; }, f: function (v, t) { return 'Level ' + t.lvl; } },
       { id: 'tkd', navn: 'Team K/D', team: true, v: function (t) { return t.k >= 10 ? t.k / Math.max(1, t.d) : 0; }, f: function (v) { return H.tal(v, 2) + ' K/D'; }, info: 'Kræver mindst 10 kills.' }
     ] },
-    { id: 'fisk', navn: 'Fiskeri', tavler: [
-      { id: 'flvl', navn: 'Fiske-level', v: function (s) { return s.ff > 0 ? s.fl * 1e9 + s.fx : 0; }, f: function (v, s) { return 'Level ' + s.fl; } },
-      { id: 'fangst', navn: 'Fangster', v: function (s) { return s.ff; }, f: function (v) { return H.tal(v) + ' fisk'; } },
-      { id: 'rare', navn: 'Rare fangster', v: function (s) { return s.fr; }, f: function (v) { return H.tal(v) + ' rare'; } },
-      { id: 'mega', navn: 'Mega Rare', v: function (s) { return s.fm; }, f: function (v) { return H.tal(v) + ' mega'; } },
-      { id: 'pvpfisk', navn: 'PvP-fangster', v: function (s) { return s.fp; }, f: function (v) { return H.tal(v) + ' fangster'; } }
-    ] },
-    { id: 'vagt', navn: 'Vagt og tyveri', tavler: [
-      { id: 'vagtposter', navn: 'Vagtposter', v: function (s) { return s.vp; }, f: function (v) { return H.tal(v) + ' poster'; } },
-      { id: 'vagtrare', navn: 'Sjældne vagt-fund', v: function (s) { return s.vr; }, f: function (v) { return H.tal(v) + ' fund'; } },
-      { id: 'roev', navn: 'Røverier', v: function (s) { return s.tr; }, f: function (v) { return H.tal(v) + ' røverier'; } },
-      { id: 'roevpenge', navn: 'Røvet for', v: function (s) { return s.tp; }, f: function (v) { return '$' + H.tal(v); } },
-      { id: 'spasser', navn: 'Spassermine-besøg', v: function (s) { return s.st; }, f: function (v) { return H.tal(v) + ' gange'; } },
-      { id: 'blocks', navn: 'Blocks i spasserminen', v: function (s) { return s.sm; }, f: function (v) { return H.tal(v) + ' blocks'; } }
-    ] },
     { id: 'aktiv', navn: 'Aktivitet', tavler: [
       { id: 'daily', navn: 'Daily-streak', v: function (s) { return s.ds; }, f: function (v) { return H.tal(v) + ' dage'; } }
     ] }

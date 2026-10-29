@@ -1,0 +1,122 @@
+/* HOPDOP - nyt design (2026). Lavet af Krainer2 */
+:root{
+  --nd-flade:#0D1311;--nd-kant:rgba(255,255,255,.07);--nd-tekst:#E8F1EC;--nd-daempet:#A9B6AF;--nd-svag:#8F9C95;
+  --nd-groen:#6EF08F;--nd-gul:#F5C542;--nd-roed:#FF6B5E;--nd-bg:#07100C;
+}
+:root[data-tema="lyst"]{
+  --nd-flade:#FFFFFF;--nd-kant:rgba(16,40,26,.12);--nd-tekst:#14251B;--nd-daempet:#4B6355;--nd-svag:#5F7769;
+  --nd-groen:#15803D;--nd-gul:#A16207;--nd-roed:#DC2626;--nd-bg:#F3F7F4;
+}
+
+/* ---------- Topbar (glas) ---------- */
+.nd-top{position:sticky;top:12px;z-index:20;padding:0 16px}
+.nd-top-in{max-width:1320px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:8px 10px 8px 14px;background:rgba(8,13,11,.66);border:1px solid rgba(255,255,255,.09);border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.35);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+:root[data-tema="lyst"] .nd-top-in{background:rgba(255,255,255,.82);border-color:rgba(16,40,26,.12);box-shadow:0 10px 30px rgba(16,40,26,.12)}
+.nd-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nd-logo img{width:34px;height:34px;image-rendering:pixelated;border-radius:6px}
+.nd-logo b{font-family:Silkscreen,monospace;font-weight:700;font-size:21px;color:#6EF08F;letter-spacing:1px;text-shadow:2px 2px 0 #0B3A1C}
+:root[data-tema="lyst"] .nd-logo b{color:#15803D;text-shadow:none}
+.nd-logo span{font-family:'Pixelify Sans',sans-serif;font-size:11px;color:#F5C542;letter-spacing:2px;padding:3px 6px;border:1px solid rgba(245,197,66,.4);border-radius:4px}
+:root[data-tema="lyst"] .nd-logo span{color:#A16207}
+.nd-nav{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+.nd-nav a{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 11px 4px;text-decoration:none;color:#B9C4BE;font-weight:500;font-size:15px;border-radius:8px;transition:color .2s,background .2s}
+.nd-nav a::after{content:"";width:18px;height:4px;background:transparent;transition:background .2s,box-shadow .2s}
+.nd-nav a:hover{color:#FFFFFF;background:rgba(255,255,255,.04)}
+.nd-nav a[aria-current="page"]{color:#FFFFFF;font-weight:600}
+.nd-nav a[aria-current="page"]::after{background:#6EF08F;box-shadow:0 0 10px #6EF08F}
+:root[data-tema="lyst"] .nd-nav a{color:#4B6355}
+:root[data-tema="lyst"] .nd-nav a:hover,:root[data-tema="lyst"] .nd-nav a[aria-current="page"]{color:#14251B;background:rgba(16,40,26,.05)}
+:root[data-tema="lyst"] .nd-nav a[aria-current="page"]::after{background:#15803D;box-shadow:none}
+.nd-knapper{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nd-discord{height:38px;display:flex;align-items:center;padding:0 16px;background:#5865F2;color:#FFFFFF !important;text-decoration:none;font-weight:700;font-size:14px;border-radius:10px;box-shadow:inset 0 -3px 0 #3C45A5;transition:filter .2s,transform .15s}
+.nd-discord:hover{filter:brightness(1.1);transform:translateY(-1px)}
+@media (max-width:760px){.nd-top{position:static;padding:0 10px}.nd-nav a{padding:6px 8px 3px;font-size:14px}}
+
+/* ---------- Sektioner ---------- */
+.nd-sek{max-width:1320px;margin:0 auto;padding:96px 24px;box-sizing:border-box}
+.nd-kick{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.nd-nr{font-family:Silkscreen,monospace;font-size:13px;color:#6EF08F}
+.nd-streg{width:40px;height:2px;background:#6EF08F}
+.nd-label{font-family:Silkscreen,monospace;font-size:13px;letter-spacing:2px}
+.nd-h2{margin:0;font-family:'Pixelify Sans',sans-serif;font-weight:700;font-size:44px;letter-spacing:-.5px;color:#FFFFFF}
+.nd-h3{display:block;font-family:'Pixelify Sans',sans-serif;font-weight:700;font-size:22px;color:#FFFFFF}
+.nd-txt{display:block;font-size:14px;line-height:1.55;color:var(--nd-daempet);margin-top:6px}
+.nd-lead{margin:0;max-width:420px;font-size:16px;line-height:1.6;color:var(--nd-daempet)}
+:root[data-tema="lyst"] .nd-h2,:root[data-tema="lyst"] .nd-h3{color:#0B1A11}
+
+.nd-kort{background:var(--nd-flade);border:1px solid var(--nd-kant);border-radius:16px;color:var(--nd-tekst);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+a.nd-kort:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.35);color:var(--nd-tekst)}
+
+.nd-grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.nd-grid5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.nd-genvej{display:flex;align-items:center;gap:14px;min-height:76px;padding:14px 18px;text-decoration:none}
+.nd-genvej b{display:block;font-family:'Pixelify Sans',sans-serif;font-weight:700;font-size:18px}
+.nd-genvej small{display:block;font-size:13px;color:var(--nd-svag);margin-top:2px}
+.nd-ikon{flex:none;width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center}
+.nd-ikon span{width:14px;height:14px}
+
+/* Bento */
+.nd-bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(210px,auto);gap:16px}
+.nd-stor{grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;justify-content:space-between;gap:24px;padding:30px}
+.nd-bred{grid-column:span 2;display:flex;gap:26px;align-items:center;padding:26px}
+.nd-lodret{flex-direction:column;align-items:stretch;justify-content:space-between;gap:16px}
+.nd-lille{display:flex;flex-direction:column;justify-content:space-between;gap:16px;padding:24px}
+.nd-skilt{padding:6px 12px;background:rgba(0,0,0,.55);border-radius:6px;font-family:'Pixelify Sans',sans-serif;font-size:20px}
+.nd-sb{flex:none;width:200px;display:flex;flex-direction:column;gap:6px;padding:14px 16px;background:rgba(0,0,0,.55);border-radius:8px;font-family:'Pixelify Sans',sans-serif;font-size:15px;font-weight:700}
+.nd-sb i{font-style:normal;font-weight:400;color:#FFFFFF}
+.nd-dag{height:26px;background:#2E2814;border-radius:3px}
+.nd-dag.on{background:#F5C542}.nd-dag.nu{box-shadow:0 0 12px rgba(245,197,66,.6)}
+.nd-topliste{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.nd-topliste li{color:var(--nd-tekst)}
+
+/* Kits */
+.nd-sten{background-color:rgba(10,16,13,.92);background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px);background-size:14px 14px;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05)}
+:root[data-tema="lyst"] .nd-sten{background-color:rgba(236,243,238,.95)}
+.nd-kit{display:flex;flex-direction:column;align-items:center;gap:14px;padding:28px 16px 24px;text-align:center}
+.nd-stativ{display:flex;flex-direction:column;align-items:center;gap:2px}
+.nd-stativ span{box-shadow:inset -5px -5px 0 rgba(0,0,0,.3)}
+.nd-kit-navn{font-family:'Pixelify Sans',sans-serif;font-weight:700;font-size:24px}
+.nd-kit-rolle{font-family:Silkscreen,monospace;font-size:11px;letter-spacing:2px;color:var(--nd-svag)}
+.nd-kit-tekst{font-size:14px;line-height:1.5;color:var(--nd-daempet)}
+.nd-kit-evne{font-size:13px;line-height:1.45;color:var(--nd-tekst);padding:10px 12px;background:rgba(255,255,255,.04);border-radius:10px}
+
+/* KOTH */
+.nd-koth{display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:space-between;padding:36px;border-top:2px solid #FF6B5E;background:radial-gradient(ellipse at 20% 0%,rgba(231,76,60,.18),transparent 60%),radial-gradient(ellipse at 90% 100%,rgba(245,197,66,.08),transparent 55%),#0F0B0A}
+:root[data-tema="lyst"] .nd-koth{background:#FFF5F3}
+.nd-chip{padding:8px 12px;background:rgba(255,255,255,.05);border-radius:8px;font-size:14px;color:var(--nd-daempet)}
+.nd-chip b{color:var(--nd-tekst)}
+.nd-flise{width:66px;height:86px;display:flex;align-items:center;justify-content:center;background:#171010;border:1px solid rgba(231,76,60,.4);border-radius:12px;font-family:Silkscreen,monospace;font-weight:700;font-size:48px;color:#FFFFFF;box-shadow:inset 0 -6px 0 rgba(0,0,0,.35)}
+
+/* FAQ som bog */
+.nd-bog{background:#6B3E22;border:3px solid #0B0D0E;padding:14px;border-radius:10px}
+.nd-side{background:#EFE4C8;padding:28px 30px;color:#2E2416;border-radius:4px;box-shadow:inset 0 -6px 0 #D9CBA6}
+.nd-side button{color:#2E2416 !important;font-family:'Pixelify Sans',sans-serif !important;font-size:18px !important}
+.nd-side p{color:#3E3322 !important}
+.nd-side > div > div{background:transparent !important;border:0 !important;border-bottom:2px dashed #C9B98F !important;border-radius:0 !important}
+.nd-side span[aria-hidden]{color:#8B4A2B !important}
+
+/* Footer som jordlag */
+.nd-footer{margin-top:24px}
+.nd-jord{padding:40px 24px;background-image:repeating-linear-gradient(90deg,#3B2A1C 0 16px,#46331F 16px 32px,#33251A 32px 48px)}
+.nd-jord a{text-decoration:none}.nd-jord a:hover{text-decoration:underline}
+.nd-bedrock{height:26px;background-image:repeating-linear-gradient(90deg,#1B1B1D 0 12px,#2A2A2E 12px 20px,#141416 20px 34px)}
+
+/* Kommer frem når man ruller */
+.nd-vis{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.nd-vis.ind{opacity:1;transform:none}
+
+@media (max-width:1000px){.nd-grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.nd-grid5{grid-template-columns:repeat(2,minmax(0,1fr))}.nd-bento{grid-template-columns:repeat(2,minmax(0,1fr))}.nd-stor{grid-row:span 1}}
+@media (max-width:640px){.nd-grid4,.nd-grid5,.nd-bento{grid-template-columns:minmax(0,1fr)}.nd-stor,.nd-bred{grid-column:span 1}.nd-bred{flex-direction:column;align-items:flex-start}.nd-sek{padding:64px 16px}.nd-h2{font-size:34px}}
+@media (prefers-reduced-motion:reduce){.nd-vis{opacity:1;transform:none;transition:none}}
+
+/* ---------- Undersider: samme kort og knapper som forsiden ---------- */
+body > main{margin-top:48px}
+.side-top h1{font-size:56px;text-shadow:4px 4px 0 rgba(11,26,18,.9)}
+:root[data-tema="lyst"] .side-top h1{text-shadow:none}
+.kort{background:var(--nd-flade) !important;border:1px solid var(--nd-kant) !important;border-radius:16px !important;box-shadow:none !important}
+.chip{border:1px solid var(--nd-kant);border-radius:10px;background:rgba(255,255,255,.03)}
+.chip[aria-pressed="true"],.chip[aria-selected="true"]{background:var(--nd-groen);border-color:var(--nd-groen);color:#06210F}
+.knap{border-radius:10px}
+.knap.groen{box-shadow:inset 0 -4px 0 #2FA855,0 8px 24px rgba(110,240,143,.18)}
+input,select,textarea{border-radius:10px}
+.nd-footer{margin-top:96px}

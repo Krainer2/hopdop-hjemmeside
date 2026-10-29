@@ -61,16 +61,6 @@
       stat('Kills', H.tal(s.k), plads(alle, s, function (x) { return x.k; })) +
       stat('Døde', H.tal(s.d)) +
       stat('K/D', H.tal(kd, 2), s.k >= 10 ? plads(alle, s, function (x) { return x.k >= 10 ? x.k / Math.max(1, x.d) : 0; }) : null) + '</div>';
-    html += '<div class="kort sp-gruppe"><h3>Fiskeri</h3>' +
-      stat('Fiske-level', s.fl, s.ff > 0 ? plads(alle, s, function (x) { return x.ff > 0 ? x.fl * 1e9 + x.fx : 0; }) : null) +
-      stat('Fangster', H.tal(s.ff), plads(alle, s, function (x) { return x.ff; })) +
-      stat('Rare / Mega Rare', H.tal(s.fr) + ' / ' + H.tal(s.fm)) +
-      stat('PvP-fangster', H.tal(s.fp)) + '</div>';
-    html += '<div class="kort sp-gruppe"><h3>Vagt og tyveri</h3>' +
-      stat('Vagtposter', H.tal(s.vp), plads(alle, s, function (x) { return x.vp; })) +
-      stat('Røverier', H.tal(s.tr), plads(alle, s, function (x) { return x.tr; })) +
-      stat('Røvet for', '$' + H.tal(s.tp)) +
-      stat('Spassermine-besøg', H.tal(s.st)) + '</div>';
     html += '<div class="kort sp-gruppe"><h3>Aktivitet</h3>' +
       '<div id="sp-spilletid"></div>' +
       stat('Daily-streak', H.tal(s.ds) + ' dage', plads(alle, s, function (x) { return x.ds; })) + '</div>';

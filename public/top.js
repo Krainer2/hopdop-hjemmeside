@@ -209,19 +209,19 @@
     window.addEventListener('mousemove', function (e) {
       var nu = performance.now();
       var afst = lx < 0 ? 99 : Math.hypot(e.clientX - lx, e.clientY - ly);
-      if (nu - sidst < 16 || afst < 6) return;
+      if (nu - sidst < 24 || afst < 10) return;
       sidst = nu; lx = e.clientX; ly = e.clientY;
-      var antal = afst > 40 ? 2 : 1;
+      var antal = 1;
       for (var i = 0; i < antal; i++) {
         dele.push({
           x: e.clientX + (Math.random() - 0.5) * 8, y: e.clientY + (Math.random() - 0.5) * 8,
           vx: (Math.random() - 0.5) * 0.5, vy: 0.15 + Math.random() * 0.45,
-          s: Math.random() < 0.3 ? 6 : 4,
+          s: Math.random() < 0.3 ? 4 : 3,
           f: FARVER[Math.floor(Math.random() * FARVER.length)],
-          liv: 0, max: 1800 + Math.random() * 2200, rot: Math.random() < 0.5
+          liv: 0, max: 800 + Math.random() * 700, rot: Math.random() < 0.5
         });
       }
-      if (dele.length > 260) dele.splice(0, dele.length - 260);
+      if (dele.length > 90) dele.splice(0, dele.length - 90);
       if (!koerer) { koerer = true; requestAnimationFrame(tegn); }
     }, { passive: true });
     var forrige = performance.now();
