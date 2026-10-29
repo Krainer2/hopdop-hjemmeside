@@ -277,15 +277,16 @@
       });
     }
 
-    var lag = document.createElement('div');
-    lag.className = 'nd-soeg-lag';
-    lag.hidden = true;
-    lag.innerHTML = '<div class="nd-soeg-boks" role="dialog" aria-modal="true" aria-label="Søg">' +
-      '<div class="nd-soeg-felt"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>' +
-      '<label class="sr" for="nd-soeg-input">Søg</label><input id="nd-soeg-input" type="search" autocomplete="off" placeholder="Søg efter spillere, teams, sider..."><kbd>Esc</kbd></div>' +
-      '<ul class="nd-soeg-res" role="listbox"></ul></div>';
-    document.body.appendChild(lag);
-    var input = lag.querySelector('input'), ul = lag.querySelector('ul'), valgt = 0, res = [];
+    // Lup i topbaren, der folder sig ud til et søgefelt
+    var holder = document.querySelector('.nd-knapper');
+    if (!holder) return;
+    var boks = document.createElement('div');
+    boks.className = 'nd-soeg';
+    boks.innerHTML = '<div class="nd-soeg-in"><button type="button" class="nd-soeg-knap" aria-label="Søg (Ctrl+K)" aria-expanded="false"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>' +
+      '<label class="sr" for="nd-soeg-input">Søg</label><input id="nd-soeg-input" type="search" autocomplete="off" placeholder="Søg spiller, team, side..." tabindex="-1"></div>' +
+      '<ul class="nd-soeg-res" role="listbox" hidden></ul>';
+    holder.insertBefore(boks, holder.firstChild);
+    var knap = boks.querySelector('button'), input = boks.querySelector('input'), ul = boks.querySelector('ul'), valgt = 0, res = [];
 
     function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
     function point(tekst, q) {
@@ -299,58 +300,53 @@
         SIDER.forEach(function (s) { var p = point(s[0], q); if (p) res.push({ t: s[0], h: s[1], type: s[2], p: p - 5 }); });
         if (data) {
           data.spillere.forEach(function (s) { var p = point(s.n, q); if (p) res.push({ t: s.n, h: 'spiller.html?navn=' + encodeURIComponent(s.n), type: 'Spiller', p: p + 2, hoved: s.u, info: s.k + ' kills' }); });
-          data.teams.forEach(function (t) { var p = point(t.n, q); if (p) res.push({ t: t.n, h: 'leaderboards.html#teams/tlvl', type: 'Team', p: p + 1, info: (t.m ? t.m.length : 0) + ' medlemmer' }); });
+          data.teams.forEach(function (t) { var p = point(t.n, q); if (p) res.push({ t: t.n, h: 'leaderboards.html#teams/tlvl', type: 'Team', p: p + 1, info: (t.m ? t.m.length : 0) + ' medl.' }); });
           data.staff.forEach(function (s) { var p = point(s.navn, q); if (p) res.push({ t: s.navn, h: 'staff.html', type: s.rolle, p: p, hoved: s.navn }); });
         }
         res.sort(function (a, b) { return b.p - a.p || a.t.localeCompare(b.t); });
-        res = res.slice(0, 9);
-      } else {
-        res = SIDER.slice(0, 6).map(function (s) { return { t: s[0], h: s[1], type: s[2] }; });
+        res = res.slice(0, 8);
       }
       valgt = 0;
       tegn();
     }
     function tegn() {
-      if (!res.length) { ul.innerHTML = '<li class="nd-soeg-tom">Ingen resultater. Prøv et andet navn.</li>'; return; }
+      if (!input.value.trim()) { ul.hidden = true; return; }
+      ul.hidden = false;
+      if (!res.length) { ul.innerHTML = '<li class="nd-soeg-tom">Ingen resultater</li>'; return; }
       ul.innerHTML = res.map(function (r, i) {
         var ikon = r.hoved ? '<img alt="" src="https://mc-heads.net/avatar/' + encodeURIComponent(r.hoved) + '/28">' : '<span class="nd-soeg-prik"></span>';
         return '<li role="option" aria-selected="' + (i === valgt) + '"><a href="' + esc(r.h) + '">' + ikon + '<span class="nd-soeg-t">' + esc(r.t) + (r.info ? ' <small>' + esc(r.info) + '</small>' : '') + '</span><span class="nd-soeg-type">' + esc(r.type) + '</span></a></li>';
       }).join('');
     }
     function aaben() {
-      lag.hidden = false;
-      input.value = '';
-      soeg();
-      setTimeout(function () { input.focus(); }, 10);
+      boks.classList.add('aaben');
+      knap.setAttribute('aria-expanded', 'true');
+      input.tabIndex = 0;
+      setTimeout(function () { input.focus(); }, 30);
       hentData().then(soeg);
     }
-    function luk() { lag.hidden = true; }
+    function luk() {
+      boks.classList.remove('aaben');
+      knap.setAttribute('aria-expanded', 'false');
+      input.tabIndex = -1;
+      input.value = '';
+      ul.hidden = true;
+    }
+    knap.addEventListener('click', function () { boks.classList.contains('aaben') ? (input.value ? input.focus() : luk()) : aaben(); });
     input.addEventListener('input', soeg);
     input.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown') { e.preventDefault(); valgt = Math.min(res.length - 1, valgt + 1); tegn(); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); valgt = Math.max(0, valgt - 1); tegn(); }
       else if (e.key === 'Enter') {
         e.preventDefault();
-        if (res[valgt]) { luk(); location.href = res[valgt].h; }
-        else if (input.value.trim()) { luk(); location.href = 'spiller.html?navn=' + encodeURIComponent(input.value.trim()); }
-      } else if (e.key === 'Escape') luk();
+        var maal = res[valgt] ? res[valgt].h : (input.value.trim() ? 'spiller.html?navn=' + encodeURIComponent(input.value.trim()) : null);
+        if (maal) { luk(); location.href = maal; }
+      } else if (e.key === 'Escape') { luk(); knap.focus(); }
     });
-    ul.addEventListener('click', function (e) { if (e.target.closest('a')) luk(); });
-    lag.addEventListener('click', function (e) { if (e.target === lag) luk(); });
+    ul.addEventListener('click', function (e) { if (e.target.closest('a')) setTimeout(luk, 0); });
+    document.addEventListener('click', function (e) { if (!boks.contains(e.target) && boks.classList.contains('aaben')) luk(); });
     document.addEventListener('keydown', function (e) {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); lag.hidden ? aaben() : luk(); }
-      else if (e.key === 'Escape' && !lag.hidden) luk();
-    });
-
-    // Knap i topbaren
-    document.querySelectorAll('.nd-knapper').forEach(function (k) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'nd-soeg-knap';
-      b.setAttribute('aria-label', 'Søg efter spillere, teams og sider');
-      b.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span>Søg spiller...</span><kbd>Ctrl K</kbd>';
-      b.addEventListener('click', aaben);
-      k.insertBefore(b, k.firstChild);
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); boks.classList.contains('aaben') ? luk() : aaben(); }
     });
   })();
 
