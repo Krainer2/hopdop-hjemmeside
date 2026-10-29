@@ -145,6 +145,28 @@
   document.querySelectorAll('.nd-genvej, .nd-bento > .nd-kort, .nd-koth, .nd-bog').forEach(function (el) { el.classList.add('nd-vis'); });
   visNaarSynlig(document.querySelectorAll('.nd-vis'));
 
+  // Topbar: den grønne markering følger med, når man ruller eller klikker på forsiden
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nd-nav a[href^="#"]'));
+  function markerNav(id) {
+    navLinks.forEach(function (l) {
+      if (l.getAttribute('href') === '#' + id) l.setAttribute('aria-current', 'page');
+      else l.removeAttribute('aria-current');
+    });
+  }
+  navLinks.forEach(function (l) { l.addEventListener('click', function () { markerNav(l.getAttribute('href').slice(1)); }); });
+  var navSektioner = navLinks.map(function (l) { return document.getElementById(l.getAttribute('href').slice(1)); }).filter(Boolean);
+  function opdaterNav() {
+    var midt = window.innerHeight * 0.35, aktivId = 'top';
+    navSektioner.forEach(function (sek) { if (sek.getBoundingClientRect().top <= midt) aktivId = sek.id; });
+    if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 4 && navSektioner.length) aktivId = navSektioner[navSektioner.length - 1].id;
+    markerNav(aktivId);
+  }
+  var navVenter = false;
+  window.addEventListener('scroll', function () {
+    if (!navVenter) { navVenter = true; requestAnimationFrame(function () { navVenter = false; opdaterNav(); }); }
+  }, { passive: true });
+  opdaterNav();
+
   // KOTH: holdet med flest sejre (fra serveren)
   var kothTop = document.getElementById('koth-top');
   if (kothTop) {
