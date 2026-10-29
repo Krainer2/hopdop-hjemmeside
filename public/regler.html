@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regler - HOPDOP</title>
+<!-- deling -->
+<link rel="canonical" href="https://hopdop.pages.dev/regler">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HOPDOP">
+<meta property="og:title" content="Regler - HOPDOP">
+<meta property="og:description" content="Reglerne på HOPDOP: spil fair, vær ordentlig og rapportér bugs. Læs kodekset før du joiner.">
+<meta property="og:url" content="https://hopdop.pages.dev/regler">
+<meta property="og:image" content="https://hopdop.pages.dev/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="da_DK">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#4ADE80">
+<!-- /deling -->
+<meta name="description" content="Reglerne på HOPDOP: spil fair, vær ordentlig og rapportér bugs. Læs kodekset før du joiner.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/ikon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script>(function(){var l=false;try{var t=localStorage.getItem("hopdop-tema")||"moerkt";l=t==="lyst"||(t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches)}catch(e){}document.documentElement.setAttribute("data-tema",l?"lyst":"moerkt")})();</script>
+<link rel="stylesheet" href="tema-lys.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&amp;family=Silkscreen:wght@700&amp;family=Inter:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="faelles.css">
+<link rel="stylesheet" href="nyt-design.css">
+<style>
+.rg-hero{position:relative;text-align:center;padding:64px 0 26px}
+.rg-hero small{font-family:Silkscreen,monospace;letter-spacing:.25em;color:var(--nd-gul);font-size:12px}
+.rg-hero h1{font-size:clamp(44px,8vw,86px);margin:12px 0 14px;text-shadow:5px 5px 0 rgba(245,197,66,.18)}
+.rg-hero h1 span{color:var(--nd-gul)}
+.rg-hero p{max-width:640px;margin:0 auto;color:var(--nd-daempet);font-size:17px;line-height:1.65}
+.rg-tldr{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:30px 0 0}
+.rg-tldr span{display:inline-flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:12px;background:var(--nd-flade);border:1px solid var(--nd-kant);font-weight:700;font-size:15px;color:var(--nd-tekst);box-shadow:inset 0 -4px 0 rgba(0,0,0,.25)}
+.rg-tldr i{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-style:normal;font-family:Silkscreen,monospace;font-size:13px;color:#06120B}
+.rg-opd{display:block;margin-top:18px;color:var(--nd-svag);font-size:13px}
+
+.rg-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:34px;align-items:start;margin-top:44px}
+.rg-index{position:sticky;top:140px;display:flex;flex-direction:column;gap:4px;padding:14px;border-radius:16px;background:var(--nd-flade);border:1px solid var(--nd-kant)}
+.rg-index b{font-family:Silkscreen,monospace;font-size:11px;letter-spacing:2px;color:var(--nd-svag);padding:4px 10px 8px}
+.rg-index a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;color:var(--nd-daempet);text-decoration:none;font-weight:600;font-size:14px;transition:background .2s,color .2s}
+.rg-index a span{font-family:Silkscreen,monospace;font-size:11px;width:28px;color:var(--f)}
+.rg-index a:hover,.rg-index a.aktiv{background:rgba(255,255,255,.05);color:var(--nd-tekst)}
+.rg-index a.aktiv{box-shadow:inset 3px 0 0 var(--f)}
+.rg-laest{margin-top:10px;padding:10px;border-top:1px solid var(--nd-kant);font-size:12px;color:var(--nd-svag)}
+.rg-bar{height:8px;margin-top:8px;border-radius:2px;background:rgba(255,255,255,.06);overflow:hidden;display:flex;gap:2px}
+.rg-bar i{flex:1;background:rgba(255,255,255,.06);transition:background .4s}
+.rg-bar i.ja{background:var(--nd-groen);box-shadow:0 0 8px var(--nd-groen)}
+
+.rg-kapitler{display:flex;flex-direction:column;gap:22px}
+.rg-kap{--f:#6EF08F;position:relative;scroll-margin-top:140px;padding:28px 28px 24px;border-radius:18px;background:radial-gradient(ellipse at 0% 0%,color-mix(in srgb,var(--f) 13%,transparent),transparent 55%),var(--nd-flade);border:1px solid var(--nd-kant);border-top:3px solid var(--f);opacity:0;transform:translateY(24px);transition:opacity .6s,transform .6s}
+.rg-kap.ind{opacity:1;transform:none}
+.rg-kap-top{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.rg-par{font-family:Silkscreen,monospace;font-weight:700;font-size:34px;color:var(--f);text-shadow:3px 3px 0 rgba(0,0,0,.35);min-width:64px}
+.rg-kap h2{font-size:28px;margin:0}
+.rg-kap-top p{margin:4px 0 0;color:var(--nd-svag);font-size:14px}
+.rg-link{margin-left:auto;flex:none;height:34px;padding:0 12px;border:1px solid var(--nd-kant);border-radius:9px;background:transparent;color:var(--nd-svag);font:600 12px Inter,system-ui,sans-serif;cursor:pointer}
+.rg-link:hover{color:var(--f);border-color:var(--f)}
+.rg-kap ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:r}
+.rg-kap li{counter-increment:r;display:flex;gap:14px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.025);color:var(--nd-tekst);line-height:1.55;font-size:15.5px}
+.rg-kap li::before{content:counter(r);flex:none;width:26px;height:26px;display:grid;place-items:center;border-radius:6px;background:color-mix(in srgb,var(--f) 18%,transparent);color:var(--f);font:700 12px Silkscreen,monospace;margin-top:1px}
+.rg-kap li b{color:var(--f)}
+
+.rg-stige{margin-top:56px;padding:30px;border-radius:20px;background:var(--nd-flade);border:1px solid var(--nd-kant)}
+.rg-stige h2{font-size:30px;margin:0 0 6px}
+.rg-stige>p{margin:0 0 26px;color:var(--nd-daempet)}
+.rg-trin{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end}
+.rg-trin div{display:flex;flex-direction:column;justify-content:flex-end;gap:6px;padding:14px;border-radius:10px 10px 4px 4px;color:#fff;box-shadow:inset 0 -6px 0 rgba(0,0,0,.25),inset 0 2px 0 rgba(255,255,255,.18);transition:transform .2s}
+.rg-trin div:hover{transform:translateY(-4px)}
+.rg-trin b{font-family:'Pixelify Sans',sans-serif;font-size:19px;text-shadow:2px 2px 0 rgba(0,0,0,.35)}
+.rg-trin small{font-size:12.5px;opacity:.9;line-height:1.4}
+.rg-trin span{font:700 11px Silkscreen,monospace;opacity:.75;letter-spacing:1px}
+.rg-stige-note{display:flex;align-items:center;gap:10px;margin-top:18px;padding:12px 14px;border-radius:12px;background:rgba(255,107,94,.08);border:1px dashed rgba(255,107,94,.4);color:var(--nd-tekst);font-size:14.5px}
+
+.rg-bund{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:22px 0 80px}
+.rg-bund .kort{display:flex;flex-direction:column;gap:10px;align-items:flex-start;background:var(--nd-flade);border:1px solid var(--nd-kant);border-radius:18px;box-shadow:none}
+.rg-bund h3{font-size:22px}
+.rg-bund p{margin:0;color:var(--nd-daempet);line-height:1.6}
+@media (max-width:900px){.rg-layout{grid-template-columns:1fr}.rg-index{display:none}.rg-trin{grid-template-columns:1fr 1fr}.rg-trin div{min-height:0 !important}.rg-bund{grid-template-columns:1fr}.rg-kap{padding:22px 18px}.rg-par{font-size:26px;min-width:48px}.rg-link{display:none}}
+:root[data-tema="lyst"] .rg-kap li{background:rgba(16,40,26,.035)}
+:root[data-tema="lyst"] .rg-hero h1{text-shadow:none}
+</style>
+</head>
+<body data-side="regler">
+<header id="hd-top"></header>
+<main class="bred">
+<section class="rg-hero">
+<small data-tekst="rg.over">HOPDOP · KODEKS</small>
+<h1>Arenaens <span>Regler</span></h1>
+<p data-tekst="rg.intro">Kort fortalt: spil fair, vær ordentlig og lad staff tage sig af dramaet. Resten står herunder, så ingen kan sige de ikke vidste det.</p>
+<div class="rg-tldr"><span><i style="background:#FF6B5E">⚔</i>Spil fair</span><span><i style="background:#6EF08F">✓</i>Vær ordentlig</span><span><i style="background:#F5C542">!</i>Rapportér bugs</span></div>
+<span class="rg-opd" data-tekst="rg.opdateret">Sidst opdateret: oktober 2026</span>
+</section>
+<div class="rg-layout">
+<nav class="rg-index" aria-label="Kapitler"><b>KAPITLER</b>
+<a href="#fair" style="--f:#FF6B5E"><span>§1</span>Fair kamp</a>
+<a href="#teams" style="--f:#7DD3FC"><span>§2</span>Teams og allierede</a>
+<a href="#chat" style="--f:#6EF08F"><span>§3</span>Chat og opførsel</a>
+<a href="#bugs" style="--f:#F5C542"><span>§4</span>Bugs og exploits</a>
+<a href="#handel" style="--f:#C084FC"><span>§5</span>Handel og konti</a>
+<a href="#staff" style="--f:#FB923C"><span>§6</span>Staff har sidste ord</a>
+<div class="rg-laest"><span id="rg-laest-tekst">Læst 0 af 6</span><div class="rg-bar"><i></i><i></i><i></i><i></i><i></i><i></i></div></div></nav>
+<div class="rg-kapitler">
+<section class="rg-kap" id="fair" style="--f:#FF6B5E"><div class="rg-kap-top"><span class="rg-par">§1</span><div><h2 data-tekst="rg.fair.titel">Fair kamp</h2><p data-tekst="rg.fair.under">Ingen snyd. Ingen undskyldninger.</p></div><button type="button" class="rg-link" data-link="fair">Kopiér link</button></div><ol>
+<li><b>Ingen hacks.</b> Hacked clients, x-ray, killaura, reach, autoclickers og macros giver ban.</li>
+<li>Brug en almindelig client (fx Lunar Client). Mods der giver dig en fordel over andre er ikke tilladt.</li>
+<li><b>Screenshare:</b> Beder staff dig om at blive til en screenshare, så bliver du. Logger du ud eller nægter, tæller det som at blive taget i at snyde.</li>
+<li>Ingen kill-farming. At give eller tage kills fra venner eller alts for at pumpe leaderboardet bliver opdaget, og stats bliver nulstillet.</li>
+<li>Log ikke ud midt i en kamp for at slippe væk.</li>
+</ol></section>
+<section class="rg-kap" id="teams" style="--f:#7DD3FC"><div class="rg-kap-top"><span class="rg-par">§2</span><div><h2 data-tekst="rg.teams.titel">Teams og allierede</h2><p data-tekst="rg.teams.under">Holdånd ja, snyd nej.</p></div><button type="button" class="rg-link" data-link="teams">Kopiér link</button></div><ol>
+<li>Du må kun samarbejde med dit eget team og jeres allierede. Hemmeligt teaming med andre teams er ikke tilladt.</li>
+<li><b>KOTH vindes i kamp.</b> Aftaler om at lade et andet team vinde er ikke tilladt.</li>
+<li>Tag ikke ting fra teamet eller teambanken uden lov fra lederen.</li>
+<li>Skift ikke team midt i en kamp for at slippe for at dø.</li>
+</ol></section>
+<section class="rg-kap" id="chat" style="--f:#6EF08F"><div class="rg-kap-top"><span class="rg-par">§3</span><div><h2 data-tekst="rg.chat.titel">Chat og opførsel</h2><p data-tekst="rg.chat.under">Trash talk er fint. At svine folk til er ikke.</p></div><button type="button" class="rg-link" data-link="chat">Kopiér link</button></div><ol>
+<li><b>Ingen racisme, trusler eller hadefuld tale.</b> Heller ikke "for sjov".</li>
+<li>Ingen spam, caps-lock-spam eller flood i chatten.</li>
+<li>Ingen reklame for andre servere eller Discords.</li>
+<li>Del aldrig andres personlige oplysninger, og pres ikke folk for deres.</li>
+<li>Hold det til spillet: Tab med stil, vind med stil.</li>
+</ol></section>
+<section class="rg-kap" id="bugs" style="--f:#F5C542"><div class="rg-kap-top"><span class="rg-par">§4</span><div><h2 data-tekst="rg.bugs.titel">Bugs og exploits</h2><p data-tekst="rg.bugs.under">Fundet en fejl? Fortæl os det.</p></div><button type="button" class="rg-link" data-link="bugs">Kopiér link</button></div><ol>
+<li><b>Rapportér bugs til staff på Discord</b> i stedet for at bruge dem.</li>
+<li>Duping, glitches og misbrug af fejl straffes, også selvom du "bare testede".</li>
+<li>Del ikke bugs med andre spillere, før de er rettet.</li>
+</ol></section>
+<section class="rg-kap" id="handel" style="--f:#C084FC"><div class="rg-kap-top"><span class="rg-par">§5</span><div><h2 data-tekst="rg.handel.titel">Handel og konti</h2><p data-tekst="rg.handel.under">Dit navn, dit ansvar.</p></div><button type="button" class="rg-link" data-link="handel">Kopiér link</button></div><ol>
+<li><b>Ingen scam.</b> Lover du noget i en handel, så holder du det.</li>
+<li>Køb og salg af items, konti eller ranks for rigtige penge uden for butikken er ikke tilladt.</li>
+<li>Du står selv for din konto. Bliver der snydt på den, er det din konto der bliver straffet.</li>
+<li>Brug ikke alts til at omgå en ban eller mute.</li>
+</ol></section>
+<section class="rg-kap" id="staff" style="--f:#FB923C"><div class="rg-kap-top"><span class="rg-par">§6</span><div><h2 data-tekst="rg.staff.titel">Staff har sidste ord</h2><p data-tekst="rg.staff.under">De er her for at hjælpe, ikke for at være fjender.</p></div><button type="button" class="rg-link" data-link="staff">Kopiér link</button></div><ol>
+<li>Følg staffs anvisninger i en situation. Er du uenig, så tag det roligt bagefter på Discord.</li>
+<li>Udgiv dig aldrig for at være staff.</li>
+<li>Er du blevet straffet og mener det er forkert, så send en unban-ansøgning. Det hjælper ikke at diskutere i chatten.</li>
+</ol></section>
+</div></div>
+<section class="rg-stige" id="straffe"><h2>Straffestigen</h2><p>Jo flere gange, og jo grovere, jo højere op på stigen. Staff vurderer hver sag.</p><div class="rg-trin">
+<div style="background:#3FA65A;min-height:70px"><span>TRIN 1</span><b>Advarsel</b><small>Første gang og småting</small></div>
+<div style="background:#9AAE3A;min-height:100px"><span>TRIN 2</span><b>Mute</b><small>Chat-regler brudt</small></div>
+<div style="background:#D29B2A;min-height:130px"><span>TRIN 3</span><b>Kick</b><small>Du skal lige køle af</small></div>
+<div style="background:#E2702F;min-height:160px"><span>TRIN 4</span><b>Tempban</b><small>Gentagelser eller grove ting</small></div>
+<div style="background:#D9443A;min-height:190px"><span>TRIN 5</span><b>Permban</b><small>Hacks, scam og trusler</small></div>
+</div><div class="rg-stige-note"><b style="color:#FF6B5E">!</b> Grove ting som hacks, trusler og scam kan springe direkte til toppen af stigen.</div></section>
+<div class="rg-bund"><div class="kort"><h3>Ser du nogen bryde reglerne?</h3><p>Tag et klip eller screenshot og send det til staff på Discord. Det hjælper os at handle hurtigt.</p><a class="knap groen" href="https://discord.gg/GE6Ku6Znh">Rapportér på Discord</a></div><div class="kort"><h3>Blevet straffet?</h3><p>Mener du, det var en fejl, eller har du lært af det? Send en unban-ansøgning, så kigger staff på den.</p><a class="knap" href="ansog.html?type=unban">Ansøg om unban</a></div></div>
+<p style="text-align:center;color:var(--nd-svag);font-size:13px;margin:-50px 0 70px">HOPDOP kører på SuperAwesome, så SuperAwesomes egne regler gælder også.</p>
+</main>
+<footer id="hd-bund"></footer>
+<script src="faelles.js"></script>
+<script src="regler.js"></script>
+<script src="rediger.js"></script>
+<script src="top.js"></script>
+</body>
+</html>

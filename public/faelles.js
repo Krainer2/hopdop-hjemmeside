@@ -94,8 +94,8 @@
     ['index.html', 'Forside', 'forside'],
     ['leaderboards.html', 'Leaderboards', 'leaderboards'],
     ['staff.html', 'Staff', 'staff'],
-    ['ansog.html', 'Ansøg', 'ansog'],
-    ['index.html#faq', 'FAQ', 'faq']
+    ['ansog.html', 'Forum', 'ansog'],
+    ['regler.html', 'Regler', 'regler']
   ];
   // Banlisten er kun for Admin og Ejer
   var migNu = H.login();

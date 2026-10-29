@@ -228,8 +228,8 @@
   var faq = [
     { q: 'Hvordan joiner jeg?', a: 'Åbn Minecraft 1.8.9 (fx med Lunar Client), tilføj serveren hopdop.superawesome.dk og tryk join.' },
     { q: 'Er serveren pay-to-win?', a: 'Nej. Butikken giver kosmetik, ranks og keys, men alle kits og systemer kan låses op ved at spille.' },
-    { q: 'Hvordan søger jeg staff?', a: 'Tryk på Ansøg i menuen øverst. Vi svarer på Discord, når ansøgningen er læst.' },
-    { q: 'Jeg er blevet bannet - hvad nu?', a: 'Send en unban-ansøgning under Ansøg. Har du forladt en screenshare, skal du skrive til staff på Discord.' },
+    { q: 'Hvordan søger jeg staff?', a: 'Tryk på Forum i menuen øverst. Vi svarer på Discord, når ansøgningen er læst.' },
+    { q: 'Jeg er blevet bannet - hvad nu?', a: 'Send en unban-ansøgning under Forum. Har du forladt en screenshare, skal du skrive til staff på Discord.' },
     { q: 'Hvordan virker kits?', a: 'Du vælger et kit ved spawn. Hvert kit har sin egen rustning, sit våben og sin evne - se dem under Kits.' }
   ];
   var faqListe = document.getElementById('faq-liste');

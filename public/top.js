@@ -269,7 +269,7 @@
     var SIDER = [
       ['Forside', F + '#top', 'Side'], ['Features', F + '#features', 'Side'], ['Kits', F + '#kits', 'Side'],
       ['KOTH', F + '#koth', 'Side'], ['FAQ', F + '#faq', 'Side'], ['Leaderboards', 'leaderboards.html', 'Side'],
-      ['Staff', 'staff.html', 'Side'], ['Ansøg om staff', 'ansog.html?type=staff', 'Side'], ['Ansøg som bygger', 'ansog.html?type=bygger', 'Side'],
+      ['Staff', 'staff.html', 'Side'], ['Regler', 'regler.html', 'Side'], ['Forum', 'ansog.html', 'Side'], ['Ansøg om staff', 'ansog.html?type=staff', 'Side'], ['Ansøg som bygger', 'ansog.html?type=bygger', 'Side'],
       ['Unban-ansøgning', 'ansog.html?type=unban', 'Side'], ['Discord', 'https://discord.gg/GE6Ku6Znh', 'Link'], ['Staff login', 'admin.html', 'Side']
     ];
     if (erAdmin) SIDER.push(['Banliste', 'banliste.html', 'Side'], ['Ret stats', 'admin.html#stats', 'Admin']);
