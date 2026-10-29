@@ -35,6 +35,8 @@
     '.hdt-menu .valgt{color:#4ADE80}',
     '.hdt-menu hr{border:0;border-top:1px solid var(--hdt-kant,#24402F);margin:4px 0;width:100%}',
     '.hdt-menu svg,.hdt-knap svg{flex:none}',
+    '.hdt-tema-knap svg{transition:transform .5s ease}.hdt-tema-knap.er-sol{color:#D97706}.hdt-tema-knap.er-sol svg{animation:hdtSol .6s ease}',
+    '@keyframes hdtSol{from{transform:rotate(-90deg) scale(.6);opacity:0}to{transform:none;opacity:1}}',
     ':root[data-tema="lyst"]{--hdt-kant:#C3D6CA;--hdt-bg:rgba(255,255,255,.85);--hdt-daempet:#4B6355;--hdt-tekst:#14251B;--hdt-hover:rgba(0,0,0,.05);--hdt-menu:#FFFFFF}',
     ':root[data-tema="lyst"] .hdt-menu{box-shadow:0 18px 40px rgba(0,0,0,.15)}',
     ':root[data-tema="lyst"] .hdt-groen{background:#DCFCE7;color:#14532D}:root[data-tema="lyst"] .hdt-groen a{color:#15803D}',
@@ -47,7 +49,7 @@
 
   var IKON = {
     maane: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>',
-    sol: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    sol: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>',
     skaerm: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>',
     person: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>',
     skjold: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>',
@@ -84,7 +86,7 @@
     var v = valgtTema();
     var lys = v === 'lyst' || (v === 'system' && mq && mq.matches);
     root.setAttribute('data-tema', lys ? 'lyst' : 'moerkt');
-    document.querySelectorAll('.hdt-tema-knap').forEach(function (k) { k.innerHTML = lys ? IKON.sol : IKON.maane; });
+    document.querySelectorAll('.hdt-tema-knap').forEach(function (k) { k.innerHTML = lys ? IKON.sol : IKON.maane; k.classList.toggle('er-sol', lys); k.setAttribute('aria-label', lys ? 'Lyst tema (skift tema)' : 'Mørkt tema (skift tema)'); });
     document.querySelectorAll('.hdt-tema-menu button').forEach(function (b) { b.classList.toggle('valgt', b.dataset.tema === v); b.setAttribute('aria-checked', b.dataset.tema === v ? 'true' : 'false'); });
     window.dispatchEvent(new Event('hdtema'));
   }
