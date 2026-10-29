@@ -99,10 +99,21 @@
         '<div class="felt"><label for="sp-ret-k">Kills</label><input id="sp-ret-k" type="number" min="0" step="1" value="' + (s.k || 0) + '"></div>' +
         '<div class="felt"><label for="sp-ret-d">Døde</label><input id="sp-ret-d" type="number" min="0" step="1" value="' + (s.d || 0) + '"></div>' +
         '<div class="felt"><label for="sp-ret-ds">Daily-streak</label><input id="sp-ret-ds" type="number" min="0" step="1" value="' + (s.ds || 0) + '"></div></div>' +
-        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="knap groen" type="submit">Gem</button><button class="knap" type="button" data-luk>Annuller</button><span class="sp-ret-besked" role="status"></span></div>';
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="knap groen" type="submit">Gem</button><button class="knap" type="button" data-luk>Annuller</button><button class="knap roed" type="button" data-nulstil>Nulstil stats</button><span class="sp-ret-besked" role="status"></span></div>';
       top.insertAdjacentElement('afterend', panel);
       retKnap.addEventListener('click', function () { panel.classList.toggle('skjult'); });
       panel.querySelector('[data-luk]').addEventListener('click', function () { panel.classList.add('skjult'); });
+      var nul = panel.querySelector('[data-nulstil]');
+      nul.addEventListener('click', function () {
+        if (nul.dataset.klar !== '1') {
+          nul.dataset.klar = '1';
+          nul.textContent = 'Sikker? Klik igen';
+          setTimeout(function () { nul.dataset.klar = ''; nul.textContent = 'Nulstil stats'; }, 5000);
+          return;
+        }
+        ['k', 'd', 'ds'].forEach(function (f) { el('sp-ret-' + f).value = 0; });
+        panel.requestSubmit ? panel.requestSubmit() : panel.dispatchEvent(new Event('submit', { cancelable: true }));
+      });
       panel.addEventListener('submit', function (e) {
         e.preventDefault();
         var besked = panel.querySelector('.sp-ret-besked');

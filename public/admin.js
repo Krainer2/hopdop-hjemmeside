@@ -261,6 +261,31 @@
     }).catch(function (e) { el('ad-stats-liste').innerHTML = '<li class="daempet"></li>'; el('ad-stats-liste').firstChild.textContent = e.message; });
   }
   el('ad-stats-navn').addEventListener('input', visNu);
+  // Nulstil: sætter kills, døde og daily-streak til 0 (kræver to klik)
+  var nulKnap = el('ad-stats-nulstil'), nulTimer = null;
+  function nulstilKnapNormal() { nulKnap.textContent = 'Nulstil stats'; nulKnap.dataset.klar = ''; }
+  el('ad-stats-navn').addEventListener('input', nulstilKnapNormal);
+  nulKnap.addEventListener('click', function () {
+    var besked = el('ad-stats-besked');
+    var s = fundet();
+    if (!s) { besked.textContent = 'Skriv navnet på en spiller først.'; return; }
+    if (nulKnap.dataset.klar !== '1') {
+      nulKnap.dataset.klar = '1';
+      nulKnap.textContent = 'Sikker? Klik igen for at nulstille ' + s.n;
+      clearTimeout(nulTimer);
+      nulTimer = setTimeout(nulstilKnapNormal, 5000);
+      return;
+    }
+    clearTimeout(nulTimer);
+    nulstilKnapNormal();
+    besked.textContent = 'Nulstiller...';
+    ['k', 'd', 'ds'].reduce(function (p, f) {
+      return p.then(function () { return H.api('statsaendring', { method: 'POST', body: { navn: s.n, felt: f, handling: 'saet', v: 0 } }); });
+    }, Promise.resolve()).then(function () {
+      besked.textContent = s.n + ' er nulstillet (kills, døde og daily-streak = 0). Serveren får det ved næste sync.';
+      hentStatsRet();
+    }).catch(function (err) { besked.textContent = err.message; });
+  });
   el('ad-stats-form').addEventListener('submit', function (e) {
     e.preventDefault();
     var besked = el('ad-stats-besked');
