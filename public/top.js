@@ -86,7 +86,7 @@
     var v = valgtTema();
     var lys = v === 'lyst' || (v === 'system' && mq && mq.matches);
     root.setAttribute('data-tema', lys ? 'lyst' : 'moerkt');
-    document.querySelectorAll('.hdt-tema-knap').forEach(function (k) { k.innerHTML = lys ? IKON.sol : IKON.maane; k.classList.toggle('er-sol', lys); k.setAttribute('aria-label', lys ? 'Lyst tema (skift tema)' : 'Mørkt tema (skift tema)'); });
+    document.querySelectorAll('.hdt-tema-knap').forEach(function (k) { var sys = v === 'system'; k.innerHTML = sys ? IKON.skaerm : (lys ? IKON.sol : IKON.maane); k.classList.toggle('er-sol', lys && !sys); k.setAttribute('aria-label', (sys ? 'System-tema' : lys ? 'Lyst tema' : 'Mørkt tema') + ' (skift tema)'); });
     document.querySelectorAll('.hdt-tema-menu button').forEach(function (b) { b.classList.toggle('valgt', b.dataset.tema === v); b.setAttribute('aria-checked', b.dataset.tema === v ? 'true' : 'false'); });
     window.dispatchEvent(new Event('hdtema'));
   }
