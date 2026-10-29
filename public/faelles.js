@@ -103,11 +103,15 @@
   var top = document.getElementById('hd-top');
   if (top) {
     top.className = 'nd-top';
-    top.innerHTML = '<div class="nd-top-in"><a class="nd-logo" href="index.html"><img src="assets/ikon-32.png" alt=""><b>HOPDOP</b><span>HCF KITS</span></a>' +
-      '<nav class="nd-nav" aria-label="Hovedmenu">' + links.map(function (l) {
-        return '<a href="' + l[0] + '"' + (l[2] === aktiv ? ' aria-current="page"' : '') + '>' + l[1] + '</a>';
-      }).join('') + '</nav>' +
-      '<div class="nd-knapper"><span data-hd-online></span><span data-hd-tema></span><span data-hd-konto></span><a class="nd-discord" href="' + H.DISCORD + '">Discord</a></div></div>';
+    var lnk = function (l) { return '<a href="' + l[0] + '"' + (l[2] === aktiv ? ' aria-current="page"' : '') + '>' + l[1] + '</a>'; };
+    var del = links.length - 3;
+    top.innerHTML = '<div class="nd-top-hoved"><div class="nd-top-in">' +
+      '<nav class="nd-nav nd-nav-v" aria-label="Hovedmenu">' + links.slice(0, del).map(lnk).join('') + '</nav>' +
+      '<a class="nd-logo" href="index.html" aria-label="HOPDOP - forside"><img src="assets/apple-touch-icon.png" alt=""></a>' +
+      '<nav class="nd-nav nd-nav-h" aria-label="Menu">' + links.slice(del).map(lnk).join('') + '</nav></div></div>' +
+      '<div class="nd-top-under"><div class="nd-top-in">' +
+      '<div class="nd-under-v"><button type="button" class="nd-ip" data-ip="' + H.IP + '" title="Kopiér IP"><b>IP</b>' + H.IP + '</button><span data-hd-online></span></div>' +
+      '<div class="nd-knapper"><span data-hd-tema></span><span data-hd-konto></span><a class="nd-discord" href="' + H.DISCORD + '">Discord</a></div></div></div>';
   }
   var bund = document.getElementById('hd-bund');
   if (bund) {
@@ -118,6 +122,6 @@
       '<span style="font-size:13px;color:#E2D3BF">' + H.IP + ' · Ikke tilknyttet Minecraft, Mojang eller Microsoft.</span></div>' +
       '<nav aria-label="Footer" style="display:flex;flex-wrap:wrap;gap:18px;font-family:Pixelify Sans,sans-serif;font-size:16px">' +
       links.map(function (l) { return '<a style="color:#fff" href="' + l[0] + '">' + l[1] + '</a>'; }).join('') +
-      '<a style="color:#fff" href="admin.html">Staff login</a></nav></div></div><div class="nd-bedrock"></div>';
+      '</nav></div></div><div class="nd-bedrock"></div>';
   }
 })();

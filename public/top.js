@@ -370,5 +370,13 @@
   document.querySelectorAll('[data-hd-konto]').forEach(kontoKnap);
   anvendTema();
   banner();
+  // Kopiér IP i topbaren
+  document.querySelectorAll('.nd-ip').forEach(function (k) {
+    k.addEventListener('click', function () {
+      var ip = k.getAttribute('data-ip'), gammel = k.innerHTML;
+      var faerdig = function () { k.innerHTML = '<b>IP</b>Kopieret!'; setTimeout(function () { k.innerHTML = gammel; }, 1400); };
+      if (navigator.clipboard) navigator.clipboard.writeText(ip).then(faerdig, faerdig); else faerdig();
+    });
+  });
   window.HDTop = { anvendTema: anvendTema };
 })();
