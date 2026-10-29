@@ -1,4 +1,4 @@
-// /api/banner   GET (offentlig) -> bjælken øverst på siden.   PUT (Admin/Ejer) -> ret den
+// /api/banner   GET (offentlig) -> kortet i bunden af siden.   PUT (Admin/Ejer) -> ret den
 import { hent, gem, logHandling } from '../lib/data.mjs';
 import { hvemErDet, harNiveau, json } from '../lib/auth.mjs';
 

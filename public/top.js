@@ -10,14 +10,21 @@
 
   var css = document.createElement('style');
   css.textContent = [
-    '.hdt-banner{position:relative;z-index:30;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 48px;font:500 14px Inter,system-ui,sans-serif;text-align:center;border-bottom:1px solid rgba(255,255,255,.08)}',
-    '.hdt-banner a{font-weight:700;text-decoration:none;color:inherit;border-bottom:2px solid currentColor}',
-    '.hdt-banner button{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:36px;height:36px;border:0;border-radius:8px;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer;opacity:.7}',
+    '.hdt-banner{--bn:#6EF08F;--bn-rgb:110,240,143;position:fixed;z-index:60;left:50%;bottom:22px;width:min(640px,calc(100% - 32px));box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:14px 14px 14px 18px;border-radius:18px;font:500 15px Inter,system-ui,sans-serif;color:#E8F1EC;background:linear-gradient(135deg,rgba(var(--bn-rgb),.16),rgba(8,13,11,.92) 55%);border:1px solid rgba(var(--bn-rgb),.35);box-shadow:0 18px 50px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.4),0 0 40px rgba(var(--bn-rgb),.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transform:translate(-50%,140%);opacity:0;transition:transform .6s cubic-bezier(.2,1.3,.4,1),opacity .4s}',
+    '.hdt-banner.vis{transform:translate(-50%,0);opacity:1}',
+    '.hdt-banner::before{content:"";position:absolute;left:18px;right:18px;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--bn),transparent);opacity:.8}',
+    '.hdt-bn-ikon{flex:none;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:rgba(var(--bn-rgb),.14);color:var(--bn);position:relative}',
+    '.hdt-bn-ikon::after{content:"";position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;background:var(--bn);box-shadow:0 0 0 0 rgba(var(--bn-rgb),.7);animation:hdtPuls 1.8s infinite}',
+    '@keyframes hdtPuls{70%{box-shadow:0 0 0 10px rgba(var(--bn-rgb),0)}100%{box-shadow:0 0 0 0 rgba(var(--bn-rgb),0)}}',
+    '.hdt-bn-tekst{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;line-height:1.35}',
+    '.hdt-bn-tekst small{font:700 11px Silkscreen,monospace;letter-spacing:2px;color:var(--bn);text-transform:uppercase}',
+    '.hdt-banner a{flex:none;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px;border-radius:11px;font-weight:700;font-size:14px;text-decoration:none;color:#06120B;background:var(--bn);box-shadow:0 3px 0 rgba(0,0,0,.35),0 0 18px rgba(var(--bn-rgb),.35);transition:transform .15s}',
+    '.hdt-banner a:hover{transform:translateY(-2px);color:#06120B}',
+    '.hdt-banner button{flex:none;width:34px;height:34px;border:0;border-radius:9px;background:transparent;color:inherit;font-size:20px;line-height:1;cursor:pointer;opacity:.6}',
     '.hdt-banner button:hover{opacity:1;background:rgba(255,255,255,.08)}',
-    '.hdt-groen{background:#0E2A19;color:#BBF7D0}.hdt-groen a{color:#4ADE80}',
-    '.hdt-gul{background:#2A1E05;color:#FDE68A}.hdt-gul a{color:#FACC15}',
-    '.hdt-roed{background:#2A1212;color:#FECACA}.hdt-roed a{color:#F87171}',
-    '.hdt-blaa{background:#0C2235;color:#BAE6FD}.hdt-blaa a{color:#7DD3FC}',
+    '.hdt-banner.hdt-gul{--bn:#F5C542;--bn-rgb:245,197,66}.hdt-banner.hdt-roed{--bn:#FF6B5E;--bn-rgb:255,107,94}.hdt-banner.hdt-blaa{--bn:#7DD3FC;--bn-rgb:125,211,252}',
+    ':root[data-tema="lyst"] .hdt-banner{color:#14251B;background:linear-gradient(135deg,rgba(var(--bn-rgb),.22),rgba(255,255,255,.95) 55%);box-shadow:0 18px 40px rgba(0,0,0,.15)}',
+    '@media (max-width:560px){.hdt-banner{flex-wrap:wrap;bottom:12px;gap:10px;padding:12px 10px 12px 14px}.hdt-bn-ikon{display:none}.hdt-bn-tekst{flex:1 1 0}.hdt-banner button{order:2}.hdt-banner a{order:3;flex:1 1 100%;justify-content:center}}',
     '.hdt-boks{display:flex;align-items:center;gap:8px;position:relative}',
     '.hdt-online{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--hdt-kant,#24402F);background:var(--hdt-bg,rgba(15,24,19,.8));color:var(--hdt-daempet,#A9BFB1);font:500 13px Inter,system-ui,sans-serif;white-space:nowrap}',
     '.hdt-online i{width:8px;height:8px;border-radius:50%;background:#4ADE80;display:inline-block}',
@@ -39,11 +46,7 @@
     '@keyframes hdtSol{from{transform:rotate(-90deg) scale(.6);opacity:0}to{transform:none;opacity:1}}',
     ':root[data-tema="lyst"]{--hdt-kant:#C3D6CA;--hdt-bg:rgba(255,255,255,.85);--hdt-daempet:#4B6355;--hdt-tekst:#14251B;--hdt-hover:rgba(0,0,0,.05);--hdt-menu:#FFFFFF}',
     ':root[data-tema="lyst"] .hdt-menu{box-shadow:0 18px 40px rgba(0,0,0,.15)}',
-    ':root[data-tema="lyst"] .hdt-groen{background:#DCFCE7;color:#14532D}:root[data-tema="lyst"] .hdt-groen a{color:#15803D}',
-    ':root[data-tema="lyst"] .hdt-gul{background:#FEF3C7;color:#713F12}:root[data-tema="lyst"] .hdt-gul a{color:#A16207}',
-    ':root[data-tema="lyst"] .hdt-roed{background:#FEE2E2;color:#7F1D1D}:root[data-tema="lyst"] .hdt-roed a{color:#B91C1C}',
-    ':root[data-tema="lyst"] .hdt-blaa{background:#E0F2FE;color:#0C4A6E}:root[data-tema="lyst"] .hdt-blaa a{color:#0369A1}',
-    '@media (max-width:760px){.hdt-online{display:none}.hdt-banner{padding:9px 44px 9px 12px;font-size:13px}}'
+    '@media (max-width:760px){.hdt-online{display:none}}'
   ].join('\n');
   document.head.appendChild(css);
 
@@ -162,12 +165,17 @@
       var d = document.createElement('div');
       d.className = 'hdt-banner hdt-' + (b.farve || 'groen');
       d.setAttribute('role', 'region');
-      d.setAttribute('aria-label', 'Besked');
-      d.innerHTML = '<span></span>' + (b.link && b.linkTekst ? '<a></a>' : '') + '<button type="button" aria-label="Luk besked">×</button>';
-      d.querySelector('span').textContent = b.tekst;
-      if (b.link && b.linkTekst) { var a = d.querySelector('a'); a.href = b.link; a.textContent = b.linkTekst; }
-      d.querySelector('button').addEventListener('click', function () { saet('hopdop-banner-luk', b.id); d.remove(); });
-      document.body.insertBefore(d, document.body.firstChild);
+      d.setAttribute('aria-label', 'Besked fra HOPDOP');
+      d.innerHTML = '<span class="hdt-bn-ikon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></span>' +
+        '<span class="hdt-bn-tekst"><small>Nyt fra HOPDOP</small><span></span></span>' +
+        (b.link && b.linkTekst ? '<a></a>' : '') + '<button type="button" aria-label="Luk besked">×</button>';
+      d.querySelector('.hdt-bn-tekst span').textContent = b.tekst;
+      if (b.link && b.linkTekst) { var a = d.querySelector('a'); a.href = b.link; a.textContent = b.linkTekst.replace(/\s*[→>]+\s*$/, '') + ' →'; }
+      d.querySelector('button').addEventListener('click', function () {
+        saet('hopdop-banner-luk', b.id); d.classList.remove('vis'); setTimeout(function () { d.remove(); }, 600);
+      });
+      document.body.appendChild(d);
+      setTimeout(function () { d.classList.add('vis'); }, 1200);
     }).catch(function () {});
   }
 
