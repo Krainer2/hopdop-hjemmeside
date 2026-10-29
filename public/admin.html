@@ -81,6 +81,7 @@
 <button type="button" data-fane="oversigt">Oversigt</button>
 <button type="button" data-fane="ansog">Ansøgninger <span class="badge gul skjult" id="ad-nye"></span></button>
 <button type="button" data-fane="staff">Staff-liste</button>
+<button type="button" data-fane="stats" id="ad-stats-knap">Ret stats</button>
 <a class="ad-banlink" href="banliste.html">Banliste ↗</a>
 <button type="button" data-fane="tekster">Hjemmesidens tekster</button>
 <button type="button" data-fane="banner">Banner</button>
@@ -151,6 +152,24 @@
 <div><span class="daempet" style="font-size:13px">Forhåndsvisning</span><div id="ad-bn-vis" style="margin-top:6px;border-radius:10px;overflow:hidden"></div></div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button class="knap groen" type="submit">Gem banner</button><span id="ad-bn-besked" role="status" class="daempet"></span></div>
 </form>
+</div>
+
+<div data-indhold="stats" class="skjult">
+<h1>Ret spiller-stats</h1>
+<p class="daempet" style="margin:8px 0 18px">Ret kills, døde eller daily-streak. Rettelsen vises med det samme her på siden og bliver gemt på serveren ved næste sync (højst 5 minutter, eller med det samme hvis du skriver <b>/websync</b>).</p>
+<div class="kort">
+<form id="ad-stats-form" style="display:flex;flex-direction:column;gap:16px">
+<div class="felt"><label for="ad-stats-navn">Spiller</label><input id="ad-stats-navn" list="ad-stats-forslag" required autocomplete="off" placeholder="Minecraft-navn"><datalist id="ad-stats-forslag"></datalist></div>
+<div id="ad-stats-nu" class="daempet" style="min-height:22px"></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+<div class="felt"><label for="ad-stats-felt">Hvad</label><select id="ad-stats-felt"><option value="k">Kills</option><option value="d">Døde</option><option value="ds">Daily-streak</option></select></div>
+<div class="felt"><label for="ad-stats-handling">Hvordan</label><select id="ad-stats-handling"><option value="saet">Sæt til</option><option value="tilfoej">Læg til / træk fra</option></select></div>
+<div class="felt"><label for="ad-stats-v">Tal</label><input id="ad-stats-v" type="number" required step="1" placeholder="fx 50 eller -5"></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><button class="knap groen" type="submit">Gem rettelse</button><span id="ad-stats-besked" role="status"></span></div>
+</form>
+</div>
+<div class="kort" style="margin-top:16px"><h3>Rettelser</h3><ul id="ad-stats-liste" class="ad-log" style="margin-top:10px"></ul></div>
 </div>
 
 <div data-indhold="log" class="skjult">

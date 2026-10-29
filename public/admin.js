@@ -55,6 +55,7 @@
     if (id === 'ansog') hentAnsog();
     if (id === 'staff') hentStaff();
     if (id === 'log') hentLog();
+    if (id === 'stats') hentStatsRet();
     if (id === 'banner') hentBanner();
     if (id === 'oversigt') hentOversigt();
   }
@@ -93,6 +94,7 @@
       }).join('') + (o.syncFejl && (!s || o.syncFejl.tid > s.sidst) ? '<li><span class="badge roed">Fejl</span><span>Seneste sync fejlede ' + H.esc(H.siden(o.syncFejl.tid)) + ': ' + H.esc(o.syncFejl.fejl) + '</span></li>' : '');
       opdaterNye(o.nyeAnsogninger);
       el('ad-import').classList.toggle('skjult', !(o.mig && o.mig.rolle === 'ejer'));
+      el('ad-stats-knap').classList.toggle('skjult', !(o.mig && (o.mig.rolle === 'ejer' || o.mig.rolle === 'admin')));
     }).catch(function () {});
   }
   function opdaterNye(n) {
@@ -225,6 +227,54 @@
   });
 
   // ---------- Log ----------
+  // ---------- Ret stats (kun Admin og Ejer) ----------
+  var statsSpillere = [];
+  function fundet() {
+    var n = el('ad-stats-navn').value.trim().toLowerCase();
+    return statsSpillere.filter(function (x) { return x.n.toLowerCase() === n; })[0];
+  }
+  function visNu() {
+    var s = fundet();
+    el('ad-stats-nu').textContent = s ? 'Nu: ' + H.tal(s.k) + ' kills · ' + H.tal(s.d) + ' døde · ' + H.tal(s.ds) + ' dages streak' : '';
+  }
+  function hentStatsRet() {
+    H.api('stats', { auth: false }).then(function (d) {
+      statsSpillere = d.spillere || [];
+      el('ad-stats-forslag').innerHTML = statsSpillere.map(function (x) { return '<option value="' + H.esc(x.n) + '">'; }).join('');
+      visNu();
+    }).catch(function () {});
+    H.api('statsaendring').catch(fejlHaandter).then(function (j) {
+      var ul = el('ad-stats-liste');
+      ul.innerHTML = '';
+      if (!j.liste.length) { ul.innerHTML = '<li class="daempet">Ingen rettelser endnu.</li>'; return; }
+      j.liste.forEach(function (x) {
+        var li = document.createElement('li');
+        var hvad = (j.felter[x.felt] || x.felt) + ' ' + (x.handling === 'tilfoej' ? (x.v >= 0 ? '+' : '') + x.v : x.foer + ' → ' + x.v);
+        li.innerHTML = '<b></b> <span class="badge"></span><br><span class="daempet"></span>';
+        li.querySelector('b').textContent = x.n + ': ' + hvad;
+        var badge = li.querySelector('.badge');
+        badge.textContent = x.status === 'venter' ? 'Venter på serveren' : 'Gemt på serveren';
+        if (x.status === 'venter') badge.classList.add('gul');
+        li.querySelector('.daempet').textContent = 'af ' + x.af + ' · ' + H.dato(x.tid);
+        ul.appendChild(li);
+      });
+    }).catch(function (e) { el('ad-stats-liste').innerHTML = '<li class="daempet"></li>'; el('ad-stats-liste').firstChild.textContent = e.message; });
+  }
+  el('ad-stats-navn').addEventListener('input', visNu);
+  el('ad-stats-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var besked = el('ad-stats-besked');
+    besked.textContent = 'Gemmer...';
+    H.api('statsaendring', { method: 'POST', body: { navn: el('ad-stats-navn').value.trim(), felt: el('ad-stats-felt').value, handling: el('ad-stats-handling').value, v: Number(el('ad-stats-v').value) } })
+      .catch(fejlHaandter)
+      .then(function (j) {
+        besked.textContent = 'Gemt! ' + j.spiller.n + ' har nu ' + H.tal(j.spiller[j.aendring.felt]) + '. Serveren får det ved næste sync.';
+        el('ad-stats-v').value = '';
+        hentStatsRet();
+      })
+      .catch(function (err) { besked.textContent = err.message; });
+  });
+
   function hentLog() {
     H.api('log').catch(fejlHaandter).then(function (j) {
       var ul = el('ad-log');

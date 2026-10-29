@@ -22,9 +22,12 @@ import:
 	org.bukkit.Statistic
 	org.bukkit.configuration.file.YamlConfiguration
 	java.io.File
+	java.net.URL
+	java.util.Scanner
 
 options:
 	url: https://hopdop.pages.dev/api/sync
+	rettelser: https://hopdop.pages.dev/api/statsaendring/server
 	noegle: SKRIV-DIN-WEB-NOEGLE-HER
 	teamsfil: plugins/Teams/teams.yml
 	prefix: &8[ &a&lWEB &8] &7
@@ -201,9 +204,75 @@ function webTeams() :: text:
 			set {_ud} to "%{_ud}%,%{_e}%"
 	return "[%{_ud}%]"
 
+# ---------- Rettelser fra hjemmesiden (Ret stats i admin-panelet) ----------
+
+# Gemmer én rettelse i Skript-variablerne. Linje: id|uuid|felt|handling|tal
+function webRetLinje(linje: text):
+	set {_d::*} to split {_linje} at "|"
+	set {_id} to {_d::1}
+	if {web::rettet::%{_id}%} is set:
+		stop
+	set {web::rettet::%{_id}%} to true
+	set {_u} to {_d::2}
+	set {_v} to {_d::5} parsed as integer
+	if {_v} is not set:
+		stop
+	if {_d::3} is "k":
+		if {_d::4} is "saet":
+			set {lb::kills::%{_u}%} to {_v}
+		else:
+			add {_v} to {lb::kills::%{_u}%}
+		if {lb::kills::%{_u}%} < 0:
+			set {lb::kills::%{_u}%} to 0
+	else if {_d::3} is "d":
+		if {_d::4} is "saet":
+			set {ld::deaths::%{_u}%} to {_v}
+		else:
+			add {_v} to {ld::deaths::%{_u}%}
+		if {ld::deaths::%{_u}%} < 0:
+			set {ld::deaths::%{_u}%} to 0
+	else if {_d::3} is "ds":
+		if {_d::4} is "saet":
+			set {drs::streak::%{_u}%} to {_v}
+		else:
+			add {_v} to {drs::streak::%{_u}%}
+		if {drs::streak::%{_u}%} < 0:
+			set {drs::streak::%{_u}%} to 0
+
+# Henter ventende rettelser fra hjemmesiden og gemmer dem. Svarer med de id'er der er gemt.
+function webHentRettelser() :: text:
+	set {_c} to new URL("{@rettelser}").openConnection()
+	{_c}.setConnectTimeout(5000)
+	{_c}.setReadTimeout(5000)
+	{_c}.setRequestProperty("Authorization", "Bearer {@noegle}")
+	{_c}.setRequestProperty("User-Agent", "HOPDOP-WebSync/1.0")
+	set {_sc} to new Scanner({_c}.getInputStream(), "UTF-8")
+	{_sc}.useDelimiter("\A")
+	set {_txt} to ""
+	if {_sc}.hasNext() is true:
+		set {_txt} to {_sc}.next()
+	{_sc}.close()
+	if {_txt} is "":
+		delete {web::rettet::*}
+		return ""
+	set {_linjer::*} to split {_txt} at "~"
+	set {_ids} to ""
+	loop {_linjer::*}:
+		webRetLinje(loop-value)
+		set {_d::*} to split loop-value at "|"
+		if {_ids} is "":
+			set {_ids} to {_d::1}
+		else:
+			set {_ids} to "%{_ids}%,%{_d::1}%"
+	return {_ids}
+
 # ---------- Selve synkroniseringen ----------
 
 function webSync():
+	# Rettelser fra hjemmesiden først, så de kommer med i det vi sender
+	set {_anvendt} to webHentRettelser()
+	if {_anvendt} is not set:
+		set {_anvendt} to ""
 	# Spilletid for alle online spillere
 	loop all players:
 		webOntime(loop-player)
@@ -243,7 +312,7 @@ function webSync():
 			else:
 				set {_ps} to "%{_ps}%,%{_e}%"
 	set {_teams} to webTeams()
-	set {_json} to "{""v"":1,""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%}"
+	set {_json} to "{""v"":1,""anvendt"":""%{_anvendt}%"",""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%}"
 	set {_h::1} to "Content-Type: application/json"
 	set {_h::2} to "Authorization: Bearer {@noegle}"
 	set {_h::3} to "User-Agent: HOPDOP-WebSync/1.0"

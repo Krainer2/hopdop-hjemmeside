@@ -3,6 +3,7 @@ import { hent, gem } from '../lib/data.mjs';
 import { ensNoegle, json } from '../lib/auth.mjs';
 import { env } from '../lib/miljoe.mjs';
 import { laesLinje, ren } from '../lib/straffe.mjs';
+import { hentAendringer, gemAendringer, anvend } from '../lib/aendringer.mjs';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const NAVN = /^[A-Za-z0-9_]{1,16}$/;
@@ -100,6 +101,21 @@ export default async (req) => {
     });
   }
   const online = (Array.isArray(d.online) ? d.online : []).filter((n) => NAVN.test(n));
+
+  // Rettelser fra hjemmesiden: serveren fortæller hvilke den har gemt ("anvendt").
+  // Dem der stadig venter, lægges oven på tallene, så siden viser dem indtil serveren har dem.
+  const ae = await hentAendringer();
+  if (ae.liste.some((x) => x.status === 'venter')) {
+    const anvendt = new Set(String(d.anvendt || '').split(',').map((x) => x.trim()).filter(Boolean));
+    let aendret = false;
+    for (const x of ae.liste) {
+      if (x.status !== 'venter') continue;
+      if (anvendt.has(x.id)) { x.status = 'anvendt'; x.anvendt = nu; aendret = true; continue; }
+      const sp = spillere.find((p) => p.u === x.u);
+      if (sp) anvend(sp, x);
+    }
+    if (aendret) await gemAendringer(ae);
+  }
 
   // Behold kun de nyeste straffe
   let alle = Object.values(poster);
