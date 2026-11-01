@@ -71,7 +71,7 @@ async function laesToken(req) {
 export async function hvemErDet(req) {
   const p = await laesToken(req);
   if (!p) return null;
-  if (p.kilde === 'sa') {
+  if (p.kilde === 'sa' || p.kilde === 'mc') {
     const r = await rolleFor(p.navn);
     if (!r) return null;
     p.rolle = r;
@@ -89,7 +89,7 @@ export async function hvemErLoggetInd(req) {
   if (!p) return null;
   const staff = await hvemErDet(req);
   if (staff) return staff;
-  return p.kilde === 'sa' ? { ...p, rolle: 'spiller' } : null;
+  return (p.kilde === 'sa' || p.kilde === 'mc') ? { ...p, rolle: 'spiller' } : null;
 }
 
 export function harNiveau(bruger, rolle) {
