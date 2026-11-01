@@ -17,6 +17,8 @@ import r12, { config as c12 } from '../../api/ruter/sync.mjs';
 import r13, { config as c13 } from '../../api/ruter/tekster.mjs';
 import r14, { config as c14 } from '../../api/ruter/statsaendring.mjs';
 import r15, { config as c15 } from '../../api/ruter/statsaendring-server.mjs';
+import r16, { config as c16 } from '../../api/ruter/weblogin.mjs';
+import r17, { config as c17 } from '../../api/ruter/weblogin-kode.mjs';
 
 const RUTER = {
   [c0.path]: r0,
@@ -34,7 +36,9 @@ const RUTER = {
   [c12.path]: r12,
   [c13.path]: r13,
   [c14.path]: r14,
-  [c15.path]: r15
+  [c15.path]: r15,
+  [c16.path]: r16,
+  [c17.path]: r17
 };
 
 export async function onRequest(context) {
