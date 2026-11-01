@@ -140,7 +140,7 @@
     s.el = el;
   }
   var taendt = true;
-  try { taendt = localStorage.getItem('hopdop-skiver') !== 'fra'; } catch (e) {}
+  try { taendt = localStorage.getItem('hopdop-skiver') === 'til'; } catch (e) {}
   function start() {
     if (!taendt) return;
     for (var i = 0; i < antal; i++) { var s = {}; skiver.push(s); spawn(s); }
