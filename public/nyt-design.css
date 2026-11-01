@@ -170,3 +170,16 @@ input,select,textarea{border-radius:10px}
 @media (max-width:760px){.nd-soeg.aaben{width:180px}.nd-soeg-res{width:min(320px,90vw)}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 html{scroll-padding-top:130px}@media (max-width:860px){html{scroll-padding-top:16px}}
+
+/* ---------- Baggrund: nat i mørkt tema, dag i lyst tema (glider over) ---------- */
+.hd-bg{background-image:url(assets/hopdop-nat.jpg) !important;background-position:center 35% !important}
+.hd-bg-sloer{background-image:url(assets/hopdop-nat-blur.jpg) !important;background-position:center 35% !important}
+.hd-bg::after,.hd-bg-sloer::after{content:"";position:absolute;inset:0;background-size:cover;background-position:center 35%;opacity:0;transition:opacity 1.2s ease}
+.hd-bg::after{background-image:url(assets/hopdop-dag.jpg)}
+.hd-bg-sloer::after{background-image:url(assets/hopdop-dag-blur.jpg)}
+:root[data-tema="lyst"] .hd-bg::after,:root[data-tema="lyst"] .hd-bg-sloer::after{opacity:1}
+.hd-glow{display:none}
+.hd-stj,.hd-ild{transition:opacity 1.2s ease}
+:root[data-tema="lyst"] .hd-stj,:root[data-tema="lyst"] .hd-ild{opacity:0 !important}
+body::before{background:url(assets/hopdop-nat-blur.jpg) center 35%/cover !important}
+:root[data-tema="lyst"] body::before{background:url(assets/hopdop-dag-blur.jpg) center 35%/cover !important}
