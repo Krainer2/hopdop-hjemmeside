@@ -1,18 +1,18 @@
 // HOPDOP - banner, online-tæller, tema-knap og konto-menu (bruges på alle sider). Lavet af Krainer2
 
-// Spillerhoved (samme regel som HD.hoved i faelles.js): rigtig UUID -> Crafatar, ellers navn via mc-heads
+// Spillerhoved (samme regel som HD.hoved i faelles.js): rigtig UUID -> /api/hoved, ellers navn via mc-heads
 window.hdHoved = function (id, str, navn) {
   id = String(id || navn || 'MHF_Steve');
   var m = id.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?([0-9a-f])[0-9a-f]{3}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i);
-  if (m && m[1] !== '3') return 'https://crafatar.com/avatars/' + id.replace(/-/g, '').toLowerCase() + '?size=' + (str || 32) + '&overlay';
+  if (m && m[1] !== '3') return '/api/hoved?u=' + id.replace(/-/g, '').toLowerCase() + '&s=' + (str || 32);
   if (m && navn) id = navn;
   return 'https://mc-heads.net/avatar/' + encodeURIComponent(id) + '/' + (str || 32);
 };
-// Svarer Crafatar ikke, bruges mc-heads i stedet
+// Fejler /api/hoved, bruges mc-heads direkte i stedet
 document.addEventListener('error', function (e) {
   var t = e.target;
   if (!t || t.tagName !== 'IMG') return;
-  var m = String(t.src).match(/crafatar\.com\/avatars\/([0-9a-f]{32})\?size=(\d+)/);
+  var m = String(t.src).match(/\/api\/hoved\?u=([0-9a-f]{32})&s=(\d+)/);
   if (m) t.src = 'https://mc-heads.net/avatar/' + m[1] + '/' + m[2];
 }, true);
 (function () {
