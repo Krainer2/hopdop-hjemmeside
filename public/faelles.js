@@ -31,11 +31,14 @@
     if (s < 86400) return Math.floor(s / 3600) + ' t. siden';
     return Math.floor(s / 86400) + ' dage siden';
   };
-  // Spillerhoved fra mc-heads. Offline-UUID'er (version 3, fra servere i offline mode) kender Mojang ikke,
-  // så for dem bruges navnet i stedet - ellers vises bare standard-skin (Steve/Alex).
+  // Spillerhoved. Rigtige UUID'er hentes fra Crafatar (direkte fra Mojang - mc-heads viste forkerte/gamle skins).
+  // Offline-UUID'er (version 3) kender Mojang ikke, så for dem bruges navnet via mc-heads.
+  // Svarer Crafatar ikke, skifter top.js automatisk til mc-heads.
   H.hoved = function (uuidEllerNavn, str, navn) {
-    var id = uuidEllerNavn || navn || 'MHF_Steve';
-    if (navn && /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-/i.test(String(id))) id = navn;
+    var id = String(uuidEllerNavn || navn || 'MHF_Steve');
+    var m = id.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?([0-9a-f])[0-9a-f]{3}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i);
+    if (m && m[1] !== '3') return 'https://crafatar.com/avatars/' + id.replace(/-/g, '').toLowerCase() + '?size=' + (str || 32) + '&overlay';
+    if (m && navn) id = navn;
     return 'https://mc-heads.net/avatar/' + encodeURIComponent(id) + '/' + (str || 32);
   };
   H.profil = function (navn) { return 'spiller.html?navn=' + encodeURIComponent(navn); };

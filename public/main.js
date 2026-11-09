@@ -301,7 +301,7 @@
           '<span style="width: 30px; height: 30px; border-radius: 4px; background: ' + farver[i][0] + '; color: ' + farver[i][1] + '; font-weight: 700; display: flex; align-items: center; justify-content: center">' + (i + 1) + '</span>' +
           '<img alt="" loading="lazy" style="width: 30px; height: 30px; border-radius: 4px; image-rendering: pixelated; background: var(--b-24402f, #24402F)"><span style="font-weight: 600"></span><span style="margin-left: auto; color: var(--t-a9bfb1, #A9BFB1)"></span></a>';
         li.querySelector('a').href = 'spiller.html?navn=' + encodeURIComponent(s.n);
-        li.querySelector('img').src = 'https://mc-heads.net/avatar/' + (/^[0-9a-f]{8}-[0-9a-f]{4}-3/i.test(s.u) ? encodeURIComponent(s.n) : s.u) + '/30';
+        li.querySelector('img').src = (window.hdHoved ? window.hdHoved(s.u, 30, s.n) : 'https://mc-heads.net/avatar/' + s.u + '/30');
         li.querySelector('span[style*="font-weight: 600"]').textContent = s.n;
         li.querySelector('span[style*="margin-left"]').textContent = s.k + ' kills';
         topKills.appendChild(li);

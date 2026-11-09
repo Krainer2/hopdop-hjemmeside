@@ -1,4 +1,20 @@
 // HOPDOP - banner, online-tæller, tema-knap og konto-menu (bruges på alle sider). Lavet af Krainer2
+
+// Spillerhoved (samme regel som HD.hoved i faelles.js): rigtig UUID -> Crafatar, ellers navn via mc-heads
+window.hdHoved = function (id, str, navn) {
+  id = String(id || navn || 'MHF_Steve');
+  var m = id.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?([0-9a-f])[0-9a-f]{3}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i);
+  if (m && m[1] !== '3') return 'https://crafatar.com/avatars/' + id.replace(/-/g, '').toLowerCase() + '?size=' + (str || 32) + '&overlay';
+  if (m && navn) id = navn;
+  return 'https://mc-heads.net/avatar/' + encodeURIComponent(id) + '/' + (str || 32);
+};
+// Svarer Crafatar ikke, bruges mc-heads i stedet
+document.addEventListener('error', function (e) {
+  var t = e.target;
+  if (!t || t.tagName !== 'IMG') return;
+  var m = String(t.src).match(/crafatar\.com\/avatars\/([0-9a-f]{32})\?size=(\d+)/);
+  if (m) t.src = 'https://mc-heads.net/avatar/' + m[1] + '/' + m[2];
+}, true);
 (function () {
   var root = document.documentElement;
   var IP = 'hopdop.superawesome.dk';
@@ -130,7 +146,7 @@
       return;
     }
     var staff = l.rolle && l.rolle !== 'spiller';
-    boks.innerHTML = '<button type="button" class="hdt-knap hdt-konto"><img alt="" src="https://mc-heads.net/avatar/' + encodeURIComponent(l.uuid && !/^[0-9a-f]{8}-[0-9a-f]{4}-3/i.test(l.uuid) ? l.uuid : l.navn) + '/28"><span>' + esc(l.navn) + '</span>' + IKON.pil + '</button>' +
+    boks.innerHTML = '<button type="button" class="hdt-knap hdt-konto"><img alt="" src="' + window.hdHoved(l.uuid, 28, l.navn) + '"><span>' + esc(l.navn) + '</span>' + IKON.pil + '</button>' +
       '<div class="hdt-menu" role="menu">' +
       '<a role="menuitem" href="spiller.html?navn=' + encodeURIComponent(l.navn) + '">' + IKON.person + 'Min profil</a>' +
       (staff ? '<a role="menuitem" href="admin.html">' + IKON.skjold + 'Admin-panel</a>' : '') +
@@ -310,7 +326,7 @@
       if (q) {
         SIDER.forEach(function (s) { var p = point(s[0], q); if (p) res.push({ t: s[0], h: s[1], type: s[2], p: p - 5 }); });
         if (data) {
-          data.spillere.forEach(function (s) { var p = point(s.n, q); if (p) res.push({ t: s.n, h: 'spiller.html?navn=' + encodeURIComponent(s.n), type: 'Spiller', p: p + 2, hoved: /^[0-9a-f]{8}-[0-9a-f]{4}-3/i.test(s.u) ? s.n : s.u, info: s.k + ' kills' }); });
+          data.spillere.forEach(function (s) { var p = point(s.n, q); if (p) res.push({ t: s.n, h: 'spiller.html?navn=' + encodeURIComponent(s.n), type: 'Spiller', p: p + 2, hoved: s.u, info: s.k + ' kills' }); });
           data.teams.forEach(function (t) { var p = point(t.n, q); if (p) res.push({ t: t.n, h: 'leaderboards.html#teams/tlvl', type: 'Team', p: p + 1, info: (t.m ? t.m.length : 0) + ' medl.' }); });
           data.staff.forEach(function (s) { var p = point(s.navn, q); if (p) res.push({ t: s.navn, h: 'staff.html', type: s.rolle, p: p, hoved: s.navn }); });
         }
@@ -325,7 +341,7 @@
       ul.hidden = false;
       if (!res.length) { ul.innerHTML = '<li class="nd-soeg-tom">Ingen resultater</li>'; return; }
       ul.innerHTML = res.map(function (r, i) {
-        var ikon = r.hoved ? '<img alt="" src="https://mc-heads.net/avatar/' + encodeURIComponent(r.hoved) + '/28">' : '<span class="nd-soeg-prik"></span>';
+        var ikon = r.hoved ? '<img alt="" src="' + window.hdHoved(r.hoved, 28, r.t) + '">' : '<span class="nd-soeg-prik"></span>';
         return '<li role="option" aria-selected="' + (i === valgt) + '"><a href="' + esc(r.h) + '">' + ikon + '<span class="nd-soeg-t">' + esc(r.t) + (r.info ? ' <small>' + esc(r.info) + '</small>' : '') + '</span><span class="nd-soeg-type">' + esc(r.type) + '</span></a></li>';
       }).join('');
     }
