@@ -28,7 +28,7 @@
   var migL = H.login();
   var straffeAdgang = !!(migL && (migL.rolle === 'admin' || migL.rolle === 'ejer'));
 
-  function vis(stats, straffe, staff) {
+  function vis(stats, straffe, staff, duel) {
     var boks = el('sp-indhold');
     var forslag = el('sp-forslag');
     forslag.innerHTML = stats.spillere.slice(0, 2000).map(function (s) { return '<option value="' + H.esc(s.n) + '">'; }).join('');
@@ -68,6 +68,27 @@
       html += '<div class="kort sp-gruppe"><h3>Team ' + H.esc(team.n) + '</h3>' +
         stat('Level', team.lvl) + stat('KOTH-sejre', H.tal(team.koth)) + stat('Kills / døde', H.tal(team.k) + ' / ' + H.tal(team.d)) +
         stat('Medlemmer', team.m.map(function (m) { return m.n; }).join(', ')) + '</div>';
+    }
+    // Duels (fra Duel.sk)
+    var ds = (duel && duel.spillere || []).filter(function (x) { return x.u === s.u; })[0];
+    if (ds) {
+      var dAlle = duel.spillere;
+      var dwr = ds.s + ds.t > 0 ? Math.round(ds.s / (ds.s + ds.t) * 100) : 0;
+      var kitRaekker = (duel.kits || []).map(function (k) { return { k: k, x: ds.ks && ds.ks[k.id] }; })
+        .filter(function (o) { return o.x && o.x.s + o.x.t + o.x.d; })
+        .sort(function (a, b) { return (b.x.s + b.x.t + b.x.d) - (a.x.s + a.x.t + a.x.d); })
+        .map(function (o) {
+          var x = o.x, w = x.s + x.t ? Math.round(x.s / (x.s + x.t) * 100) : 0;
+          return '<div class="sp-stat"><span class="daempet" style="display:flex;align-items:center;gap:8px"><span style="display:inline-flex;width:20px;height:20px">' +
+            H.kitIkon(o.k.ikon).replace('<svg', '<svg width="20" height="20" style="shape-rendering:crispEdges"') + '</span>' + H.esc(o.k.n) + '</span>' +
+            '<span><b>' + H.tal(x.s) + 'W / ' + H.tal(x.t) + 'L</b><span class="plads">' + w + '% · streak ' + H.tal(x.st) + '</span></span></div>';
+        }).join('');
+      html += '<div class="kort sp-gruppe"><h3>Duels <a href="duel.html" style="font-size:13px;font-family:Inter,system-ui,sans-serif;font-weight:600">Alle duels →</a></h3>' +
+        stat('Rating', H.tal(ds.elo), plads(dAlle, ds, function (x) { return x.elo; })) +
+        stat('Sejre / tab', H.tal(ds.s) + ' / ' + H.tal(ds.t), plads(dAlle, ds, function (x) { return x.s; })) +
+        stat('Win rate', dwr + '%') +
+        stat('Streak (bedste)', H.tal(ds.st) + ' (' + H.tal(ds.bs) + ')') +
+        kitRaekker + '</div>';
     }
     html += '</div>';
 
@@ -143,7 +164,8 @@
   Promise.all([
     H.api('stats' + (straffeAdgang ? '?t=' + Date.now() : ''), { auth: false }),
     (straffeAdgang ? H.api('straffe') : Promise.reject()).catch(function () { return { poster: [] }; }),
-    H.api('staff', { auth: false }).catch(function () { return { staff: [] }; })
-  ]).then(function (r) { vis(r[0], r[1].poster || [], r[2].staff || []); })
+    H.api('staff', { auth: false }).catch(function () { return { staff: [] }; }),
+    H.api('duel', { auth: false }).catch(function () { return { kits: [], spillere: [] }; })
+  ]).then(function (r) { vis(r[0], r[1].poster || [], r[2].staff || [], r[3]); })
     .catch(function () { el('sp-indhold').innerHTML = '<div class="kort tom">Kunne ikke hente spilleren lige nu.</div>'; });
 })();

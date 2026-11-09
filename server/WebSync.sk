@@ -10,6 +10,8 @@
 #   - Teams og KOTH fra Teams-pluginet (plugins/Teams/teams.yml)
 #   - Straffe: aktive bans/mutes + historik fra Straf.sk
 #   - Hvem der er online
+#   - Duels fra Duel.sk: kits (navn og ikon) + rating, sejre, tab,
+#     streaks, gevinst og stats pr. kit for alle der har duelleret
 #
 #  OPSÆTNING:
 #   1. Skriv den samme hemmelige nøgle her under "noegle" som du
@@ -204,6 +206,85 @@ function webTeams() :: text:
 			set {_ud} to "%{_ud}%,%{_e}%"
 	return "[%{_ud}%]"
 
+# ---------- Duels (fra Duel.sk) ----------
+# Mangler Duel.sk, sendes bare tomme lister.
+
+# Kittets ikon som tekst (fx "diamond helmet") - samme ikon som i duel-menuen
+function webDuelIkon(k: text) :: text:
+	if {duel::kitikon::%{_k}%} is set:
+		return "%{duel::kitikon::%{_k}%}%"
+	if {duel::kitinv::%{_k}%::hjelm} is set:
+		set {_t} to type of {duel::kitinv::%{_k}%::hjelm}
+		return "%{_t}%"
+	if {duel::kitinv::%{_k}%::0} is set:
+		set {_t} to type of {duel::kitinv::%{_k}%::0}
+		return "%{_t}%"
+	return "diamond sword"
+
+# Stats pr. kit for én spiller: {"1":[sejre,tab,uafgjort,streak,bedste],...}
+function webDuelKs(u: text) :: text:
+	set {_ud} to ""
+	loop {duel::kits::*}:
+		set {_k} to "%loop-index%"
+		set {_s} to {duel::ks::%{_u}%::%{_k}%::sejre} ? 0
+		set {_t} to {duel::ks::%{_u}%::%{_k}%::tab} ? 0
+		set {_d} to {duel::ks::%{_u}%::%{_k}%::uafgjort} ? 0
+		set {_st} to {duel::ks::%{_u}%::%{_k}%::streak} ? 0
+		set {_bs} to {duel::ks::%{_u}%::%{_k}%::bstreak} ? 0
+		set {_alle} to {_s} + {_t} + {_d}
+		if {_alle} > 0:
+			set {_e} to """%{_k}%"":[""%{_s}%"",""%{_t}%"",""%{_d}%"",""%{_st}%"",""%{_bs}%""]"
+			if {_ud} is "":
+				set {_ud} to {_e}
+			else:
+				set {_ud} to "%{_ud}%,%{_e}%"
+	return "{%{_ud}%}"
+
+# Alle kits og alle der har spillet en duel
+function webDuel() :: text:
+	set {_kits} to ""
+	loop {duel::kits::*}:
+		set {_k} to "%loop-index%"
+		set {_kn} to webEsc("%loop-value%")
+		set {_ikr} to webDuelIkon({_k})
+		set {_ik} to webEsc({_ikr})
+		set {_ak} to 1
+		if {duel::kitaktiv::%{_k}%} is false:
+			set {_ak} to 0
+		set {_e} to "{""id"":""%{_k}%"",""n"":""%{_kn}%"",""ikon"":""%{_ik}%"",""aktiv"":""%{_ak}%""}"
+		if {_kits} is "":
+			set {_kits} to {_e}
+		else:
+			set {_kits} to "%{_kits}%,%{_e}%"
+	set {_uge} to now formatted as "YYYY-ww"
+	set {_mdr} to now formatted as "yyyy-MM"
+	loop {duel::elo::*}:
+		set {_med::%loop-index%} to true
+	loop {duel::uafgjort::*}:
+		set {_med::%loop-index%} to true
+	set {_ps} to ""
+	loop {_med::*}:
+		set {_u} to "%loop-index%"
+		set {_sp} to {duel::spiller::%{_u}%}
+		if {_sp} is set:
+			set {_n} to webEsc("%{_sp}%")
+			set {_elo} to {duel::elo::%{_u}%} ? 1000
+			set {_s} to {duel::sejre::%{_u}%} ? 0
+			set {_t} to {duel::tab::%{_u}%} ? 0
+			set {_d} to {duel::uafgjort::%{_u}%} ? 0
+			set {_st} to {duel::streak::%{_u}%} ? 0
+			set {_bs} to {duel::bstreak::%{_u}%} ? 0
+			set {_gev} to {duel::gevinst::%{_u}%} ? 0
+			set {_us} to {duel::ugesejre::%{_uge}%::%{_u}%} ? 0
+			set {_ms} to {duel::mdsejre::%{_mdr}%::%{_u}%} ? 0
+			set {_ks} to webDuelKs({_u})
+			set {_e} to "{""u"":""%{_u}%"",""n"":""%{_n}%"",""elo"":""%{_elo}%"",""s"":""%{_s}%"",""t"":""%{_t}%"",""d"":""%{_d}%"",""st"":""%{_st}%"",""bs"":""%{_bs}%"",""gev"":""%{_gev}%"",""us"":""%{_us}%"",""ms"":""%{_ms}%"",""ks"":%{_ks}%}"
+			if {_ps} is "":
+				set {_ps} to {_e}
+			else:
+				set {_ps} to "%{_ps}%,%{_e}%"
+	return "{""kits"":[%{_kits}%],""spillere"":[%{_ps}%]}"
+
 # ---------- Rettelser fra hjemmesiden (Ret stats i admin-panelet) ----------
 
 # Gemmer én rettelse i Skript-variablerne. Linje: id|uuid|felt|handling|tal
@@ -312,7 +393,8 @@ function webSync():
 			else:
 				set {_ps} to "%{_ps}%,%{_e}%"
 	set {_teams} to webTeams()
-	set {_json} to "{""v"":1,""anvendt"":""%{_anvendt}%"",""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%}"
+	set {_duel} to webDuel()
+	set {_json} to "{""v"":1,""anvendt"":""%{_anvendt}%"",""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%,""duel"":%{_duel}%}"
 	set {_h::1} to "Content-Type: application/json"
 	set {_h::2} to "Authorization: Bearer {@noegle}"
 	set {_h::3} to "User-Agent: HOPDOP-WebSync/1.0"

@@ -186,3 +186,6 @@ body::before{background:url(assets/hopdop-nat-blur.jpg) center 35%/cover !import
 /* Hele bygningen skal kunne ses: ingen zoom, og billedet starter under topbaren */
 .hd-scene{animation:none !important;transform:none !important}
 @media (min-width:861px){#bg-fast .hd-scene{top:116px}}
+
+/* Duel-kit-ikoner: lyse ikoner (fx jern) skal kunne ses på lys baggrund */
+:root[data-tema="lyst"] svg[data-kitikon]{filter:drop-shadow(0 0 1px rgba(0,0,0,.75))}

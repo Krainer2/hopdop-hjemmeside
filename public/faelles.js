@@ -88,11 +88,44 @@
     knap('›', side + 1, false, side >= antal, 'Næste side');
   };
 
+  // Pixel-ikon til et duel-kit ud fra ikonets navn fra serveren (fx "diamond helmet")
+  var IKON_FORM = {
+    hjelm: ['............', '............', '...######...', '..########..', '.###hhhh###.', '.##########.', '.###....###.', '.##......##.', '.##......##.', '............', '............', '............'],
+    bryst: ['............', '.###....###.', '.####..####.', '.##########.', '.###hhhh###.', '..########..', '..########..', '..########..', '..########..', '..########..', '............', '............'],
+    bukser: ['............', '..########..', '..########..', '..###..###..', '..###..###..', '..##....##..', '..##....##..', '..##....##..', '..##....##..', '..##....##..', '............', '............'],
+    sko: ['............', '............', '............', '............', '..##....##..', '..##....##..', '..##....##..', '.###...###..', '####..####..', '####..####..', '............', '............'],
+    svaerd: ['..........##', '.........###', '........###.', '.......###..', '......###...', '.....###....', '..h.###.....', '..hhh#......', '...hh.......', '..hhhh......', '.hh..h......', '.h..........'],
+    oekse: ['......###...', '.....####...', '....#####...', '....##hh....', '.....hh.....', '....hh......', '...hh.......', '..hh........', '.hh.........', 'hh..........', '............', '............'],
+    bue: ['.......hhh..', '.....hh..w..', '....h....w..', '...h.....w..', '...h....w...', '..h....w....', '..h...w.....', '.h...w......', '.h..w.......', '.hhw........', '..w.........', '............'],
+    rund: ['............', '....####....', '..########..', '.##########.', '.###hh#####.', '.##########.', '.##########.', '.##########.', '..########..', '....####....', '............', '............']
+  };
+  H.kitIkon = function (navn) {
+    var t = String(navn || '').toLowerCase();
+    var form = /helmet|cap|skull|head/.test(t) ? 'hjelm' : /chestplate|tunic/.test(t) ? 'bryst' : /leggings|pants/.test(t) ? 'bukser' : /boots/.test(t) ? 'sko' :
+      /\bbow\b/.test(t) ? 'bue' : /axe|hoe|shovel|pickaxe/.test(t) ? 'oekse' : /apple|pearl|potion|ball|star|orb/.test(t) ? 'rund' : 'svaerd';
+    var farve = /diamond/.test(t) ? '#4FE3E3' : /iron/.test(t) ? '#D9DEE3' : /gold/.test(t) ? '#F5C542' : /leather/.test(t) ? '#A9693B' :
+      /chain/.test(t) ? '#8E969E' : /stone/.test(t) ? '#9A9A9A' : /wood/.test(t) ? '#A47A47' : /pearl/.test(t) ? '#2BB39B' : /apple/.test(t) ? '#E5483B' :
+      /potion/.test(t) ? '#C04BD8' : /bow/.test(t) ? '#A47A47' : '#6EF08F';
+    var hl = /diamond/.test(t) ? '#B9FFFF' : /iron/.test(t) ? '#FFFFFF' : /gold/.test(t) ? '#FFF2A8' : 'rgba(255,255,255,.55)';
+    var r = '';
+    IKON_FORM[form].forEach(function (linje, y) {
+      for (var x = 0; x < linje.length; x++) {
+        var c = linje[x];
+        if (c === '.') continue;
+        var f = c === '#' ? farve : c === 'w' ? '#E8E8E8' : (form === 'hjelm' || form === 'bryst' || form === 'rund') ? hl : '#6B4A2B';
+        if (form === 'bue' && c === 'h') f = farve;
+        r += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="' + f + '"/>';
+      }
+    });
+    return '<svg viewBox="0 0 12 12" data-kitikon aria-hidden="true" focusable="false">' + r + '</svg>';
+  };
+
   // Header og footer på alle undersider
   var aktiv = document.body.getAttribute('data-side') || '';
   var links = [
     ['index.html', 'Forside', 'forside'],
     ['leaderboards.html', 'Leaderboards', 'leaderboards'],
+    ['duel.html', 'Duels', 'duel'],
     ['staff.html', 'Staff', 'staff'],
     ['ansog.html', 'Forum', 'ansog'],
     ['regler.html', 'Regler', 'regler']

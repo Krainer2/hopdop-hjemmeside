@@ -18,8 +18,28 @@
     ] },
     { id: 'aktiv', navn: 'Aktivitet', tavler: [
       { id: 'daily', navn: 'Daily-streak', v: function (s) { return s.ds; }, f: function (v) { return H.tal(v) + ' dage'; } }
-    ] }
+    ] },
+    // Duels fra Duel.sk. Et kit-leaderboard pr. kit tilføjes automatisk, når data er hentet.
+    { id: 'duels', navn: 'Duels', tavler: [] }
   ];
+  var DUEL_FASTE = [
+    { id: 'rating', navn: 'Rating', duel: true, v: function (s) { return s.elo; }, f: function (v) { return H.tal(v) + ' rating'; }, info: 'Elo-rating. Alle starter på 1000.' },
+    { id: 'dsejre', navn: 'Sejre', duel: true, v: function (s) { return s.s; }, f: function (v) { return H.tal(v) + ' sejre'; } },
+    { id: 'dwr', navn: 'Win rate', duel: true, v: function (s) { return s.s + s.t >= 10 ? Math.round(s.s / (s.s + s.t) * 100) : 0; }, f: function (v) { return v + '%'; }, info: 'Kræver mindst 10 dueller.' },
+    { id: 'dbs', navn: 'Bedste streak', duel: true, v: function (s) { return s.bs; }, f: function (v) { return H.tal(v) + ' i træk'; } },
+    { id: 'duge', navn: 'Ugens sejre', duel: true, v: function (s) { return s.us; }, f: function (v) { return H.tal(v) + ' sejre'; } },
+    { id: 'dmd', navn: 'Månedens sejre', duel: true, v: function (s) { return s.ms; }, f: function (v) { return H.tal(v) + ' sejre'; } }
+  ];
+  var duelData = { kits: [], spillere: [] };
+  function byggDuelTavler() {
+    var k = KATEGORIER.filter(function (x) { return x.id === 'duels'; })[0];
+    k.tavler = DUEL_FASTE.concat(duelData.kits.map(function (kt) {
+      return { id: 'kit-' + kt.id, navn: kt.n, duel: true, ikon: kt.ikon,
+        v: function (s) { var x = s.ks && s.ks[kt.id]; return x ? x.s : 0; },
+        f: function (v) { return H.tal(v) + ' sejre'; }, info: 'Sejre med kittet ' + kt.n + '.' };
+    }));
+  }
+  byggDuelTavler();
 
   var data = null, katId = 'pvp', tavleId = 'kills', side = 1, soeg = '';
   var el = function (id) { return document.getElementById(id); };
@@ -27,7 +47,7 @@
   function laesHash() {
     var h = location.hash.replace('#', '').split('/');
     var k = KATEGORIER.filter(function (x) { return x.id === h[0]; })[0];
-    if (k) { katId = k.id; tavleId = (k.tavler.filter(function (t) { return t.id === h[1]; })[0] || k.tavler[0]).id; }
+    if (k && k.tavler.length) { katId = k.id; tavleId = (k.tavler.filter(function (t) { return t.id === h[1]; })[0] || k.tavler[0]).id; }
   }
   function kat() { return KATEGORIER.filter(function (k) { return k.id === katId; })[0]; }
   function tavle() { return kat().tavler.filter(function (t) { return t.id === tavleId; })[0]; }
@@ -46,7 +66,11 @@
     kat().tavler.forEach(function (t) {
       var b = document.createElement('button');
       b.className = 'chip'; b.type = 'button'; b.setAttribute('role', 'tab');
-      b.textContent = t.navn;
+      if (t.ikon && H.kitIkon) {
+        b.style.cssText = 'display:inline-flex;align-items:center;gap:8px';
+        b.innerHTML = '<span style="display:inline-flex;width:18px;height:18px">' + H.kitIkon(t.ikon).replace('<svg', '<svg width="18" height="18" style="shape-rendering:crispEdges"') + '</span><span></span>';
+        b.lastChild.textContent = t.navn;
+      } else b.textContent = t.navn;
       b.setAttribute('aria-selected', t.id === tavleId ? 'true' : 'false');
       b.addEventListener('click', function () { tavleId = t.id; side = 1; skift(); });
       el('lb-tavler').appendChild(b);
@@ -60,7 +84,7 @@
 
   function raekker() {
     var t = tavle();
-    var kilde = t.team ? data.teams : data.spillere;
+    var kilde = t.team ? data.teams : t.duel ? duelData.spillere : data.spillere;
     var r = kilde.map(function (x) { return { x: x, v: Number(t.v(x)) || 0 }; })
       .filter(function (r) { return r.v > 0; })
       .sort(function (a, b) { return b.v - a.v; });
@@ -76,7 +100,7 @@
   function tegn() {
     if (!data) return;
     var t = tavle();
-    el('lb-navn').textContent = t.navn + (t.team ? '' : '');
+    el('lb-navn').textContent = (t.duel ? 'Duels · ' : '') + t.navn;
     var alle = raekker();
     var online = {};
     data.online.forEach(function (n) { online[n.toLowerCase()] = true; });
@@ -140,8 +164,16 @@
   }
 
   function hent() {
-    H.api('stats', { auth: false }).then(function (d) {
-      data = d;
+    Promise.all([
+      H.api('stats', { auth: false }),
+      H.api('duel', { auth: false }).catch(function () { return { kits: [], spillere: [] }; })
+    ]).then(function (r) {
+      data = r[0];
+      duelData = r[1] || { kits: [], spillere: [] };
+      byggDuelTavler();
+      laesHash();
+      if (katId === 'duels' && !kat().tavler.some(function (t) { return t.id === tavleId; })) tavleId = kat().tavler[0].id;
+      chips();
       info();
       tegn();
     }).catch(function () {

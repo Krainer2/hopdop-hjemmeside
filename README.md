@@ -10,6 +10,7 @@ Lavet af Krainer2.
 |---|---|
 | `index.html` | Forsiden: animeret natbaggrund, kits, features, live top kills, FAQ og tekster, som staff kan redigere. |
 | `leaderboards.html` | Live leaderboards i 5 kategorier: PvP, Teams/KOTH, Fiskeri, Vagt og tyveri, Aktivitet. Har søgning og sider. |
+| `duel.html` | Duels fra Duel.sk: tal, et kort pr. kit (nye kits kommer selv med), toplister (Overall, Rating og pr. kit med Sejre/Win rate/Streak/Dueller), spiller-opslag og "Sådan virker duels". Duels er også en kategori på Leaderboards og står på spillerprofilen. |
 | `banliste.html` | Alle bans, mutes, kicks og ophævelser. Både aktive og tidligere, med filtre, søgning og 25 pr. side. |
 | `spiller.html?navn=X` | Spillerprofil: stats, placeringer, team og straffe. |
 | `staff.html` | Staff-holdet, delt op efter rolle, med online-status. |
@@ -23,10 +24,10 @@ Spørgsmålene til ansøgningerne står i `public/ansog-skema.js` og kan rettes 
 ```
 Minecraft-server  --(WebSync.sk, hvert 5. min)-->  /api/sync  -->  Cloudflare D1
                                                                     |
-Hjemmesiden  <--  /api/stats, /api/straffe, /api/staff, /api/ansog  <--
+Hjemmesiden  <--  /api/stats, /api/duel, /api/straffe, /api/staff, /api/ansog  <--
 ```
 
-- **Serveren** sender data med `server/WebSync.sk`: kills, døde, spilletid, daily, fiskeri, vagtposter, tyveri, spassermine, teams/KOTH, straffe og hvem der er online.
+- **Serveren** sender data med `server/WebSync.sk`: kills, døde, spilletid, daily, fiskeri, vagtposter, tyveri, spassermine, teams/KOTH, straffe, hvem der er online og duels (kits, rating, sejre/tab, streaks og stats pr. kit fra Duel.sk).
 - **Hjemmesiden** kører på Cloudflare Pages (gratis) og gemmer alt i en Cloudflare D1-database. Der skal ikke bruges MySQL.
 - **Banlisten** bygges ud fra Straf.sk-historikken og husker gamle straffe, også dem Straf.sk selv sletter.
 - **Staff-login** sker med SuperAwesome (OAuth med PKCE, kun scopet `player:profile`) eller med kode.

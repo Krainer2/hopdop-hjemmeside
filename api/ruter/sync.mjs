@@ -102,6 +102,31 @@ export default async (req) => {
   }
   const online = (Array.isArray(d.online) ? d.online : []).filter((n) => NAVN.test(n));
 
+  // Duels fra Duel.sk (kommer kun med, hvis serverens WebSync er ny nok)
+  let duel = null;
+  if (d.duel && typeof d.duel === 'object') {
+    const kits = (Array.isArray(d.duel.kits) ? d.duel.kits : [])
+      .filter((k) => k && /^\d{1,6}$/.test(String(k.id)))
+      .map((k) => ({ id: String(k.id), n: ren(k.n).slice(0, 32) || 'Kit ' + k.id, ikon: ren(k.ikon).toLowerCase().slice(0, 60), aktiv: String(k.aktiv) !== '0' }));
+    const kitIds = new Set(kits.map((k) => k.id));
+    const ds = [];
+    for (const s of Array.isArray(d.duel.spillere) ? d.duel.spillere : []) {
+      if (!s || !UUID.test(s.u) || !NAVN.test(s.n)) continue;
+      const ks = {};
+      if (s.ks && typeof s.ks === 'object') {
+        for (const [id, a] of Object.entries(s.ks)) {
+          if (!kitIds.has(String(id)) || !Array.isArray(a)) continue;
+          ks[id] = { s: tal(a[0]), t: tal(a[1]), d: tal(a[2]), st: tal(a[3]), bs: tal(a[4]) };
+        }
+      }
+      ds.push({
+        u: s.u, n: s.n, elo: tal(s.elo) || 1000, s: tal(s.s), t: tal(s.t), d: tal(s.d),
+        st: tal(s.st), bs: tal(s.bs), gev: tal(s.gev), us: tal(s.us), ms: tal(s.ms), ks
+      });
+    }
+    duel = { opdateret: nu, kits, spillere: ds };
+  }
+
   // Rettelser fra hjemmesiden: serveren fortæller hvilke den har gemt ("anvendt").
   // Dem der stadig venter, lægges oven på tallene, så siden viser dem indtil serveren har dem.
   const ae = await hentAendringer();
@@ -125,9 +150,10 @@ export default async (req) => {
   }
   await gem('straffe', { poster: Object.fromEntries(alle.map((p) => [p.id, p])) });
   await gem('stats', { opdateret: nu, online, spillere, teams });
+  if (duel) await gem('duel', duel);
   await gem('sync-meta', { sidst: nu, spillere: spillere.length, teams: teams.length, online: online.length, nyeStraffe, bytes: raa.length });
   await forsoeg(req, 200, 'OK', { spillere: spillere.length, teams: teams.length, bytes: raa.length });
-  return json({ ok: true, spillere: spillere.length, teams: teams.length, nyeStraffe });
+  return json({ ok: true, spillere: spillere.length, teams: teams.length, nyeStraffe, duel: duel ? duel.spillere.length : null });
 };
 
 export const config = { path: '/api/sync' };
