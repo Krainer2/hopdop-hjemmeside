@@ -12,8 +12,8 @@ window.hdHoved = function (id, str, navn) {
 document.addEventListener('error', function (e) {
   var t = e.target;
   if (!t || t.tagName !== 'IMG') return;
-  var m = String(t.src).match(/\/api\/hoved\?u=([0-9a-f]{32})&s=(\d+)/);
-  if (m) t.src = 'https://mc-heads.net/avatar/' + m[1] + '/' + m[2];
+  var m = String(t.src).match(/\/api\/hoved\?u=([0-9a-f]{32})&s=(\d+)(&t=body)?/);
+  if (m) t.src = 'https://mc-heads.net/' + (m[3] ? 'body' : 'avatar') + '/' + m[1] + '/' + m[2];
 }, true);
 (function () {
   var root = document.documentElement;

@@ -41,6 +41,14 @@
     if (m && navn) id = navn;
     return 'https://mc-heads.net/avatar/' + encodeURIComponent(id) + '/' + (str || 32);
   };
+  // Hel krop (3D) - samme regler som H.hoved
+  H.krop = function (uuidEllerNavn, str, navn) {
+    var id = String(uuidEllerNavn || navn || 'MHF_Steve');
+    var m = id.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?([0-9a-f])[0-9a-f]{3}-?[0-9a-f]{4}-?[0-9a-f]{12}$/i);
+    if (m && m[1] !== '3') return '/api/hoved?u=' + id.replace(/-/g, '').toLowerCase() + '&s=' + (str || 180) + '&t=body';
+    if (m && navn) id = navn;
+    return 'https://mc-heads.net/body/' + encodeURIComponent(id) + '/' + (str || 180);
+  };
   H.profil = function (navn) { return 'spiller.html?navn=' + encodeURIComponent(navn); };
 
   H.login = function () {

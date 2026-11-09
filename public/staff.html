@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vores Staff Team - HOPDOP</title>
+<title>Staff - HOPDOP</title>
 <!-- deling -->
 <link rel="canonical" href="https://hopdop.pages.dev/staff">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="HOPDOP">
-<meta property="og:title" content="Vores Staff Team - HOPDOP">
-<meta property="og:description" content="Mød staff-holdet bag HOPDOP.">
+<meta property="og:title" content="Staff - HOPDOP">
+<meta property="og:description" content="Mød folkene bag HOPDOP: ejere, admins, moderatorer, helpere og byggere.">
 <meta property="og:url" content="https://hopdop.pages.dev/staff">
 <meta property="og:image" content="https://hopdop.pages.dev/assets/og.png">
 <meta property="og:image:width" content="1200">
@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#4ADE80">
 <!-- /deling -->
-<meta name="description" content="Mød staff-holdet bag HOPDOP.">
+<meta name="description" content="Mød folkene bag HOPDOP: ejere, admins, moderatorer, helpere og byggere.">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/ikon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="assets/ikon-16.png">
@@ -29,83 +29,149 @@
 <link rel="stylesheet" href="faelles.css">
 <link rel="stylesheet" href="nyt-design.css">
 <style>
-/* Hero */
-.st-hero{text-align:center;padding:56px 0 18px}
-.st-hero small{font-family:var(--pixel);letter-spacing:.2em;text-transform:uppercase;color:var(--groen);font-size:13px}
-.st-hero h1{font-size:clamp(40px,7vw,76px);margin:10px 0 12px;text-shadow:4px 4px 0 color-mix(in srgb,var(--groen) 25%,transparent)}
-.st-hero h1 span{color:var(--groen)}
-body.vagt .st-hero small,body.vagt .st-hero h1 span{color:var(--orange)}
-body.vagt .st-hero h1{text-shadow:4px 4px 0 color-mix(in srgb,var(--orange) 25%,transparent)}
-.st-hero p{max-width:620px;margin:0 auto;color:var(--daempet)}
-.st-pil{display:block;margin:22px auto 0;width:22px;height:22px;border-right:3px solid var(--svag);border-bottom:3px solid var(--svag);transform:rotate(45deg);animation:stPil 1.6s ease-in-out infinite}
-@keyframes stPil{50%{transform:translate(0,8px) rotate(45deg);opacity:.5}}
+/* ===== Staff: inventar + spotlight. Lavet af Krainer2 ===== */
+:root{
+  --inv:#0A100D;--inv-kant:rgba(255,255,255,.07);--slot:#111915;--slot-lys:rgba(255,255,255,.07);--slot-skygge:rgba(0,0,0,.6);
+  --r-ejer:#FFB020;--r-admin:#FF5C5C;--r-mod:#5CC8FF;--r-helper:#6EF08F;--r-bygger:#C59BFF;--r-vagtchef:#FF8A3D;--r-vagt:#FBB46B;
+  --orange:#FB923C;
+}
+:root[data-tema="lyst"]{
+  --inv:#F4F7F5;--inv-kant:rgba(16,40,26,.12);--slot:#E3EAE5;--slot-lys:#FFFFFF;--slot-skygge:rgba(16,40,26,.2);
+  --r-ejer:#B26A00;--r-admin:#C62828;--r-mod:#0369A1;--r-helper:#15803D;--r-bygger:#7C3AED;--r-vagtchef:#C2410C;--r-vagt:#B45309;
+  --orange:#C2410C;
+}
+.r-ejer{--rf:var(--r-ejer)}.r-admin{--rf:var(--r-admin)}.r-mod{--rf:var(--r-mod)}.r-helper{--rf:var(--r-helper)}.r-bygger{--rf:var(--r-bygger)}.r-vagtchef{--rf:var(--r-vagtchef)}.r-vagt{--rf:var(--r-vagt)}
 
-/* Vandret menu */
-.st-menu{position:sticky;top:70px;z-index:10;display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 12px 14px;margin:0 -12px 12px;border-radius:0 0 16px 16px;background:color-mix(in srgb,var(--bg) 86%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:2px solid var(--kant)}
-.st-faner{display:inline-flex;gap:4px;padding:5px;border-radius:14px;background:var(--kort2);border:2px solid var(--kant)}
-.st-faner button{font:700 15px var(--pixel);color:var(--daempet);background:none;border:0;border-radius:10px;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .2s,color .2s}
-.st-faner button:hover{color:var(--tekst)}
-.st-faner button[aria-selected="true"]{background:var(--groen);color:#052E16}
-.st-faner button.vagtfane[aria-selected="true"]{background:var(--orange);color:#2A1203}
-.st-faner .laas{font-size:11px;opacity:.8}
-.st-hop{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
-.st-hop a{font-size:13px;font-weight:600;text-decoration:none;color:var(--daempet);border:1px solid var(--kant);border-radius:999px;padding:4px 12px;background:var(--kort2)}
-.st-hop a:hover{color:var(--tekst);border-color:var(--kant2)}
-@media (max-width:760px){.st-menu{top:0}}
+/* Toppen */
+.sf-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;padding:46px 0 26px}
+.sf-over{font:700 12px Silkscreen,monospace;letter-spacing:.18em;color:var(--nd-groen,var(--groen));display:flex;align-items:center;gap:10px}
+.sf-over::before{content:"";width:10px;height:10px;background:currentColor;box-shadow:12px 0 0 currentColor,24px 0 0 color-mix(in srgb,currentColor 40%,transparent);margin-right:26px}
+.sf-top h1{font-size:clamp(38px,6vw,64px);line-height:1.02;margin:12px 0 10px}
+.sf-top h1 em{font-style:normal;color:var(--nd-groen,var(--groen))}
+.sf-top p{margin:0;max-width:560px;color:var(--daempet)}
+.sf-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.sf-chip{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--inv-kant);border-radius:8px;background:var(--inv);font-size:13px;font-weight:600;color:var(--daempet)}
+.sf-chip b{color:var(--tekst);font-family:var(--pixel);font-size:15px}
+.sf-chip i{width:8px;height:8px;background:var(--nd-groen,var(--groen));box-shadow:0 0 10px var(--nd-groen,var(--groen))}
+.sf-faner{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--inv);border:1px solid var(--inv-kant)}
+.sf-faner button{font:700 14px var(--pixel);color:var(--daempet);background:none;border:0;border-radius:9px;padding:9px 16px;cursor:pointer}
+.sf-faner button:hover{color:var(--tekst)}
+.sf-faner button[aria-selected="true"]{background:var(--nd-groen,var(--groen));color:#06120B}
+.sf-faner button.vagtfane[aria-selected="true"]{background:var(--orange);color:#2A1203}
 
-/* Grupper */
-.st-gruppe{margin:34px 0 10px;scroll-margin-top:170px}
-.st-gruppe h2{margin-bottom:16px;display:flex;align-items:center;gap:12px}
-.st-gruppe h2::after{content:"";flex:1;height:2px;background:linear-gradient(90deg,var(--kant2),transparent)}
-.st-kort{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.st-person{position:relative;background:var(--kort);border:2px solid var(--kant);border-radius:14px;padding:22px 18px 18px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;text-decoration:none;color:inherit;transition:transform .25s,border-color .25s,box-shadow .25s}
-.st-person:hover{transform:translateY(-5px);border-color:var(--groen);box-shadow:0 10px 30px -12px color-mix(in srgb,var(--groen) 50%,transparent);color:inherit}
-.st-person img{width:76px;height:76px;border-radius:10px;image-rendering:pixelated;background:var(--b-24402f, #24402F)}
-.st-person b{font-size:17px;word-break:break-all}
-.st-on{font-size:12px;color:var(--daempet);display:flex;align-items:center;gap:6px}
-.st-on i{width:8px;height:8px;border-radius:2px;background:var(--b-4b5563, #4B5563);display:inline-block}
-.st-on.ja i{background:var(--groen);box-shadow:0 0 8px var(--groen)}
+/* Indhold: inventar til venstre, spotlight til højre */
+.sf-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+@media (max-width:960px){.sf-grid{grid-template-columns:1fr}.sf-spot{order:-1}}
 
-/* Kommer frem når man ruller */
-.st-vis{opacity:0;transform:translateY(28px) scale(.97);transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i,0) * 70ms)}
-.st-vis.ind{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.st-vis{opacity:1;transform:none;transition:none}.st-pil{animation:none}}
+/* Inventaret */
+.sf-inv{background:var(--inv);border:1px solid var(--inv-kant);border-radius:16px;padding:8px 18px 18px;position:relative}
+.sf-inv-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 2px 6px;font:700 12px Silkscreen,monospace;letter-spacing:.12em;color:var(--svag)}
+.sf-raekke{display:grid;grid-template-columns:132px minmax(0,1fr);gap:14px;align-items:center;padding:12px 0;border-top:1px dashed var(--inv-kant)}
+.sf-raekke:first-of-type{border-top:0}
+.sf-rang{display:flex;flex-direction:column;gap:2px}
+.sf-rang b{font:700 13px Silkscreen,monospace;letter-spacing:.06em;color:var(--rf);text-transform:uppercase}
+.sf-rang small{font-size:12px;color:var(--svag)}
+.sf-slots{display:flex;flex-wrap:wrap;gap:6px}
+@media (max-width:620px){.sf-raekke{grid-template-columns:1fr;gap:8px}.sf-rang{flex-direction:row;align-items:baseline;gap:8px}}
+
+.sf-slot{position:relative;width:60px;height:60px;padding:0;border:0;border-radius:4px;cursor:pointer;background:var(--slot);
+  box-shadow:inset 3px 3px 0 var(--slot-skygge),inset -3px -3px 0 var(--slot-lys);display:grid;place-items:center;overflow:hidden;
+  transition:transform .15s,background .15s;color:inherit;text-decoration:none}
+.sf-slot img{width:40px;height:40px;image-rendering:pixelated;border-radius:2px;position:relative;z-index:1;transition:transform .2s}
+.sf-slot:hover{background:color-mix(in srgb,var(--slot) 70%,var(--tekst))}
+.sf-slot:hover img{transform:scale(1.1)}
+.sf-slot:focus-visible{outline:2px solid var(--rf,var(--nd-groen));outline-offset:2px}
+.sf-slot[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--rf),inset 3px 3px 0 3px var(--slot-skygge);background:color-mix(in srgb,var(--slot) 82%,var(--rf))}
+/* Online = "fortryllet" glimt som på et enchanted item */
+.sf-slot.on::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(115deg,transparent 30%,rgba(190,120,255,.55) 45%,rgba(140,90,255,.15) 55%,transparent 70%) 0 0/250% 250%;animation:sfGlimt 2.6s linear infinite}
+:root[data-tema="lyst"] .sf-slot.on::after{mix-blend-mode:multiply;background-image:linear-gradient(115deg,transparent 30%,rgba(150,80,230,.35) 45%,rgba(140,90,255,.1) 55%,transparent 70%)}
+.sf-slot.on::before{content:"";position:absolute;right:5px;bottom:5px;z-index:3;width:6px;height:6px;background:var(--nd-groen,var(--groen));box-shadow:0 0 6px var(--nd-groen,var(--groen))}
+@keyframes sfGlimt{from{background-position:120% 0}to{background-position:-120% 0}}
+.sf-slot.ny{background:transparent;box-shadow:none;border:2px dashed var(--inv-kant);font:700 26px var(--pixel);color:var(--svag)}
+.sf-slot.ny:hover{border-color:var(--nd-groen,var(--groen));color:var(--nd-groen,var(--groen));background:transparent}
+.sf-inv-bund{margin:14px 2px 0;font-size:13px;color:var(--svag);display:flex;flex-wrap:wrap;gap:6px 16px}
+.sf-inv-bund span{display:inline-flex;align-items:center;gap:6px}
+.sf-glimt-ikon{width:12px;height:12px;border-radius:2px;background:linear-gradient(115deg,var(--slot) 30%,#B98CFF 50%,var(--slot) 70%)}
+
+/* Tooltip i Minecraft-stil */
+.sf-tip{position:fixed;z-index:60;pointer-events:none;min-width:150px;max-width:240px;padding:7px 9px 8px;background:rgba(16,0,16,.94);
+  border:2px solid #2A0B5E;outline:2px solid rgba(16,0,16,.94);box-shadow:inset 0 0 0 1px #4F1FA0;font:500 14px/1.45 var(--pixel);color:#AAAAAA;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+.sf-tip.vis{opacity:1;transform:none}
+.sf-tip b{display:block;font-size:16px;color:var(--rf);margin-bottom:2px}
+.sf-tip .g{color:#55FF55}.sf-tip .m{color:#555555}.sf-tip .t{color:#FFFF55}
+:root[data-tema="lyst"] .sf-tip{--r-ejer:#FFB020;--r-admin:#FF5C5C;--r-mod:#5CC8FF;--r-helper:#6EF08F;--r-bygger:#C59BFF;--r-vagtchef:#FF8A3D;--r-vagt:#FBB46B}
+
+/* Spotlight */
+.sf-spot{position:sticky;top:130px;background:var(--inv);border:1px solid var(--inv-kant);border-radius:16px;overflow:hidden}
+@media (max-width:960px){.sf-spot{position:relative;top:0;display:grid;grid-template-columns:180px 1fr}}
+@media (max-width:480px){.sf-spot{grid-template-columns:1fr}}
+.sf-scene{position:relative;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:30px;
+  background:radial-gradient(ellipse 60% 55% at 50% 58%,color-mix(in srgb,var(--rf) 26%,transparent),transparent 70%),
+  repeating-linear-gradient(0deg,transparent 0 23px,color-mix(in srgb,var(--tekst) 4%,transparent) 23px 24px),
+  repeating-linear-gradient(90deg,transparent 0 23px,color-mix(in srgb,var(--tekst) 4%,transparent) 23px 24px)}
+@media (max-width:960px){.sf-scene{height:250px}}
+.sf-tag{position:relative;z-index:2;margin-bottom:6px;padding:2px 8px 3px;background:rgba(0,0,0,.42);font:600 15px var(--pixel);color:#fff;white-space:nowrap}
+.sf-tag span{color:var(--rf);margin-right:6px}
+:root[data-tema="lyst"] .sf-tag{--r-ejer:#FFB020;--r-admin:#FF5C5C;--r-mod:#5CC8FF;--r-helper:#6EF08F;--r-bygger:#C59BFF;--r-vagtchef:#FF8A3D;--r-vagt:#FBB46B;background:rgba(0,0,0,.6)}
+.sf-krop{position:relative;z-index:1;height:190px;width:auto;image-rendering:pixelated;filter:drop-shadow(0 10px 8px rgba(0,0,0,.35));animation:sfSvaev 3.2s ease-in-out infinite}
+@media (max-width:960px){.sf-krop{height:150px}}
+@keyframes sfSvaev{50%{transform:translateY(-6px)}}
+.sf-sokkel{position:absolute;bottom:18px;left:50%;width:150px;height:22px;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(ellipse,color-mix(in srgb,var(--rf) 45%,transparent),transparent 70%)}
+.sf-skift{animation:sfInd .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes sfInd{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.sf-info{padding:18px 20px 20px;border-top:1px solid var(--inv-kant)}
+@media (max-width:960px){.sf-info{border-top:0;border-left:1px solid var(--inv-kant);display:flex;flex-direction:column;justify-content:center}}
+@media (max-width:480px){.sf-info{border-left:0;border-top:1px solid var(--inv-kant)}}
+.sf-rangtekst{font:700 11px Silkscreen,monospace;letter-spacing:.14em;color:var(--rf);text-transform:uppercase}
+.sf-info h2{margin:4px 0 4px;font-size:28px;word-break:break-all}
+.sf-status{font-size:13px;color:var(--svag);display:flex;align-items:center;gap:7px}
+.sf-status i{width:8px;height:8px;background:var(--svag)}
+.sf-status.ja{color:var(--nd-groen,var(--groen))}.sf-status.ja i{background:currentColor;box-shadow:0 0 8px currentColor}
+.sf-tal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:16px 0}
+.sf-tal div{background:var(--slot);border-radius:8px;padding:9px 6px;text-align:center}
+.sf-tal b{display:block;font:700 20px var(--pixel);color:var(--tekst)}
+.sf-tal span{font-size:11px;color:var(--svag);text-transform:uppercase;letter-spacing:.06em}
+.sf-info .knap{width:100%}
 
 /* Vagt-holdet: id-kort */
-.vagt-kort .st-person{border-color:color-mix(in srgb,var(--orange) 35%,var(--kant));padding-top:30px;overflow:hidden}
-.vagt-kort .st-person::before{content:"";position:absolute;top:0;left:0;right:0;height:10px;background:repeating-linear-gradient(-45deg,var(--orange) 0 10px,#1A1A1A 10px 20px)}
-.vagt-kort .st-person:hover{border-color:var(--orange);box-shadow:0 10px 30px -12px color-mix(in srgb,var(--orange) 55%,transparent)}
-.vagt-nr{font:700 12px var(--pixel);letter-spacing:.12em;color:var(--orange)}
-.badge.orange{background:color-mix(in srgb,var(--orange) 14%,var(--kort));color:var(--orange);border-color:color-mix(in srgb,var(--orange) 40%,var(--kant))}
-.vagt-info{scroll-margin-top:170px;display:flex;gap:14px;align-items:center;margin:8px 0 0;padding:14px 16px;border:2px dashed color-mix(in srgb,var(--orange) 45%,var(--kant));border-radius:12px;color:var(--daempet);font-size:14px}
+body.vagt .sf-over,body.vagt .sf-top h1 em{color:var(--orange)}
+body.vagt .sf-spot{border-color:color-mix(in srgb,var(--orange) 35%,var(--inv-kant))}
+body.vagt .sf-scene::before{content:"";position:absolute;top:0;left:0;right:0;height:10px;z-index:3;background:repeating-linear-gradient(-45deg,var(--orange) 0 10px,#1A1A1A 10px 20px)}
+.sf-vagtnr{position:absolute;top:22px;left:16px;z-index:3;font:700 11px Silkscreen,monospace;letter-spacing:.12em;color:var(--orange)}
+.vagt-info{display:flex;gap:12px;align-items:center;margin:0 0 16px;padding:12px 16px;border:2px dashed color-mix(in srgb,var(--orange) 45%,var(--kant));border-radius:12px;color:var(--daempet);font-size:14px}
 .vagt-info b{color:var(--orange)}
-.st-cta{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-top:34px}
-:root{--orange:#FB923C}
-:root[data-tema="lyst"]{--orange:#C2410C}
+
+@media (prefers-reduced-motion:reduce){.sf-slot.on::after,.sf-krop,.sf-skift{animation:none}}
 </style>
 </head>
 <body data-side="staff">
 <header id="hd-top"></header>
 <main class="bred">
-<section class="st-hero">
-<small id="st-over">HOPDOP</small>
-<h1 id="st-titel">Vores <span>Staff</span> Team</h1>
-<p id="st-tekst">De her folk holder HOPDOP kørende, hjælper spillere og sørger for fair kampe. Brug for hjælp? Skriv til os på <a id="st-discord" href="#">Discord</a>.</p>
-<i class="st-pil" aria-hidden="true"></i>
-</section>
-<nav class="st-menu" aria-label="Vælg hold">
-<div class="st-faner" role="tablist">
-<button type="button" role="tab" id="fane-staff" aria-selected="true">Staff Team</button>
-<button type="button" role="tab" id="fane-vagt" class="vagtfane skjult" aria-selected="false">Vagt Team <span class="laas" title="Kun synlig for staff">🔒</span></button>
+<section class="sf-top">
+<div>
+<div class="sf-over" id="sf-over">HOPDOP STAFF</div>
+<h1 id="sf-titel">Folkene <em>bag</em> serveren</h1>
+<p id="sf-tekst"></p>
+<div class="sf-chips" id="sf-chips"></div>
 </div>
-<div class="st-hop" id="st-hop"></div>
-</nav>
-<div id="st-liste" aria-live="polite"><p class="indlaeser">Henter staff...</p></div>
-<div class="kort st-cta" id="st-cta">
-<div><h2>Vil du være en del af holdet?</h2><p class="daempet" style="margin:8px 0 0">Vi søger aktive og hjælpsomme spillere som staff og byggere.</p></div>
-<a class="knap groen" href="ansog.html?type=staff">Ansøg nu</a>
+<div class="sf-faner skjult" id="sf-faner" role="tablist" aria-label="Vælg hold">
+<button type="button" role="tab" id="fane-staff" aria-selected="true">Staff</button>
+<button type="button" role="tab" id="fane-vagt" class="vagtfane skjult" aria-selected="false">Vagter <span title="Kun synlig for staff">🔒</span></button>
+</div>
+</section>
+<div id="sf-vagtinfo"></div>
+<div class="sf-grid">
+<section class="sf-inv" aria-label="Holdet">
+<div class="sf-inv-top"><span id="sf-inv-titel">STAFF</span><span id="sf-inv-antal"></span></div>
+<div id="sf-liste" aria-live="polite"><p class="indlaeser">Henter staff...</p></div>
+<div class="sf-inv-bund" id="sf-inv-bund"></div>
+</section>
+<aside class="sf-spot" id="sf-spot" aria-live="polite"></aside>
 </div>
 </main>
+<div class="sf-tip" id="sf-tip" role="tooltip"></div>
 <footer id="hd-bund"></footer>
 <script src="faelles.js"></script>
 <script src="staff.js"></script>

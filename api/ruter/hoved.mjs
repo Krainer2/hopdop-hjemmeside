@@ -1,4 +1,4 @@
-// GET /api/hoved?u=<uuid>&s=<str> - spillerhoved ud fra spillerens rigtige skin. Lavet af Krainer2
+// GET /api/hoved?u=<uuid>&s=<str>[&t=body] - spillerhoved (eller hel krop med t=body) ud fra spillerens rigtige skin. Lavet af Krainer2
 // mc-heads og Crafatar viste nogle gange Steve for rigtige konti (gamle opslag i deres cache),
 // og Mojang svarer ofte ikke Cloudflare. Derfor:
 //   1. skinnet som Minecraft-serveren sender med WebSync (det man har i spillet)
@@ -42,11 +42,12 @@ export default async (req) => {
   const q = new URL(req.url).searchParams;
   const u = String(q.get('u') || '').replace(/-/g, '').toLowerCase();
   const s = Math.min(512, Math.max(8, parseInt(q.get('s'), 10) || 32));
-  if (!UUID.test(u)) return videre('https://mc-heads.net/avatar/MHF_Steve/' + s, 3600);
+  const MC = 'https://mc-heads.net/' + (q.get('t') === 'body' ? 'body' : 'avatar') + '/';
+  if (!UUID.test(u)) return videre(MC + 'MHF_Steve/' + s, 3600);
 
   // 1. Skinnet fra serveren
   const skins = (await hent('skins')) || {};
-  if (TEKSTUR.test(skins[u] || '')) return videre('https://mc-heads.net/avatar/' + skins[u] + '/' + s, 3600);
+  if (TEKSTUR.test(skins[u] || '')) return videre(MC + skins[u] + '/' + s, 3600);
 
   // 2-3. Mojang (gemt i 6 timer)
   const noegle = 'skin:' + u;
@@ -55,9 +56,9 @@ export default async (req) => {
     const m = await mojang(u);
     if (m) { c = { h: m.h, tid: Date.now() }; await gem(noegle, c); }
   }
-  if (c && TEKSTUR.test(c.h || '')) return videre('https://mc-heads.net/avatar/' + c.h + '/' + s, 3600);
+  if (c && TEKSTUR.test(c.h || '')) return videre(MC + c.h + '/' + s, 3600);
   // Ingen skin kendt endnu - kort cache, så den prøver igen snart
-  return videre('https://mc-heads.net/avatar/' + u + '/' + s, 120);
+  return videre(MC + u + '/' + s, 120);
 };
 
 export const config = { path: '/api/hoved' };
