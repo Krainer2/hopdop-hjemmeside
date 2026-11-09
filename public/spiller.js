@@ -49,7 +49,7 @@
     var st = staff.filter(function (x) { return x.navn.toLowerCase() === s.n.toLowerCase(); })[0];
     var kd = s.k / Math.max(1, s.d);
 
-    var html = '<div class="kort sp-top"><img alt="" src="' + H.hoved(s.u, 120) + '"><div><h1>' + H.esc(s.n) + '</h1><div class="badges">' +
+    var html = '<div class="kort sp-top"><img alt="" src="' + H.hoved(s.u, 120, s.n) + '"><div><h1>' + H.esc(s.n) + '</h1><div class="badges">' +
       (online ? '<span class="badge">Online nu</span>' : '<span class="badge graa">Offline</span>') +
       (st ? '<span class="badge gul">' + H.esc(st.rolle) + '</span>' : '') +
       (team ? '<span class="badge blaa">Team ' + H.esc(team.n) + (rolle ? ' · ' + H.esc(rolle.charAt(0) + rolle.slice(1).toLowerCase().replace('_', '-')) : '') + '</span>' : '') +

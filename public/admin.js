@@ -394,7 +394,7 @@
     el('ad-panel').classList.remove('skjult');
     el('ad-mig-navn').textContent = mig.navn;
     el('ad-mig-rolle').textContent = ROLLE_NAVN[mig.rolle] || mig.rolle;
-    el('ad-mig-hoved').src = H.hoved(mig.uuid || mig.navn, 40);
+    el('ad-mig-hoved').src = H.hoved(mig.uuid || mig.navn, 40, mig.navn);
     var f = location.hash.replace('#', '');
     fane(['oversigt', 'ansog', 'staff', 'stats', 'tekster', 'banner', 'log'].indexOf(f) !== -1 ? f : 'oversigt');
   }

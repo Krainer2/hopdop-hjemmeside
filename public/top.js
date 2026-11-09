@@ -130,7 +130,7 @@
       return;
     }
     var staff = l.rolle && l.rolle !== 'spiller';
-    boks.innerHTML = '<button type="button" class="hdt-knap hdt-konto"><img alt="" src="https://mc-heads.net/avatar/' + encodeURIComponent(l.uuid || l.navn) + '/28"><span>' + esc(l.navn) + '</span>' + IKON.pil + '</button>' +
+    boks.innerHTML = '<button type="button" class="hdt-knap hdt-konto"><img alt="" src="https://mc-heads.net/avatar/' + encodeURIComponent(l.uuid && !/^[0-9a-f]{8}-[0-9a-f]{4}-3/i.test(l.uuid) ? l.uuid : l.navn) + '/28"><span>' + esc(l.navn) + '</span>' + IKON.pil + '</button>' +
       '<div class="hdt-menu" role="menu">' +
       '<a role="menuitem" href="spiller.html?navn=' + encodeURIComponent(l.navn) + '">' + IKON.person + 'Min profil</a>' +
       (staff ? '<a role="menuitem" href="admin.html">' + IKON.skjold + 'Admin-panel</a>' : '') +
@@ -310,7 +310,7 @@
       if (q) {
         SIDER.forEach(function (s) { var p = point(s[0], q); if (p) res.push({ t: s[0], h: s[1], type: s[2], p: p - 5 }); });
         if (data) {
-          data.spillere.forEach(function (s) { var p = point(s.n, q); if (p) res.push({ t: s.n, h: 'spiller.html?navn=' + encodeURIComponent(s.n), type: 'Spiller', p: p + 2, hoved: s.u, info: s.k + ' kills' }); });
+          data.spillere.forEach(function (s) { var p = point(s.n, q); if (p) res.push({ t: s.n, h: 'spiller.html?navn=' + encodeURIComponent(s.n), type: 'Spiller', p: p + 2, hoved: /^[0-9a-f]{8}-[0-9a-f]{4}-3/i.test(s.u) ? s.n : s.u, info: s.k + ' kills' }); });
           data.teams.forEach(function (t) { var p = point(t.n, q); if (p) res.push({ t: t.n, h: 'leaderboards.html#teams/tlvl', type: 'Team', p: p + 1, info: (t.m ? t.m.length : 0) + ' medl.' }); });
           data.staff.forEach(function (s) { var p = point(s.navn, q); if (p) res.push({ t: s.navn, h: 'staff.html', type: s.rolle, p: p, hoved: s.navn }); });
         }

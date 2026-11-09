@@ -114,7 +114,7 @@
         var a = document.createElement(n.link ? 'a' : 'div');
         if (n.link) a.href = n.link;
         a.className = 'lb-pod p' + (i + 1);
-        a.innerHTML = '<span class="plads">#' + (i + 1) + '</span><img alt="" loading="lazy" src="' + H.hoved(n.hoved, 72) + '"><b></b><span class="v"></span>';
+        a.innerHTML = '<span class="plads">#' + (i + 1) + '</span><img alt="" loading="lazy" src="' + H.hoved(n.hoved, 72, t.team ? null : n.navn) + '"><b></b><span class="v"></span>';
         a.querySelector('b').textContent = n.navn;
         a.querySelector('.v').textContent = t.f(r.v, r.x) + (n.under ? ' · ' + n.under : '');
         pod.appendChild(a);
@@ -136,7 +136,7 @@
       var a = document.createElement(n.link ? 'a' : 'div');
       if (n.link) a.href = n.link;
       else a.style.cssText = 'display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid var(--k-18251d, #18251D)';
-      a.innerHTML = '<span class="nr">' + r.plads + '</span><img class="hoved" alt="" loading="lazy" src="' + H.hoved(n.hoved) + '"><span class="navn"></span>' +
+      a.innerHTML = '<span class="nr">' + r.plads + '</span><img class="hoved" alt="" loading="lazy" src="' + H.hoved(n.hoved, 32, t.team ? null : n.navn) + '"><span class="navn"></span>' +
         (!t.team && online[r.x.n.toLowerCase()] ? '<span class="on" title="Online"></span>' : '') + '<span class="v"></span>';
       a.querySelector('.navn').textContent = n.navn + (n.under ? ' · ' + n.under : '');
       a.querySelector('.v').textContent = t.f(r.v, r.x);

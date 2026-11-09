@@ -128,7 +128,7 @@
         '<div class="du-kit-tal"><div><small>Dueller</small><b>' + H.tal(Math.round(tot / 2)) + '</b></div><div><small>Spillere</small><b>' + H.tal(spillede) + '</b></div></div>' +
         '<div class="du-kit-top3">' + (top.length ? top.map(function (t, i) {
           return '<span style="display:flex;align-items:center;gap:8px"><span class="p" style="color:' + ['#FACC15', '#D1D5DB', '#FDBA74'][i] + '">' + (i + 1) + '</span>' +
-            '<img alt="" loading="lazy" src="' + H.hoved(t.s.u, 22) + '"><span class="n">' + H.esc(t.s.n) + '</span><span class="v">' + kitF(t.v, 'sejre') + '</span></span>';
+            '<img alt="" loading="lazy" src="' + H.hoved(t.s.u, 22, t.s.n) + '"><span class="n">' + H.esc(t.s.n) + '</span><span class="v">' + kitF(t.v, 'sejre') + '</span></span>';
         }).join('') : '<span class="daempet">Ingen sejre endnu</span>') + '</div>' +
         '<span class="du-mere">Se topliste →</span>';
       b.querySelector('h3').textContent = k.n;
@@ -191,7 +191,7 @@
         var a = document.createElement('a');
         a.href = H.profil(r.x.n);
         a.className = 'lb-pod p' + (i + 1);
-        a.innerHTML = '<span class="plads">#' + (i + 1) + '</span><img alt="" loading="lazy" src="' + H.hoved(r.x.u, 72) + '"><b></b><span class="v"></span>';
+        a.innerHTML = '<span class="plads">#' + (i + 1) + '</span><img alt="" loading="lazy" src="' + H.hoved(r.x.u, 72, r.x.n) + '"><b></b><span class="v"></span>';
         a.querySelector('b').textContent = r.x.n;
         a.querySelector('.v').textContent = vaerdi(r);
         pod.appendChild(a);
@@ -211,7 +211,7 @@
         (online[r.x.n.toLowerCase()] ? '<span class="on" title="Online"></span>' : '') + '<span class="v"></span></a>';
       var a = li.firstChild;
       a.href = H.profil(r.x.n);
-      a.querySelector('img').src = H.hoved(r.x.u);
+      a.querySelector('img').src = H.hoved(r.x.u, 32, r.x.n);
       a.querySelector('.navn').textContent = r.x.n;
       var e = ekstra(r);
       a.querySelector('.v').innerHTML = H.esc(vaerdi(r)) + (e ? '<div class="ekstra">' + H.esc(e) + '</div>' : '');
@@ -230,7 +230,7 @@
     var rPlads = ratingListe.indexOf(s) + 1;
     var oPlads = placering(overall(), s.u);
     var linje = function (l, v, p) { return '<div class="du-linje"><span class="daempet">' + l + '</span><span><b>' + H.esc(v) + '</b>' + (p ? '<span class="plads">#' + p + '</span>' : '') + '</span></div>'; };
-    var html = '<div class="du-sp-top"><img alt="" src="' + H.hoved(s.u, 56) + '"><div><h3></h3><a href="' + H.profil(s.n) + '" style="font-size:13px">Se hele profilen →</a></div></div>' +
+    var html = '<div class="du-sp-top"><img alt="" src="' + H.hoved(s.u, 56, s.n) + '"><div><h3></h3><a href="' + H.profil(s.n) + '" style="font-size:13px">Se hele profilen →</a></div></div>' +
       linje('Overall', '#' + oPlads, null) +
       linje('Rating', H.tal(s.elo), rPlads) +
       linje('Sejre / tab / uafgjort', H.tal(s.s) + ' / ' + H.tal(s.t) + ' / ' + H.tal(s.d)) +

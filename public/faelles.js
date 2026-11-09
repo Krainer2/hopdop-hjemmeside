@@ -31,8 +31,12 @@
     if (s < 86400) return Math.floor(s / 3600) + ' t. siden';
     return Math.floor(s / 86400) + ' dage siden';
   };
-  H.hoved = function (uuidEllerNavn, str) {
-    return 'https://mc-heads.net/avatar/' + encodeURIComponent(uuidEllerNavn || 'MHF_Steve') + '/' + (str || 32);
+  // Spillerhoved fra mc-heads. Offline-UUID'er (version 3, fra servere i offline mode) kender Mojang ikke,
+  // så for dem bruges navnet i stedet - ellers vises bare standard-skin (Steve/Alex).
+  H.hoved = function (uuidEllerNavn, str, navn) {
+    var id = uuidEllerNavn || navn || 'MHF_Steve';
+    if (navn && /^[0-9a-f]{8}-[0-9a-f]{4}-3[0-9a-f]{3}-/i.test(String(id))) id = navn;
+    return 'https://mc-heads.net/avatar/' + encodeURIComponent(id) + '/' + (str || 32);
   };
   H.profil = function (navn) { return 'spiller.html?navn=' + encodeURIComponent(navn); };
 
