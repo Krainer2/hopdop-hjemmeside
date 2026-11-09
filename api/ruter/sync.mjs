@@ -62,6 +62,17 @@ export default async (req) => {
   const poster = gammel.poster || {};
   let nyeStraffe = 0;
 
+  // Skin-id pr. spiller (fra serverens skin) - bruges af /api/hoved
+  const skins = (await hent('skins')) || {};
+  const skinId = (b64) => {
+    try {
+      const t = JSON.parse(atob(String(b64)));
+      const url = t && t.textures && t.textures.SKIN && t.textures.SKIN.url;
+      const h = url ? String(url).split('/').pop() : '';
+      return /^[0-9a-f]{20,80}$/.test(h) ? h : '';
+    } catch { return ''; }
+  };
+
   const spillere = [];
   for (const s of Array.isArray(d.spillere) ? d.spillere : []) {
     if (!s || !UUID.test(s.u) || !NAVN.test(s.n)) continue;
@@ -83,6 +94,10 @@ export default async (req) => {
       }
     }
     spillere.push(p);
+    if (s.sk && /^[A-Za-z0-9+/=]{20,4000}$/.test(s.sk)) {
+      const h = skinId(s.sk);
+      if (h) skins[s.u.replace(/-/g, '').toLowerCase()] = h;
+    }
     for (const linje of Array.isArray(s.h) ? s.h : []) {
       const post = laesLinje(s.u, s.n, linje, nu, poster);
       if (!post) continue;
@@ -150,6 +165,7 @@ export default async (req) => {
   }
   await gem('straffe', { poster: Object.fromEntries(alle.map((p) => [p.id, p])) });
   await gem('stats', { opdateret: nu, online, spillere, teams });
+  await gem('skins', skins);
   if (duel) await gem('duel', duel);
   await gem('sync-meta', { sidst: nu, spillere: spillere.length, teams: teams.length, online: online.length, nyeStraffe, bytes: raa.length });
   await forsoeg(req, 200, 'OK', { spillere: spillere.length, teams: teams.length, bytes: raa.length });

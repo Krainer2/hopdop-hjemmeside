@@ -10,6 +10,7 @@
 #   - Teams og KOTH fra Teams-pluginet (plugins/Teams/teams.yml)
 #   - Straffe: aktive bans/mutes + historik fra Straf.sk
 #   - Hvem der er online
+#   - Spillernes skin (til hovederne på hjemmesiden)
 #   - Duels fra Duel.sk: kits (navn og ikon) + rating, sejre, tab,
 #     streaks, gevinst og stats pr. kit for alle der har duelleret
 #
@@ -49,6 +50,15 @@ function webOntime(p: player):
 	set {_ticks} to {_p}.getStatistic(Statistic.PLAY_ONE_TICK)
 	set {_sek} to {_ticks} / 20
 	set {web::ontime::%{_u}%} to round({_sek})
+
+# Gem spillerens skin (som serveren kender det) - bruges til hovederne på hjemmesiden.
+# Værdien er Mojangs "textures" (base64) og indeholder kun A-Z, a-z, 0-9, + / =
+function webSkin(p: player):
+	set {_u} to uuid of {_p}
+	set {_props} to {_p}.getHandle().getProfile().getProperties().get("textures")
+	loop ...{_props}:
+		set {_v} to loop-value.getValue()
+		set {web::skin::%{_u}%} to "%{_v}%"
 
 # Straf-historik for én spiller som JSON-liste
 function webHist(u: text) :: text:
@@ -128,11 +138,12 @@ function webSpiller(u: text) :: text:
 	set {_ban} to webStraf({_u}, "ban")
 	set {_mute} to webStraf({_u}, "mute")
 	set {_h} to webHist({_u})
+	set {_sk} to {web::skin::%{_u}%} ? ""
 	set {_j} to "{""u"":""%{_u}%"",""n"":""%{_n}%"",""k"":""%{_k}%"",""d"":""%{_d}%"",""bk"":""%{_bk}%"",""bd"":""%{_bd}%"""
 	set {_j} to "%{_j}%,""ot"":""%{_ot}%"",""ott"":""%{_ott}%"",""ds"":""%{_ds}%"""
 	set {_j} to "%{_j}%,""fl"":""%{_fl}%"",""fx"":""%{_fx}%"",""ff"":""%{_ff}%"",""fr"":""%{_fr}%"",""fm"":""%{_fm}%"",""fp"":""%{_fp}%"""
 	set {_j} to "%{_j}%,""vp"":""%{_vp}%"",""vr"":""%{_vr}%"",""vs"":""%{_vs}%"",""tr"":""%{_tr}%"",""tp"":""%{_tp}%"",""tf"":""%{_tf}%"""
-	set {_j} to "%{_j}%,""st"":""%{_st}%"",""sm"":""%{_sm}%"",""ban"":%{_ban}%,""mute"":%{_mute}%,""h"":%{_h}%}"
+	set {_j} to "%{_j}%,""st"":""%{_st}%"",""sm"":""%{_sm}%"",""ban"":%{_ban}%,""mute"":%{_mute}%,""h"":%{_h}%,""sk"":""%{_sk}%""}"
 	return {_j}
 
 # Medlemmer af ét team som JSON-liste
@@ -354,9 +365,10 @@ function webSync():
 	set {_anvendt} to webHentRettelser()
 	if {_anvendt} is not set:
 		set {_anvendt} to ""
-	# Spilletid for alle online spillere
+	# Spilletid og skin for alle online spillere
 	loop all players:
 		webOntime(loop-player)
+		webSkin(loop-player)
 	# Online liste
 	set {_on} to ""
 	loop all players:
@@ -413,6 +425,10 @@ on quit:
 on join:
 	set {_u} to uuid of player
 	set {web::navn::%{_u}%} to "%player%"
+	# Vent lidt, så et evt. skin-plugin har sat skinnet først
+	wait 3 seconds
+	if player is online:
+		webSkin(player)
 
 command /websync:
 	permission: hopdop.websync
