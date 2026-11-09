@@ -51,14 +51,15 @@ function webOntime(p: player):
 	set {_sek} to {_ticks} / 20
 	set {web::ontime::%{_u}%} to round({_sek})
 
-# Gem spillerens skin (som serveren kender det) - bruges til hovederne på hjemmesiden.
-# Værdien er Mojangs "textures" (base64) og indeholder kun A-Z, a-z, 0-9, + / =
+# Husk spillerens skin (som serveren kender det) til næste sync - bruges til hovederne på hjemmesiden.
+# Gemmes KUN midlertidigt i RAM ({-web::...} skrives ikke til variables-filen) og slettes efter hver sync.
+# Hjemmesiden gemmer selv skinnet, så serveren behøver ikke huske det.
 function webSkin(p: player):
 	set {_u} to uuid of {_p}
 	set {_props} to {_p}.getHandle().getProfile().getProperties().get("textures")
 	loop ...{_props}:
 		set {_v} to loop-value.getValue()
-		set {web::skin::%{_u}%} to "%{_v}%"
+		set {-web::skin::%{_u}%} to "%{_v}%"
 
 # Straf-historik for én spiller som JSON-liste
 function webHist(u: text) :: text:
@@ -138,7 +139,7 @@ function webSpiller(u: text) :: text:
 	set {_ban} to webStraf({_u}, "ban")
 	set {_mute} to webStraf({_u}, "mute")
 	set {_h} to webHist({_u})
-	set {_sk} to {web::skin::%{_u}%} ? ""
+	set {_sk} to {-web::skin::%{_u}%} ? ""
 	set {_j} to "{""u"":""%{_u}%"",""n"":""%{_n}%"",""k"":""%{_k}%"",""d"":""%{_d}%"",""bk"":""%{_bk}%"",""bd"":""%{_bd}%"""
 	set {_j} to "%{_j}%,""ot"":""%{_ot}%"",""ott"":""%{_ott}%"",""ds"":""%{_ds}%"""
 	set {_j} to "%{_j}%,""fl"":""%{_fl}%"",""fx"":""%{_fx}%"",""ff"":""%{_ff}%"",""fr"":""%{_fr}%"",""fm"":""%{_fm}%"",""fp"":""%{_fp}%"""
@@ -407,6 +408,9 @@ function webSync():
 	set {_teams} to webTeams()
 	set {_duel} to webDuel()
 	set {_json} to "{""v"":1,""anvendt"":""%{_anvendt}%"",""online"":[%{_on}%],""spillere"":[%{_ps}%],""teams"":%{_teams}%,""duel"":%{_duel}%}"
+	# Skins er sendt - glem dem igen (fylder så intet mellem syncs)
+	delete {-web::skin::*}
+	delete {web::skin::*}
 	set {_h::1} to "Content-Type: application/json"
 	set {_h::2} to "Authorization: Bearer {@noegle}"
 	set {_h::3} to "User-Agent: HOPDOP-WebSync/1.0"
