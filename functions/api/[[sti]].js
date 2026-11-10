@@ -22,6 +22,7 @@ import r17, { config as c17 } from '../../api/ruter/weblogin-kode.mjs';
 import r18, { config as c18 } from '../../api/ruter/duel.mjs';
 import r19, { config as c19 } from '../../api/ruter/hoved.mjs';
 import r20, { config as c20 } from '../../api/ruter/link.mjs';
+import r21, { config as c21 } from '../../api/ruter/bro.mjs';
 
 const RUTER = {
   [c0.path]: r0,
@@ -44,7 +45,8 @@ const RUTER = {
   [c17.path]: r17,
   [c18.path]: r18,
   [c19.path]: r19,
-  [c20.path]: r20
+  [c20.path]: r20,
+  [c21.path]: r21
 };
 
 export async function onRequest(context) {
