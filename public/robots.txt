@@ -3,5 +3,6 @@ Allow: /
 Disallow: /admin
 Disallow: /banliste
 Disallow: /api/
+Disallow: /samtale
 
 Sitemap: https://hopdop.pages.dev/sitemap.xml
