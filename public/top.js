@@ -286,7 +286,7 @@ document.addEventListener('error', function (e) {
       ['Forside', F + '#top', 'Side'], ['Features', F + '#features', 'Side'], ['Kits', F + '#kits', 'Side'],
       ['KOTH', F + '#koth', 'Side'], ['FAQ', F + '#faq', 'Side'], ['Leaderboards', 'leaderboards.html', 'Side'], ['Duels', 'duel.html', 'Side'], ['Duel-toplister', 'duel.html#overall', 'Side'],
       ['Staff', 'staff.html', 'Side'], ['Regler', 'regler.html', 'Side'], ['Forum', 'ansog.html', 'Side'], ['Ansøg om staff', 'ansog.html?type=staff', 'Side'], ['Ansøg som bygger', 'ansog.html?type=bygger', 'Side'],
-      ['Unban-ansøgning', 'ansog.html?type=unban', 'Side'], ['Discord', 'https://discord.gg/GE6Ku6Znh', 'Link'], ['Log ind', 'login.html', 'Side']
+      ['Unban-ansøgning', 'ansog.html?type=unban', 'Side'], ['Discord', 'https://discord.gg/53fAaeMGqP', 'Link'], ['Log ind', 'login.html', 'Side']
     ];
     if (erAdmin) SIDER.push(['Banliste', 'banliste.html', 'Side'], ['Ret stats', 'admin.html#stats', 'Admin']);
     ['Diamond', 'Bard', 'Archer', 'Rogue', 'Reaper'].forEach(function (k) { SIDER.push([k + ' kit', F + '#kits', 'Kit']); });

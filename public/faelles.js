@@ -2,7 +2,7 @@
 (function () {
   var H = window.HD = {};
   H.IP = 'hopdop.superawesome.dk';
-  H.DISCORD = 'https://discord.gg/GE6Ku6Znh';
+  H.DISCORD = 'https://discord.gg/53fAaeMGqP';
 
   H.esc = function (t) {
     return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) {
