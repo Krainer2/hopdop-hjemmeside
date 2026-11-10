@@ -69,6 +69,12 @@ async function laesToken(req) {
 
 // Staff med adgang til panelet (rollen tjekkes igen, så fjernet adgang virker med det samme)
 export async function hvemErDet(req) {
+  // Discord-botten: fast nøgle (BOT_NOEGLE, mindst 32 tegn) som KUN må læse (GET) - aldrig rette noget
+  const bn = env('BOT_NOEGLE') || '';
+  const h = req.headers.get('authorization') || '';
+  if (bn.length >= 32 && req.method === 'GET' && h.startsWith('Bot ') && (await ens(h.slice(4), bn))) {
+    return { navn: 'Discord-bot', rolle: 'admin', kilde: 'bot' };
+  }
   const p = await laesToken(req);
   if (!p) return null;
   if (p.kilde === 'sa' || p.kilde === 'mc') {

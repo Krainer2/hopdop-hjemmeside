@@ -47,6 +47,7 @@ Hele opsætningen står trin for trin i **[FLYT-TIL-CLOUDFLARE.md](FLYT-TIL-CLOU
 - `TOKEN_HEMMELIGHED`, `WEB_NOEGLE` og `SA_CLIENT_SECRET` (som Secret)
 - `EJERE` og `SA_CLIENT_ID`
 - `ADMIN_BRUGERE` (valgfri, login med kode)
+- `BOT_NOEGLE` (valgfri, som Secret, mindst 32 tegn): lader Discord-botten LÆSE ansøgninger og straffe
 
 **Binding:** D1-database med navnet `DB`.
 
