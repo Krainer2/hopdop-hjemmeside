@@ -4,7 +4,7 @@
 //    GET  ?efter=<nr>                      -> {chat:[...], svar:[...], nr}  nye chatlinjer og svar
 //  Minecraft-serveren ("Bearer <WEB_NOEGLE>"):
 //    GET                                   -> tekst: "id~~kommando|||id~~kommando" (tom = ingenting)
-//    POST {chat:["tekst",...], svar:[{id, tekst}]}
+//    POST {chat:["tekst",...], svar:[{id, tekst}]} -> tekst med ventende kommandoer (eller "INGEN")
 import { hent, gem } from '../lib/data.mjs';
 import { ensNoegle, json } from '../lib/auth.mjs';
 import { env } from '../lib/miljoe.mjs';
@@ -56,8 +56,11 @@ export default async (req) => {
     for (const c of (Array.isArray(b.chat) ? b.chat : []).slice(0, 200)) d.chat.push({ nr: ++d.nr, tekst: ren(c, 400), t: nu });
     for (const s of (Array.isArray(b.svar) ? b.svar : []).slice(0, 50)) if (s && s.id) d.svar.push({ nr: ++d.nr, id: ren(s.id, 20), tekst: ren(s.tekst, 1500), t: nu });
     d.chat = d.chat.slice(-300); d.svar = d.svar.slice(-100);
+    // Svaret er de ventende kommandoer som tekst (samme format som GET), så serveren kun behøver én forespørgsel
+    const ud = d.ko.map((x) => `${x.id}~~${x.k}`).join('|||');
+    d.ko = [];
     await gem('bro', d);
-    return json({ ok: true });
+    return new Response(ud || 'INGEN', { status: 200, headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' } });
   }
   return json({ fejl: 'Metode ikke tilladt' }, 405);
 };
