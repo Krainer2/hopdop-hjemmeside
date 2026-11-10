@@ -114,7 +114,7 @@
           '<div><b>' + (p ? doede : '–') + '</b><span>Døde</span></div>' +
           '<div><b>' + (p ? kd : '–') + '</b><span>K/D</span></div>' +
         '</div>' +
-        '<a class="knap groen" href="' + H.profil(s.navn) + '">Se profil</a>' +
+        '<a class="knap groen" href="' + H.profil(s.navn) + '">Se prof&#8204;il</a>' +
       '</div>';
   }
 

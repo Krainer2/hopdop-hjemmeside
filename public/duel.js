@@ -230,7 +230,7 @@
     var rPlads = ratingListe.indexOf(s) + 1;
     var oPlads = placering(overall(), s.u);
     var linje = function (l, v, p) { return '<div class="du-linje"><span class="daempet">' + l + '</span><span><b>' + H.esc(v) + '</b>' + (p ? '<span class="plads">#' + p + '</span>' : '') + '</span></div>'; };
-    var html = '<div class="du-sp-top"><img alt="" src="' + H.hoved(s.u, 56, s.n) + '"><div><h3></h3><a href="' + H.profil(s.n) + '" style="font-size:13px">Se hele profilen →</a></div></div>' +
+    var html = '<div class="du-sp-top"><img alt="" src="' + H.hoved(s.u, 56, s.n) + '"><div><h3></h3><a href="' + H.profil(s.n) + '" style="font-size:13px">Se hele prof&#8204;ilen →</a></div></div>' +
       linje('Overall', '#' + oPlads, null) +
       linje('Rating', H.tal(s.elo), rPlads) +
       linje('Sejre / tab / uafgjort', H.tal(s.s) + ' / ' + H.tal(s.t) + ' / ' + H.tal(s.d)) +
