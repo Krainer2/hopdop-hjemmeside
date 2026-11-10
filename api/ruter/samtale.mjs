@@ -28,7 +28,7 @@ export default async (req) => {
   let b = {}; try { b = JSON.parse(await req.text()); } catch { return json({ fejl: 'Ugyldig JSON' }, 400); }
   if (!Array.isArray(b.beskeder)) return json({ fejl: 'Mangler beskeder' }, 400);
   const beskeder = b.beskeder.slice(0, 3000).map((m) => ({
-    f: t(m.f, 40), a: t(m.a, 300), bot: !!m.bot, t: Number(m.t) || 0, x: t(m.x, 4000),
+    f: t(m.f, 300), a: t(m.a, 300), bot: !!m.bot, t: Number(m.t) || 0, x: t(m.x, 4000),
     e: (Array.isArray(m.e) ? m.e : []).slice(0, 5).map((e) => ({ t: t(e.t, 256), x: t(e.x, 2000) })),
     v: (Array.isArray(m.v) ? m.v : []).slice(0, 10).map((v) => ({ n: t(v.n, 100), u: t(v.u, 500) })),
   }));
