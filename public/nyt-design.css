@@ -204,3 +204,13 @@ body::before{background:url(assets/hopdop-nat-blur.jpg) center 35%/cover !import
 
 /* Pixelify Sans laver "fi" om til et tegn der ligner "A" (fx "Se proAl") - slå ligaturer fra */
 html,body,*{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}
+/* ---- Solnedgangs-accent fra det nye logo (lyserød/orange sammen med HopDop-grøn) ---- */
+:root{--sol1:#F472B6;--sol2:#FB923C;--sol3:#A78BFA}
+.nd-top-hoved,.nd-top-under{position:relative}
+.nd-top-under::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--sol3),var(--sol1),var(--sol2),#4ADE80,transparent);opacity:.85;pointer-events:none}
+.nd-sek h2,.nd-sten h2{position:relative;padding-bottom:12px}
+.nd-sek h2::after,.nd-sten h2::after{content:"";position:absolute;left:0;bottom:0;width:84px;height:4px;border-radius:4px;background:linear-gradient(90deg,#4ADE80,var(--sol2),var(--sol1))}
+.hd-kort:hover,.hd-flise:hover{border-color:var(--sol1) !important;box-shadow:0 18px 40px rgba(0,0,0,.45),0 0 28px rgba(244,114,182,.22) !important}
+.nd-logo::before{background:radial-gradient(ellipse at center,rgba(244,114,182,.22),rgba(251,146,60,.10) 45%,transparent 65%) !important}
+.hd-hero-bilde{box-shadow:0 0 0 2px rgba(244,114,182,.35),0 0 70px rgba(251,146,60,.22),0 24px 50px rgba(0,0,0,.55)}
+::selection{background:rgba(244,114,182,.45);color:#fff}
