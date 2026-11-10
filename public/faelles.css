@@ -77,3 +77,6 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--groen);outline-o
 .hd-bund a{color:var(--t-c9dcd0, #C9DCD0);text-decoration:none}
 
 @media (prefers-reduced-motion: reduce){.knap{transition:none}}
+
+/* Pixelify Sans laver "fi" om til et tegn der ligner "A" (fx "Se proAl") - slå ligaturer fra */
+html,body,*{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}

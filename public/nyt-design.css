@@ -201,3 +201,6 @@ body::before{background:url(assets/hopdop-nat-blur.jpg) center 35%/cover !import
 .hd-hero-bilde::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 40px 10px rgba(7,11,9,.6);}
 :root[data-tema="lyst"] .hd-hero-bilde{box-shadow:0 0 0 2px rgba(22,163,74,.25),0 18px 40px rgba(16,40,26,.25)}
 :root[data-tema="lyst"] .hd-hero-bilde::after,:root[data-tema="lyst"] .hd-hero-bilde::before{opacity:.35}
+
+/* Pixelify Sans laver "fi" om til et tegn der ligner "A" (fx "Se proAl") - slå ligaturer fra */
+html,body,*{font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0}
